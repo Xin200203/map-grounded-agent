@@ -1,4 +1,4 @@
-"""Unit tests for SmoothNav planner and smooth executor."""
+"""Legacy generation-1 tests kept only for reference, not default collection."""
 
 import sys
 import os

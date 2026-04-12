@@ -310,6 +310,15 @@ class HighLevelPlanner:
             json_match = re.search(r'\{.*\}', response, re.DOTALL)
             if not json_match:
                 return None
-            return json.loads(json_match.group())
+            data = json.loads(json_match.group())
+            choice_type = str(data.get('choice_type', '')).strip().lower()
+            choice_id = str(data.get('choice_id', '')).strip()
+            if choice_type not in {"object", "room", "direction"}:
+                return None
+            if not choice_id:
+                return None
+            data["choice_type"] = choice_type
+            data["choice_id"] = choice_id
+            return data
         except (json.JSONDecodeError, KeyError, TypeError):
             return None

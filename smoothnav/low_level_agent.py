@@ -199,15 +199,17 @@ class LowLevelAgent:
             if not json_match:
                 return None
             data = json.loads(json_match.group())
-            action_str = data.get('action', 'CONTINUE').upper()
+            action_str = str(data.get('action', '')).upper()
             action_map = {
                 'CONTINUE': LowLevelAction.CONTINUE,
                 'ADJUST': LowLevelAction.ADJUST,
                 'PREFETCH': LowLevelAction.PREFETCH,
                 'ESCALATE': LowLevelAction.ESCALATE,
             }
+            if action_str not in action_map:
+                return None
             return LowLevelResult(
-                action=action_map.get(action_str, LowLevelAction.CONTINUE),
+                action=action_map[action_str],
                 reason=data.get('reason', ''),
                 adjust_anchor=data.get('adjust_anchor', ''),
             )

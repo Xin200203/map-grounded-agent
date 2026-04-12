@@ -37,6 +37,7 @@ from smoothnav.low_level_agent import (
 )
 from smoothnav.metrics import SmoothnessMetrics
 from smoothnav.planner import PLANNER_PROMPT_SCHEMA_VERSION, HighLevelPlanner
+from smoothnav.strategy_grounding import apply_strategy
 from smoothnav.tracing import RunTracer, strategy_to_dict
 
 
@@ -91,22 +92,6 @@ def get_config():
         },
     )
     return args
-
-
-def _apply_strategy(strategy, graph, bev_map, args, global_goals):
-    graph.set_full_map(bev_map.full_map)
-    graph.set_full_pose(bev_map.full_pose)
-
-    bias = strategy.bias_position if strategy else None
-    goal = graph.get_goal(goal=bias)
-
-    if goal is not None:
-        goal = list(goal)
-        goal[0] -= bev_map.local_map_boundary[0, 0]
-        goal[1] -= bev_map.local_map_boundary[0, 2]
-        if 0 <= goal[0] < args.local_width and 0 <= goal[1] < args.local_height:
-            global_goals[0] = goal[0]
-            global_goals[1] = goal[1]
 
 
 def _goal_description_from_infos(args, infos):
@@ -328,7 +313,7 @@ def main():
                         step_idx=step,
                         trace_writer=tracer,
                     )
-                    _apply_strategy(controller_state.current_strategy, graph, bev_map, args, global_goals)
+                    apply_strategy(controller_state.current_strategy, graph, bev_map, args, global_goals)
                     controller_state.needs_initial_plan = False
                     frontier_reached = False
                     controller_state.prev_node_count = len(graph.nodes)
@@ -376,7 +361,7 @@ def main():
                             step_idx=step,
                             trace_writer=tracer,
                         )
-                        _apply_strategy(controller_state.current_strategy, graph, bev_map, args, global_goals)
+                        apply_strategy(controller_state.current_strategy, graph, bev_map, args, global_goals)
                         is_planning = True
                         logging.info(
                             "Step %s: New room -> %s",
@@ -401,7 +386,7 @@ def main():
                     if low_result.action == LowLevelAction.ADJUST:
                         if low_result.adjust_bias is not None:
                             controller_state.current_strategy.bias_position = low_result.adjust_bias
-                            _apply_strategy(controller_state.current_strategy, graph, bev_map, args, global_goals)
+                            apply_strategy(controller_state.current_strategy, graph, bev_map, args, global_goals)
                             logging.info(
                                 "Step %s: ADJUST bias -> %s reason=%s",
                                 step,
@@ -446,7 +431,7 @@ def main():
                             trace_writer=tracer,
                         )
                         controller_state.pending_strategy = None
-                        _apply_strategy(controller_state.current_strategy, graph, bev_map, args, global_goals)
+                        apply_strategy(controller_state.current_strategy, graph, bev_map, args, global_goals)
                         is_planning = True
                         logging.info(
                             "Step %s: ESCALATE -> %s",
@@ -460,7 +445,7 @@ def main():
                     bev_map=bev_map,
                     args=args,
                     global_goals=global_goals,
-                    apply_strategy_fn=_apply_strategy,
+                    apply_strategy_fn=apply_strategy,
                 ):
                     pass
 
@@ -474,7 +459,7 @@ def main():
                     high_planner=high_planner,
                     goal_description=goal_description,
                     agent_pos=(int(agent_map_x), int(agent_map_y)),
-                    apply_strategy_fn=_apply_strategy,
+                    apply_strategy_fn=apply_strategy,
                     episode_id=step_episode_id,
                     step_idx=step,
                     trace_writer=tracer,
@@ -519,7 +504,7 @@ def main():
                     high_planner=high_planner,
                     goal_description=goal_description,
                     agent_pos=(int(agent_map_x), int(agent_map_y)),
-                    apply_strategy_fn=_apply_strategy,
+                    apply_strategy_fn=apply_strategy,
                     episode_id=step_episode_id,
                     step_idx=step,
                     trace_writer=tracer,
