@@ -76,3 +76,13 @@ api_key: ""
 base_url: ""
 api_key_env: "SMOOTHNAV_API_KEY"
 base_url_env: "SMOOTHNAV_BASE_URL"
+
+# Phase 2 controller profiles and ablations
+controller_profile: ""
+controller_enable_monitor: true
+controller_monitor_policy: "llm"
+controller_enable_prefetch: true
+controller_replan_policy: "event"
+controller_enable_stuck_replan: true
+controller_fixed_plan_interval_steps: 40
+controller_prefetch_near_threshold: 10.0

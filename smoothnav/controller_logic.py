@@ -3,8 +3,6 @@
 import logging
 from typing import Dict, List, Tuple
 
-import numpy as np
-
 from smoothnav.controller_events import GraphDelta
 from smoothnav.low_level_agent import LowLevelAction
 from smoothnav.planner import serialize_for_planner

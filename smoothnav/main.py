@@ -19,6 +19,12 @@ from src.graph.graph import Graph
 from src.map.bev_mapping import BEV_Map
 from src.utils.llm import LLM
 
+from smoothnav.control_metrics import compute_run_control_metrics
+from smoothnav.controller_config import (
+    available_controller_profiles,
+    controller_config_dict,
+    resolve_controller_config,
+)
 from smoothnav.controller_logic import (
     build_graph_delta,
     handle_frontier_reached,
@@ -31,9 +37,12 @@ from smoothnav.controller_logic import (
 from smoothnav.controller_state import ControllerState
 from smoothnav.experiment_io import resolve_api_config, setup_run_environment
 from smoothnav.low_level_agent import (
+    DisabledMonitor,
     LOW_LEVEL_PROMPT_SCHEMA_VERSION,
     LowLevelAction,
     LowLevelAgent,
+    RULE_MONITOR_SCHEMA_VERSION,
+    RuleBasedMonitor,
 )
 from smoothnav.metrics import SmoothnessMetrics
 from smoothnav.planner import PLANNER_PROMPT_SCHEMA_VERSION, HighLevelPlanner
@@ -56,6 +65,78 @@ def get_config():
                         help="override num_eval_episodes (0=use config)")
     parser.add_argument("--results-root", default="", type=str,
                         help="optional override for results root directory")
+    parser.add_argument(
+        "--controller-profile",
+        dest="controller_profile",
+        default=None,
+        choices=available_controller_profiles(),
+    )
+    parser.add_argument(
+        "--monitor-policy",
+        dest="controller_monitor_policy",
+        default=None,
+        choices=["llm", "rules", "off"],
+    )
+    parser.add_argument(
+        "--replan-policy",
+        dest="controller_replan_policy",
+        default=None,
+        choices=["event", "fixed_interval", "baseline_explore"],
+    )
+    parser.add_argument(
+        "--fixed-plan-interval-steps",
+        dest="controller_fixed_plan_interval_steps",
+        default=None,
+        type=int,
+    )
+    parser.add_argument(
+        "--prefetch-near-threshold",
+        dest="controller_prefetch_near_threshold",
+        default=None,
+        type=float,
+    )
+    parser.add_argument(
+        "--enable-monitor",
+        dest="controller_enable_monitor",
+        action="store_const",
+        const=True,
+        default=None,
+    )
+    parser.add_argument(
+        "--disable-monitor",
+        dest="controller_enable_monitor",
+        action="store_const",
+        const=False,
+        default=None,
+    )
+    parser.add_argument(
+        "--enable-prefetch",
+        dest="controller_enable_prefetch",
+        action="store_const",
+        const=True,
+        default=None,
+    )
+    parser.add_argument(
+        "--disable-prefetch",
+        dest="controller_enable_prefetch",
+        action="store_const",
+        const=False,
+        default=None,
+    )
+    parser.add_argument(
+        "--enable-stuck-replan",
+        dest="controller_enable_stuck_replan",
+        action="store_const",
+        const=True,
+        default=None,
+    )
+    parser.add_argument(
+        "--disable-stuck-replan",
+        dest="controller_enable_stuck_replan",
+        action="store_const",
+        const=False,
+        default=None,
+    )
     parsed_args = parser.parse_args()
 
     with open(parsed_args.config_file, "r") as file:
@@ -67,6 +148,10 @@ def get_config():
                 args_dict[key] = value
             elif key not in args_dict:
                 args_dict[key] = value
+        elif value is not None and key.startswith("controller_"):
+            args_dict[key] = value
+        elif value is None and key.startswith("controller_"):
+            continue
         else:
             args_dict[key] = value
     args = SimpleNamespace(**args_dict)
@@ -82,13 +167,18 @@ def get_config():
         args.num_eval_episodes = args.num_eval
     args.num_episodes = int(args.num_eval_episodes)
 
+    args = resolve_controller_config(args)
     args = resolve_api_config(args)
     args = setup_run_environment(
         args,
         argv=sys.argv,
         prompt_versions={
             "planner": PLANNER_PROMPT_SCHEMA_VERSION,
-            "monitor": LOW_LEVEL_PROMPT_SCHEMA_VERSION,
+            "monitor": (
+                RULE_MONITOR_SCHEMA_VERSION
+                if args.controller_monitor_policy == "rules"
+                else LOW_LEVEL_PROMPT_SCHEMA_VERSION
+            ),
         },
     )
     return args
@@ -133,12 +223,18 @@ def main():
     args = get_config()
     tracer = RunTracer(args.run_dir)
     _configure_logging(args)
-    logging.info("SmoothNav starting: mode=%s run_id=%s", args.mode, args.run_id)
     logging.info(
-        "Run context: goal_type=%s num_eval=%s results=%s",
+        "SmoothNav starting: mode=%s profile=%s run_id=%s",
+        args.mode,
+        args.controller_profile,
+        args.run_id,
+    )
+    logging.info(
+        "Run context: goal_type=%s num_eval=%s results=%s controller=%s",
         args.goal_type,
         args.num_eval_episodes,
         args.run_dir,
+        controller_config_dict(args),
     )
 
     bev_map = BEV_Map(args)
@@ -147,9 +243,16 @@ def main():
     agent = UniGoal_Agent(args, envs)
 
     llm_sonnet = LLM(args.base_url, args.api_key, args.llm_model)
-    llm_haiku = LLM(args.base_url, args.api_key, args.llm_model_fast)
     high_planner = HighLevelPlanner(llm_fn=llm_sonnet)
-    low_agent = LowLevelAgent(llm_fn=llm_haiku)
+    if args.controller_monitor_policy == "llm":
+        llm_haiku = LLM(args.base_url, args.api_key, args.llm_model_fast)
+        low_agent = LowLevelAgent(llm_fn=llm_haiku)
+    elif args.controller_monitor_policy == "rules":
+        low_agent = RuleBasedMonitor(
+            prefetch_near_threshold=args.controller_prefetch_near_threshold
+        )
+    else:
+        low_agent = DisabledMonitor()
     smoothness = SmoothnessMetrics()
 
     episode_results = []
@@ -270,11 +373,24 @@ def main():
             monitor_calls_before = low_agent.call_count
             planner_called = False
             monitor_called = False
+            planner_reasons = []
             monitor_decision = None
             monitor_reason = ""
             low_level_action = None
             graph_delta = None
             step_episode_id = active_episode_id
+            current_strategy_before = (
+                controller_state.current_strategy.target_region
+                if controller_state.current_strategy is not None
+                else None
+            )
+            pending_strategy_before = (
+                controller_state.pending_strategy.target_region
+                if controller_state.pending_strategy is not None
+                else None
+            )
+            pending_created = False
+            pending_promoted = False
 
             near_goal = np.linalg.norm(
                 np.array([bev_map.local_row, bev_map.local_col]) - np.array(global_goals)
@@ -314,6 +430,7 @@ def main():
                         trace_writer=tracer,
                     )
                     apply_strategy(controller_state.current_strategy, graph, bev_map, args, global_goals)
+                    planner_reasons.append("episode_start")
                     controller_state.needs_initial_plan = False
                     frontier_reached = False
                     controller_state.prev_node_count = len(graph.nodes)
@@ -343,7 +460,7 @@ def main():
                 )
                 controller_state.prev_room_object_counts = graph_delta.room_object_counts
 
-                if graph_delta.has_new_rooms:
+                if graph_delta.has_new_rooms and args.controller_replan_policy == "event":
                     if (
                         controller_state.current_strategy
                         and not is_room_target(controller_state.current_strategy.target_region)
@@ -362,6 +479,7 @@ def main():
                             trace_writer=tracer,
                         )
                         apply_strategy(controller_state.current_strategy, graph, bev_map, args, global_goals)
+                        planner_reasons.append("new_room_discovered")
                         is_planning = True
                         logging.info(
                             "Step %s: New room -> %s",
@@ -369,15 +487,20 @@ def main():
                             controller_state.current_strategy.target_region,
                         )
 
-                monitor_called, low_result = maybe_call_monitor(
-                    low_agent=low_agent,
-                    controller_state=controller_state,
-                    graph_delta=graph_delta,
-                    graph=graph,
-                    episode_id=step_episode_id,
-                    step_idx=step,
-                    trace_writer=tracer,
-                )
+                if args.controller_enable_monitor:
+                    monitor_called, low_result = maybe_call_monitor(
+                        low_agent=low_agent,
+                        controller_state=controller_state,
+                        graph_delta=graph_delta,
+                        graph=graph,
+                        episode_id=step_episode_id,
+                        step_idx=step,
+                        trace_writer=tracer,
+                    )
+                else:
+                    monitor_called, low_result = False, None
+                    if graph_delta.has_new_nodes:
+                        controller_state.prev_node_count = len(graph.nodes)
                 if monitor_called:
                     controller_state.prev_node_count = len(graph.nodes)
                     low_level_action = low_result.action
@@ -394,7 +517,10 @@ def main():
                                 low_result.reason,
                             )
                     elif low_result.action == LowLevelAction.PREFETCH:
-                        if controller_state.pending_strategy is None:
+                        if (
+                            args.controller_enable_prefetch
+                            and controller_state.pending_strategy is None
+                        ):
                             controller_state.pending_strategy = plan_strategy(
                                 high_planner=high_planner,
                                 graph=graph,
@@ -407,6 +533,7 @@ def main():
                                 step_idx=step,
                                 trace_writer=tracer,
                             )
+                            planner_reasons.append("monitor_prefetch")
                             is_planning = True
                             logging.info(
                                 "Step %s: PREFETCH -> %s",
@@ -432,6 +559,7 @@ def main():
                         )
                         controller_state.pending_strategy = None
                         apply_strategy(controller_state.current_strategy, graph, bev_map, args, global_goals)
+                        planner_reasons.append("monitor_escalate")
                         is_planning = True
                         logging.info(
                             "Step %s: ESCALATE -> %s",
@@ -447,7 +575,7 @@ def main():
                     global_goals=global_goals,
                     apply_strategy_fn=apply_strategy,
                 ):
-                    pass
+                    pending_promoted = True
 
                 if handle_frontier_reached(
                     controller_state=controller_state,
@@ -464,9 +592,13 @@ def main():
                     step_idx=step,
                     trace_writer=tracer,
                 ):
+                    planner_reasons.append("frontier_reached")
                     is_planning = True
 
                 if (
+                    args.controller_enable_prefetch
+                    and args.controller_replan_policy == "event"
+                    and
                     dist_to_goal < 10
                     and controller_state.pending_strategy is None
                     and low_level_action != LowLevelAction.PREFETCH
@@ -487,6 +619,7 @@ def main():
                         step_idx=step,
                         trace_writer=tracer,
                     )
+                    planner_reasons.append("auto_prefetch")
                     is_planning = True
                     logging.info(
                         "Step %s: Auto-PREFETCH -> %s",
@@ -494,7 +627,31 @@ def main():
                         controller_state.pending_strategy.target_region,
                     )
 
-                if handle_stuck_replan(
+                if (
+                    args.controller_replan_policy == "fixed_interval"
+                    and not controller_state.needs_initial_plan
+                    and args.controller_fixed_plan_interval_steps > 0
+                    and step > 0
+                    and step % args.controller_fixed_plan_interval_steps == 0
+                ):
+                    controller_state.current_strategy = plan_strategy(
+                        high_planner=high_planner,
+                        graph=graph,
+                        controller_state=controller_state,
+                        goal_description=goal_description,
+                        escalate_reason="Fixed interval refresh",
+                        agent_pos=(int(agent_map_x), int(agent_map_y)),
+                        map_size=args.map_size,
+                        episode_id=step_episode_id,
+                        step_idx=step,
+                        trace_writer=tracer,
+                    )
+                    controller_state.pending_strategy = None
+                    apply_strategy(controller_state.current_strategy, graph, bev_map, args, global_goals)
+                    planner_reasons.append("fixed_interval_refresh")
+                    is_planning = True
+
+                if args.controller_enable_stuck_replan and handle_stuck_replan(
                     controller_state=controller_state,
                     graph_delta=graph_delta,
                     graph=graph,
@@ -509,6 +666,7 @@ def main():
                     step_idx=step,
                     trace_writer=tracer,
                 ):
+                    planner_reasons.append("stuck_replan")
                     is_planning = True
 
                 smoothness.record_from_habitat(
@@ -580,6 +738,30 @@ def main():
             monitor_called = monitor_called or (low_agent.call_count > monitor_calls_before)
             goal_after = list(global_goals)
             controller_state.last_goal = list(goal_after)
+            current_strategy_after = (
+                controller_state.current_strategy.target_region
+                if controller_state.current_strategy is not None
+                else None
+            )
+            pending_strategy_after = (
+                controller_state.pending_strategy.target_region
+                if controller_state.pending_strategy is not None
+                else None
+            )
+            strategy_switched = (
+                current_strategy_before is not None
+                and current_strategy_after != current_strategy_before
+            )
+            pending_created = (
+                pending_strategy_before is None and pending_strategy_after is not None
+            )
+            if (
+                pending_strategy_before is not None
+                and pending_strategy_after is None
+                and current_strategy_after == pending_strategy_before
+            ):
+                pending_promoted = True
+            goal_updated = goal_after != goal_before
 
             goal_maps = np.zeros((args.local_width, args.local_height))
             gx = int(np.clip(global_goals[0], 0, args.local_width - 1))
@@ -649,12 +831,20 @@ def main():
                     "pending_strategy": strategy_to_dict(controller_state.pending_strategy),
                     "planner_called": planner_called,
                     "planner_calls_this_step": high_planner.call_count - planner_calls_before,
+                    "planner_reasons": planner_reasons,
                     "monitor_called": monitor_called,
                     "monitor_calls_this_step": low_agent.call_count - monitor_calls_before,
                     "monitor_decision": monitor_decision,
                     "monitor_reason": monitor_reason,
                     "goal_before": goal_before,
                     "goal_after": goal_after,
+                    "goal_updated": goal_updated,
+                    "strategy_switched": strategy_switched,
+                    "pending_created": pending_created,
+                    "pending_promoted": pending_promoted,
+                    "controller_profile": args.controller_profile,
+                    "controller_monitor_policy": args.controller_monitor_policy,
+                    "controller_replan_policy": args.controller_replan_policy,
                     "visible_target_override": bool(agent.last_override_info.get("visible_target_override")),
                     "temp_goal_override": bool(agent.last_override_info.get("temp_goal_override")),
                     "stuck_goal_override": bool(agent.last_override_info.get("stuck_goal_override")),
@@ -687,19 +877,20 @@ def main():
         summary = {
             "run_id": args.run_id,
             "mode": args.mode,
+            "controller_profile": args.controller_profile,
+            "controller": controller_config_dict(args),
             "goal_type": args.goal_type,
             "num_episodes": len(total_success),
             "SR": float(np.mean(total_success)) if total_success else 0,
             "SPL": float(np.mean(total_spl)) if total_spl else 0,
         }
 
-        if args.mode == "smoothnav":
-            summary["avg_high_level_calls"] = float(np.mean(
-                [r["high_level_calls"] for r in episode_results]
-            )) if episode_results else 0
-            summary["avg_low_level_calls"] = float(np.mean(
-                [r["low_level_calls"] for r in episode_results]
-            )) if episode_results else 0
+        summary["avg_high_level_calls"] = float(np.mean(
+            [r["high_level_calls"] for r in episode_results]
+        )) if episode_results else 0
+        summary["avg_low_level_calls"] = float(np.mean(
+            [r["low_level_calls"] for r in episode_results]
+        )) if episode_results else 0
 
         if episode_smoothness:
             summary.update(
@@ -713,6 +904,8 @@ def main():
                     "avg_direction_reversals": float(np.mean([s.direction_reversals for s in episode_smoothness])),
                 }
             )
+
+        summary.update(compute_run_control_metrics(args.run_dir))
 
         log = f"\n{'=' * 60}\nFinal Results ({args.mode}):\n"
         for key, value in summary.items():

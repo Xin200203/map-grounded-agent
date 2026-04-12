@@ -9,6 +9,8 @@ import uuid
 from datetime import datetime
 from pathlib import Path
 
+from smoothnav.controller_config import controller_config_dict
+
 
 def _json_safe(value):
     if value is None or isinstance(value, (str, int, float, bool)):
@@ -165,6 +167,7 @@ def setup_run_environment(args, argv, prompt_versions):
             "api_key_env": getattr(args, "api_key_env", ""),
             "base_url_env": getattr(args, "base_url_env", ""),
         },
+        "controller": controller_config_dict(args),
     }
     _write_json(args.manifest_path, manifest)
 

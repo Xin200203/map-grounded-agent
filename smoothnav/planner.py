@@ -8,7 +8,6 @@ NOT frontier selection. Called 3-8 times per episode.
 import re
 import json
 import logging
-import numpy as np
 from typing import List, Optional, Tuple
 from dataclasses import dataclass, field
 
@@ -158,8 +157,8 @@ def resolve_bias_position(parsed: dict, graph, agent_pos: Tuple[int, int],
             if choice_lower in rn.caption.lower() and len(rn.nodes) > 0:
                 centers = [n.center for n in rn.nodes if n.center is not None]
                 if centers:
-                    cx = int(np.mean([c[0] for c in centers]))
-                    cy = int(np.mean([c[1] for c in centers]))
+                    cx = int(sum(c[0] for c in centers) / len(centers))
+                    cy = int(sum(c[1] for c in centers) / len(centers))
                     return (cx, cy)
 
     elif choice_type == 'direction':
@@ -172,8 +171,8 @@ def resolve_bias_position(parsed: dict, graph, agent_pos: Tuple[int, int],
         for dir_name, (dr, dc) in direction_offsets.items():
             if dir_name == choice_lower:
                 offset = map_size // 3
-                bx = int(np.clip(agent_pos[0] + dr * offset, 0, map_size - 1))
-                by = int(np.clip(agent_pos[1] + dc * offset, 0, map_size - 1))
+                bx = int(min(max(agent_pos[0] + dr * offset, 0), map_size - 1))
+                by = int(min(max(agent_pos[1] + dc * offset, 0), map_size - 1))
                 return (bx, by)
 
     return None

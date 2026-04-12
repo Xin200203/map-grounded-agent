@@ -61,6 +61,14 @@ class SetupRunEnvironmentTests(unittest.TestCase):
                 base_url_env="SMOOTHNAV_BASE_URL",
                 api_key="super-secret-key",
                 base_url="https://example.invalid/v1/",
+                controller_profile="smoothnav-full",
+                controller_enable_monitor=True,
+                controller_monitor_policy="llm",
+                controller_enable_prefetch=True,
+                controller_replan_policy="event",
+                controller_enable_stuck_replan=True,
+                controller_fixed_plan_interval_steps=40,
+                controller_prefetch_near_threshold=10.0,
             )
 
             with mock.patch(
@@ -87,6 +95,7 @@ class SetupRunEnvironmentTests(unittest.TestCase):
             self.assertEqual(manifest["mode"], "baseline")
             self.assertEqual(manifest["goal_type"], "text")
             self.assertEqual(manifest["api_env"]["api_key_env"], "SMOOTHNAV_API_KEY")
+            self.assertEqual(manifest["controller"]["profile"], "smoothnav-full")
 
             with open(configured.effective_config_path, "r", encoding="utf-8") as handle:
                 effective_config = json.load(handle)

@@ -7,7 +7,7 @@ from types import SimpleNamespace
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from smoothnav.low_level_agent import LowLevelAction, LowLevelAgent
+from smoothnav.low_level_agent import LowLevelAction, LowLevelAgent, RuleBasedMonitor
 
 
 class MockLLM:
@@ -111,6 +111,20 @@ class MonitorGen2Tests(unittest.TestCase):
         self.assertEqual(result.action, LowLevelAction.CONTINUE)
         self.assertEqual(result.reason, "parse_failure")
         self.assertTrue(trace.monitor_calls[0][1]["fallback_triggered"])
+
+    def test_rules_monitor_prefetches_when_near_frontier(self):
+        monitor = RuleBasedMonitor(prefetch_near_threshold=12.0)
+
+        result = monitor.evaluate(
+            strategy=self.strategy,
+            new_nodes=[MockNode("chair", (1, 2))],
+            dist_to_goal=5.0,
+            total_nodes=3,
+            graph=MockGraph([]),
+        )
+
+        self.assertEqual(result.action, LowLevelAction.PREFETCH)
+        self.assertEqual(result.reason, "rules_prefetch_near_frontier")
 
 
 if __name__ == "__main__":

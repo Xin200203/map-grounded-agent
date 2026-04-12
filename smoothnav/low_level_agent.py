@@ -17,6 +17,7 @@ from smoothnav.tracing import hash_text
 
 logger = logging.getLogger(__name__)
 LOW_LEVEL_PROMPT_SCHEMA_VERSION = "smoothnav_monitor_v1"
+RULE_MONITOR_SCHEMA_VERSION = "smoothnav_monitor_rules_v1"
 
 
 class LowLevelAction(IntEnum):
@@ -215,3 +216,74 @@ class LowLevelAgent:
             )
         except (json.JSONDecodeError, KeyError, TypeError):
             return None
+
+
+class RuleBasedMonitor:
+    """Deterministic low-level monitor for Phase 2 ablations."""
+
+    def __init__(self, prefetch_near_threshold: float = 10.0):
+        self.prefetch_near_threshold = float(prefetch_near_threshold)
+        self._call_count: int = 0
+
+    def reset(self):
+        self._call_count = 0
+
+    @property
+    def call_count(self) -> int:
+        return self._call_count
+
+    def evaluate(self, strategy, new_nodes: list, dist_to_goal: float,
+                 total_nodes: int, graph=None,
+                 episode_id: Optional[int] = None,
+                 step_idx: Optional[int] = None,
+                 trace_writer=None) -> LowLevelResult:
+        self._call_count += 1
+
+        new_captions = []
+        for node in new_nodes:
+            if hasattr(node, "caption") and node.caption:
+                new_captions.append(node.caption)
+
+        action = LowLevelAction.CONTINUE
+        reason = "rules_continue"
+        if dist_to_goal < self.prefetch_near_threshold:
+            action = LowLevelAction.PREFETCH
+            reason = "rules_prefetch_near_frontier"
+
+        result = LowLevelResult(action=action, reason=reason)
+        if trace_writer is not None and episode_id is not None:
+            trace_writer.record_monitor_call(
+                episode_id,
+                {
+                    "step_idx": step_idx,
+                    "schema_version": RULE_MONITOR_SCHEMA_VERSION,
+                    "prompt_hash": "",
+                    "raw_prompt": "",
+                    "raw_response": "",
+                    "parsed_result": {
+                        "action": result.action.name,
+                        "reason": result.reason,
+                        "adjust_anchor": result.adjust_anchor,
+                        "adjust_bias": result.adjust_bias,
+                    },
+                    "fallback_triggered": False,
+                    "llm_called": False,
+                    "rule_based": True,
+                    "strategy_target_region": strategy.target_region,
+                    "new_objects": new_captions,
+                    "dist_to_goal": int(dist_to_goal),
+                    "total_nodes": total_nodes,
+                },
+            )
+        return result
+
+
+class DisabledMonitor:
+    """Monitor placeholder used when the ablation disables monitoring entirely."""
+
+    def reset(self):
+        return None
+
+    @property
+    def call_count(self) -> int:
+        return 0
