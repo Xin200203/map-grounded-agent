@@ -1,0 +1,8 @@
+{
+  "env": {
+    "SMOOTHNAV_BASE_URL": "set-in-shell",
+    "SMOOTHNAV_API_KEY": "set-in-shell",
+    "CLAUDE_CODE_ATTRIBUTION_HEADER": "0"
+  },
+  "note": "Deprecated helper file. Real API settings must be provided via environment variables."
+}
