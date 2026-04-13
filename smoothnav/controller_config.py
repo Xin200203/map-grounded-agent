@@ -91,26 +91,26 @@ def controller_config_dict(args) -> dict:
 
 
 def resolve_controller_config(args):
+    controller_cli_overrides = set(getattr(args, "_controller_cli_overrides", []))
     explicit_profile = getattr(args, "controller_profile", None)
     profile = explicit_profile or infer_controller_profile(getattr(args, "mode", "smoothnav"))
     if profile not in CONTROLLER_PROFILE_DEFAULTS:
         raise ValueError(f"Unknown controller profile: {profile}")
 
-    explicit_values = {
-        "controller_enable_monitor": getattr(args, "controller_enable_monitor", None),
-        "controller_monitor_policy": getattr(args, "controller_monitor_policy", None),
-        "controller_enable_prefetch": getattr(args, "controller_enable_prefetch", None),
-        "controller_replan_policy": getattr(args, "controller_replan_policy", None),
-        "controller_enable_stuck_replan": getattr(
-            args, "controller_enable_stuck_replan", None
-        ),
-        "controller_fixed_plan_interval_steps": getattr(
-            args, "controller_fixed_plan_interval_steps", None
-        ),
-        "controller_prefetch_near_threshold": getattr(
-            args, "controller_prefetch_near_threshold", None
-        ),
-    }
+    explicit_values = {}
+    for key in [
+        "controller_enable_monitor",
+        "controller_monitor_policy",
+        "controller_enable_prefetch",
+        "controller_replan_policy",
+        "controller_enable_stuck_replan",
+        "controller_fixed_plan_interval_steps",
+        "controller_prefetch_near_threshold",
+    ]:
+        if "controller_profile" in controller_cli_overrides and key not in controller_cli_overrides:
+            explicit_values[key] = None
+        else:
+            explicit_values[key] = getattr(args, key, None)
 
     defaults = CONTROLLER_PROFILE_DEFAULTS[profile]
     args.mode = defaults["mode"]

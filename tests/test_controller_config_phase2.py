@@ -43,12 +43,36 @@ class ControllerConfigPhase2Tests(unittest.TestCase):
             controller_enable_stuck_replan=None,
             controller_fixed_plan_interval_steps=None,
             controller_prefetch_near_threshold=None,
+            _controller_cli_overrides=["controller_profile"],
         )
 
         resolved = resolve_controller_config(args)
 
         self.assertEqual(resolved.mode, "smoothnav")
         self.assertEqual(resolved.controller_profile, "baseline-periodic")
+        self.assertFalse(resolved.controller_enable_monitor)
+        self.assertEqual(resolved.controller_monitor_policy, "off")
+        self.assertFalse(resolved.controller_enable_prefetch)
+        self.assertEqual(resolved.controller_replan_policy, "fixed_interval")
+        self.assertFalse(resolved.controller_enable_stuck_replan)
+
+    def test_cli_profile_overrides_yaml_style_controller_defaults(self):
+        args = SimpleNamespace(
+            mode="smoothnav",
+            num_local_steps=40,
+            controller_profile="baseline-periodic",
+            controller_enable_monitor=True,
+            controller_monitor_policy="llm",
+            controller_enable_prefetch=True,
+            controller_replan_policy="event",
+            controller_enable_stuck_replan=True,
+            controller_fixed_plan_interval_steps=None,
+            controller_prefetch_near_threshold=None,
+            _controller_cli_overrides=["controller_profile"],
+        )
+
+        resolved = resolve_controller_config(args)
+
         self.assertFalse(resolved.controller_enable_monitor)
         self.assertEqual(resolved.controller_monitor_policy, "off")
         self.assertFalse(resolved.controller_enable_prefetch)

@@ -150,6 +150,11 @@ def get_config():
         default=None,
     )
     parsed_args = parser.parse_args()
+    controller_cli_overrides = {
+        key
+        for key, value in vars(parsed_args).items()
+        if key.startswith("controller_") and value is not None
+    }
 
     with open(parsed_args.config_file, "r") as file:
         config = yaml.safe_load(file)
@@ -167,6 +172,7 @@ def get_config():
         else:
             args_dict[key] = value
     args = SimpleNamespace(**args_dict)
+    args._controller_cli_overrides = sorted(controller_cli_overrides)
 
     args.is_debugging = sys.gettrace() is not None
     args.map_size = args.map_size_cm // args.map_resolution
