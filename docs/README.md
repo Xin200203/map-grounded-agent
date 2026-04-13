@@ -18,7 +18,8 @@ docs/
 ├── README.md
 ├── implementation/
 │   ├── architecture_design.md
-│   └── implementation_audit_20260408.md
+│   ├── implementation_audit_20260408.md
+│   └── llm_gateway_protocol_notes_20260413.md
 ├── planning/
 │   ├── project_state_briefing_20260408.md
 │   └── smoothnav_implementation_master_plan_20260412.md
@@ -39,3 +40,10 @@ docs/
 - 两者都属于第一代方案时期的材料，核心假设依赖 custom executor / override-style control。
 - 当前项目已经明确转向 “event-driven semantic replanning + preserved UniGoal executor”。
 - 历史结论里仍有价值的部分，已经在现存的 briefing / audit / paper-facing 文档中被吸收和转述。
+
+新增的重要实现说明：
+
+- `implementation/llm_gateway_protocol_notes_20260413.md`
+  - 记录 Clauddy 下 Claude / GPT / Codex 的协议差异
+  - 说明为什么当前项目新增了 `api_provider` / `api_protocol`
+  - 给出后续排障顺序，避免重复掉进 `chat.completions` 兼容性误判

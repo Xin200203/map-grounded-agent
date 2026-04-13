@@ -19,6 +19,8 @@ class ResolveApiConfigTests(unittest.TestCase):
         args = SimpleNamespace(
             api_key_env="TEST_SMOOTHNAV_API_KEY",
             base_url_env="TEST_SMOOTHNAV_BASE_URL",
+            api_provider="openai",
+            api_protocol="openai-responses",
         )
 
         with self.assertRaisesRegex(RuntimeError, "TEST_SMOOTHNAV_API_KEY"):
@@ -36,12 +38,54 @@ class ResolveApiConfigTests(unittest.TestCase):
         args = SimpleNamespace(
             api_key_env="TEST_SMOOTHNAV_API_KEY",
             base_url_env="TEST_SMOOTHNAV_BASE_URL",
+            api_provider="openai",
+            api_protocol="openai-responses",
         )
 
         resolved = resolve_api_config(args)
 
         self.assertEqual(resolved.api_key, "top-secret")
         self.assertEqual(resolved.base_url, "https://example.invalid/v1/")
+        self.assertEqual(resolved.api_provider, "openai")
+        self.assertEqual(resolved.api_protocol, "openai-responses")
+
+    @mock.patch.dict(
+        os.environ,
+        {
+            "TEST_SMOOTHNAV_API_KEY": "top-secret",
+            "TEST_SMOOTHNAV_BASE_URL": "https://example.invalid",
+        },
+        clear=True,
+    )
+    def test_defaults_to_anthropic_messages_when_unspecified(self):
+        args = SimpleNamespace(
+            api_key_env="TEST_SMOOTHNAV_API_KEY",
+            base_url_env="TEST_SMOOTHNAV_BASE_URL",
+        )
+
+        resolved = resolve_api_config(args)
+
+        self.assertEqual(resolved.api_provider, "anthropic")
+        self.assertEqual(resolved.api_protocol, "anthropic-messages")
+
+    @mock.patch.dict(
+        os.environ,
+        {
+            "TEST_SMOOTHNAV_API_KEY": "top-secret",
+            "TEST_SMOOTHNAV_BASE_URL": "https://example.invalid/v1/",
+        },
+        clear=True,
+    )
+    def test_provider_protocol_mismatch_raises(self):
+        args = SimpleNamespace(
+            api_key_env="TEST_SMOOTHNAV_API_KEY",
+            base_url_env="TEST_SMOOTHNAV_BASE_URL",
+            api_provider="anthropic",
+            api_protocol="openai-responses",
+        )
+
+        with self.assertRaisesRegex(RuntimeError, "mismatch"):
+            resolve_api_config(args)
 
 
 class SetupRunEnvironmentTests(unittest.TestCase):
@@ -59,6 +103,8 @@ class SetupRunEnvironmentTests(unittest.TestCase):
                 vlm_model="vision-model",
                 api_key_env="SMOOTHNAV_API_KEY",
                 base_url_env="SMOOTHNAV_BASE_URL",
+                api_provider="anthropic",
+                api_protocol="anthropic-messages",
                 api_key="super-secret-key",
                 base_url="https://example.invalid/v1/",
                 controller_profile="smoothnav-full",
@@ -95,6 +141,8 @@ class SetupRunEnvironmentTests(unittest.TestCase):
             self.assertEqual(manifest["mode"], "baseline")
             self.assertEqual(manifest["goal_type"], "text")
             self.assertEqual(manifest["api_env"]["api_key_env"], "SMOOTHNAV_API_KEY")
+            self.assertEqual(manifest["api_env"]["provider"], "anthropic")
+            self.assertEqual(manifest["api_env"]["protocol"], "anthropic-messages")
             self.assertEqual(manifest["controller"]["profile"], "smoothnav-full")
 
             with open(configured.effective_config_path, "r", encoding="utf-8") as handle:

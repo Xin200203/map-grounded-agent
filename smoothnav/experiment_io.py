@@ -11,6 +11,22 @@ from pathlib import Path
 
 from smoothnav.controller_config import controller_config_dict
 
+SUPPORTED_API_PROVIDERS = ("anthropic", "openai")
+SUPPORTED_API_PROTOCOLS = (
+    "anthropic-messages",
+    "openai-responses",
+    "openai-chat-completions",
+)
+_DEFAULT_PROTOCOL_BY_PROVIDER = {
+    "anthropic": "anthropic-messages",
+    "openai": "openai-responses",
+}
+_PROVIDER_BY_PROTOCOL = {
+    "anthropic-messages": "anthropic",
+    "openai-responses": "openai",
+    "openai-chat-completions": "openai",
+}
+
 
 def _json_safe(value):
     if value is None or isinstance(value, (str, int, float, bool)):
@@ -59,6 +75,10 @@ def get_repo_root():
 
 
 def resolve_api_config(args):
+    api_provider = getattr(args, "api_provider", "") or ""
+    api_protocol = getattr(args, "api_protocol", "") or ""
+    api_provider, api_protocol = _resolve_provider_protocol(api_provider, api_protocol)
+
     api_key_env = getattr(args, "api_key_env", "SMOOTHNAV_API_KEY")
     base_url_env = getattr(args, "base_url_env", "SMOOTHNAV_BASE_URL")
 
@@ -76,9 +96,45 @@ def resolve_api_config(args):
 
     args.api_key = api_key
     args.base_url = base_url
+    args.api_provider = api_provider
+    args.api_protocol = api_protocol
     args.api_key_env = api_key_env
     args.base_url_env = base_url_env
     return args
+
+
+def _resolve_provider_protocol(api_provider, api_protocol):
+    provider = api_provider.strip().lower()
+    protocol = api_protocol.strip().lower()
+
+    if not provider and not protocol:
+        return "anthropic", "anthropic-messages"
+
+    if provider and provider not in SUPPORTED_API_PROVIDERS:
+        raise RuntimeError(
+            f"Unsupported API provider '{api_provider}'. "
+            f"Expected one of: {', '.join(SUPPORTED_API_PROVIDERS)}."
+        )
+
+    if protocol and protocol not in SUPPORTED_API_PROTOCOLS:
+        raise RuntimeError(
+            f"Unsupported API protocol '{api_protocol}'. "
+            f"Expected one of: {', '.join(SUPPORTED_API_PROTOCOLS)}."
+        )
+
+    if not provider:
+        provider = _PROVIDER_BY_PROTOCOL[protocol]
+    if not protocol:
+        protocol = _DEFAULT_PROTOCOL_BY_PROVIDER[provider]
+
+    expected_provider = _PROVIDER_BY_PROTOCOL[protocol]
+    if provider != expected_provider:
+        raise RuntimeError(
+            f"API provider/protocol mismatch: provider='{provider}' "
+            f"is incompatible with protocol='{protocol}'."
+        )
+
+    return provider, protocol
 
 
 def get_git_hash(repo_root):
@@ -166,6 +222,8 @@ def setup_run_environment(args, argv, prompt_versions):
         "api_env": {
             "api_key_env": getattr(args, "api_key_env", ""),
             "base_url_env": getattr(args, "base_url_env", ""),
+            "provider": getattr(args, "api_provider", ""),
+            "protocol": getattr(args, "api_protocol", ""),
         },
         "controller": controller_config_dict(args),
     }

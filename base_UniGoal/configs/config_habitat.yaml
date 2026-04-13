@@ -70,8 +70,10 @@ map_resolution: 5
 
 # LLM and VLM
 llm_model: "claude-sonnet-4-5-20250929"       # strong: planning, graph matching, instruction decomposition
-llm_model_fast: "claude-haiku-4-5"             # fast: captions, edges, room prediction
-vlm_model: "claude-haiku-4-5"                  # vision: object captioning (frequent)
+llm_model_fast: "claude-haiku-4-5-20251001"    # fast: captions, edges, room prediction
+vlm_model: "claude-haiku-4-5-20251001"         # vision: object captioning (frequent)
+api_provider: "anthropic"                      # anthropic -> /v1/messages, openai -> /v1/responses
+api_protocol: "anthropic-messages"             # claude via Clauddy should use anthropic-messages
 api_key: ""
 base_url: ""
 api_key_env: "SMOOTHNAV_API_KEY"

@@ -66,6 +66,18 @@ def get_config():
     parser.add_argument("--results-root", default="", type=str,
                         help="optional override for results root directory")
     parser.add_argument(
+        "--api-provider",
+        dest="api_provider",
+        default=None,
+        choices=["anthropic", "openai"],
+    )
+    parser.add_argument(
+        "--api-protocol",
+        dest="api_protocol",
+        default=None,
+        choices=["anthropic-messages", "openai-responses", "openai-chat-completions"],
+    )
+    parser.add_argument(
         "--controller-profile",
         dest="controller_profile",
         default=None,
@@ -242,10 +254,22 @@ def main():
     envs = construct_envs(args)
     agent = UniGoal_Agent(args, envs)
 
-    llm_sonnet = LLM(args.base_url, args.api_key, args.llm_model)
+    llm_sonnet = LLM(
+        args.base_url,
+        args.api_key,
+        args.llm_model,
+        api_provider=args.api_provider,
+        api_protocol=args.api_protocol,
+    )
     high_planner = HighLevelPlanner(llm_fn=llm_sonnet)
     if args.controller_monitor_policy == "llm":
-        llm_haiku = LLM(args.base_url, args.api_key, args.llm_model_fast)
+        llm_haiku = LLM(
+            args.base_url,
+            args.api_key,
+            args.llm_model_fast,
+            api_provider=args.api_provider,
+            api_protocol=args.api_protocol,
+        )
         low_agent = LowLevelAgent(llm_fn=llm_haiku)
     elif args.controller_monitor_policy == "rules":
         low_agent = RuleBasedMonitor(

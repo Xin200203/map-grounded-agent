@@ -42,7 +42,13 @@ class UniGoal_Agent():
 
 
         self.sem_pred = SemanticPredMaskRCNN(args)
-        self.llm = LLM(self.args.base_url, self.args.api_key, self.args.llm_model)
+        self.llm = LLM(
+            self.args.base_url,
+            self.args.api_key,
+            self.args.llm_model,
+            api_provider=getattr(self.args, "api_provider", ""),
+            api_protocol=getattr(self.args, "api_protocol", ""),
+        )
 
         self.selem = skimage.morphology.disk(3)
 

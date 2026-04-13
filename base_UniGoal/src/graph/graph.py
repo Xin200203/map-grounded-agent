@@ -245,8 +245,20 @@ Example output format if no relation:
 Please provide the relationship you can determine from the image.
         """
         self.grounded_sam = self.get_grounded_sam(self.device)
-        self.llm = LLM(self.args.base_url, self.args.api_key, self.args.llm_model)
-        self.vlm = VLM(self.args.base_url, self.args.api_key, self.args.vlm_model)
+        self.llm = LLM(
+            self.args.base_url,
+            self.args.api_key,
+            self.args.llm_model,
+            api_provider=getattr(self.args, "api_provider", ""),
+            api_protocol=getattr(self.args, "api_protocol", ""),
+        )
+        self.vlm = VLM(
+            self.args.base_url,
+            self.args.api_key,
+            self.args.vlm_model,
+            api_provider=getattr(self.args, "api_provider", ""),
+            api_protocol=getattr(self.args, "api_protocol", ""),
+        )
         self.graphbuilder = GraphBuilder(self.llm)
         self.goalgraphdecomposer = GoalGraphDecomposer(self.llm)
         self.extractor = DISK(max_num_keypoints=2048).eval().to(self.device)
