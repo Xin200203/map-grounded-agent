@@ -6,6 +6,8 @@ import urllib.error
 import urllib.request
 from io import BytesIO
 
+import httpx
+
 try:
     from anthropic import Anthropic
 except ImportError:  # pragma: no cover - exercised via runtime fallback.
@@ -159,6 +161,26 @@ def _post_json(endpoint, payload, headers):
         ) from exc
 
 
+def _post_json_httpx(endpoint, payload, headers):
+    try:
+        with httpx.Client(timeout=_REQUEST_TIMEOUT_SECONDS) as client:
+            response = client.post(endpoint, headers=headers, json=payload)
+    except httpx.HTTPError as exc:
+        raise RuntimeError(f"Request to {endpoint} failed: {exc}") from exc
+
+    body = response.text
+    if response.status_code >= 400:
+        excerpt = " ".join(body.split())[:400]
+        raise RuntimeError(f"HTTP {response.status_code} from {endpoint}: {excerpt}")
+
+    try:
+        return json.loads(body)
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(
+            f"Non-JSON response from {endpoint}: {' '.join(body.split())[:400]}"
+        ) from exc
+
+
 def _build_anthropic_message_payload(prompt, model, max_tokens, image_str=None):
     content = [{"type": "text", "text": prompt}]
     if image_str:
@@ -265,18 +287,37 @@ def _extract_text(protocol, response):
     raise RuntimeError(f"Unsupported API protocol '{protocol}'.")
 
 
+def _anthropic_httpx_headers(api_key, base_url):
+    if Anthropic is not None:
+        try:
+            client = Anthropic(
+                api_key=api_key,
+                base_url=(base_url or "").rstrip("/"),
+            )
+            headers = dict(client.default_headers)
+            headers.update(client.auth_headers)
+            return headers
+        except Exception:
+            pass
+
+    headers = _anthropic_headers(api_key, use_auth_header=False)
+    headers.setdefault("User-Agent", "SmoothNav/anthropic-httpx")
+    headers.setdefault("x-stainless-lang", "python")
+    headers.setdefault("x-stainless-package-version", "fallback")
+    return headers
+
+
 def _call_model(base_url, api_key, model, provider, protocol, prompt, max_tokens, image_str=None):
     del provider  # provider is validated before this point and carried for observability.
 
     if protocol == "anthropic-messages":
-        if Anthropic is None:
-            raise RuntimeError(
-                "anthropic package is required for anthropic-messages protocol but is not installed."
-            )
-
+        endpoint = _endpoint_for_protocol(base_url, protocol)
         payload = _build_anthropic_message_payload(prompt, model, max_tokens, image_str)
-        client = Anthropic(api_key=api_key, base_url=(base_url or "").rstrip("/"))
-        response = client.messages.create(**payload)
+        response = _post_json_httpx(
+            endpoint,
+            payload,
+            _anthropic_httpx_headers(api_key, base_url),
+        )
         return _extract_text(protocol, response)
 
     endpoint = _endpoint_for_protocol(base_url, protocol)

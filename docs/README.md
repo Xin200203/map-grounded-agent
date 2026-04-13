@@ -47,3 +47,4 @@ docs/
   - 记录 Clauddy 下 Claude / GPT / Codex 的协议差异
   - 说明为什么当前项目新增了 `api_provider` / `api_protocol`
   - 给出后续排障顺序，避免重复掉进 `chat.completions` 兼容性误判
+  - 补充当前真实跑通实验所使用的工程细节，包括 `httpx + Anthropic headers`、本地凭据文件和 conda 覆盖顺序

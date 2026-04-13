@@ -183,9 +183,102 @@ export SMOOTHNAV_API_KEY="..."
 
 因此当前项目的工程策略是：
 
-- `anthropic-messages` 优先走官方 `anthropic` SDK
+- `anthropic-messages` 在工程实现上优先复用 Anthropic 风格 headers，但实际请求链路改为 `httpx -> https://clauddy.com/v1/messages`
 - `openai-responses` 继续保留为 OpenAI 兼容路线
 - 实验前必须做一次最小文本返回验证，不能只测连通性
+
+---
+
+## 当前工程实现细节（已用于真实实验）
+
+### 1. `anthropic-messages` 的稳定实现
+
+当前 [llm.py](/Users/xin/Code/research/SmoothNav/base_UniGoal/src/utils/llm.py) 中，`anthropic-messages` 不再走：
+
+- 旧版手写 `urllib` 请求
+- 服务器上的旧版 `anthropic` SDK `messages.create(...)`
+
+当前稳定路径是：
+
+1. 用项目配置解析出：
+   - `provider = anthropic`
+   - `protocol = anthropic-messages`
+   - `base_url = https://clauddy.com`
+2. 通过 `_endpoint_for_protocol(...)` 解析成：
+   - `https://clauddy.com/v1/messages`
+3. 用 `Anthropic(...)` client 生成与 SDK 一致的：
+   - `default_headers`
+   - `auth_headers`
+4. 用 `httpx.Client(...).post(...)` 发送 JSON 请求
+
+这样做的原因很直接：
+
+- Clauddy 对纯 `urllib` 裸请求会返回 `403 / error code: 1010`
+- 服务器上的 `anthropic==0.72.0` 会把 `base_url=https://clauddy.com` 处理成 `https://clauddy.com/v1/`
+- 再叠加 `messages.create()` 内部固定的 `"/v1/messages"`，最终就会打成错误的 `/v1/v1/messages`
+
+所以当前最稳的组合不是“完全手写”，也不是“完全依赖旧 SDK”，而是：
+
+**Anthropic 风格 headers + `httpx` 直接请求 Clauddy 的正确 endpoint。**
+
+### 2. 哪些路径已经验证过
+
+已经实际验证过的路径如下：
+
+- 本地 `Claude Code` 自带 token + Anthropic SDK：可返回正常文本
+- 本地 `Anthropic headers + httpx + /v1/messages`：可返回正常文本
+- 184 服务器 `Anthropic headers + httpx + /v1/messages`：可返回正常文本
+- 184 服务器 `baseline text 5`：已进入真实 episode 采样并持续写 `step_traces`
+
+已知不稳定或错误的路径：
+
+- `urllib` 直接 POST Clauddy `/v1/messages`：被边缘层拦成 `1010`
+- 服务器旧版 `anthropic==0.72.0` 直接 `messages.create()`：会出现 `/v1/v1/messages`
+- 某些 `sk-...` token 虽然返回 `200`，但可能：
+  - 响应模型被映射成别的模型
+  - `content` 为空
+
+因此工程上必须把“`HTTP 200`”和“真的有有效文本输出”分开看。
+
+### 3. 当前推荐的运行顺序
+
+如果使用仓库内的 `run.sh`，当前推荐方式是：
+
+1. 激活 conda 环境
+2. 进入项目根目录
+3. 让 `run.sh` 自动读取 git 忽略的本地凭据文件 `.local/clauddy.env.sh`
+4. 再启动实验
+
+`run.sh` 现在会自动 source：
+
+```bash
+<repo>/.local/clauddy.env.sh
+```
+
+这个文件应至少包含：
+
+```bash
+export SMOOTHNAV_BASE_URL="https://clauddy.com"
+export SMOOTHNAV_API_KEY="..."
+```
+
+文件是**本地明文、但 git 忽略**的，适合实验机和开发机长期复用。
+
+### 4. 为什么要让本地凭据文件覆盖环境变量
+
+这次实验里已经遇到一个真实坑：
+
+- `conda activate unigoal` 可能会通过 `activate.d` 注入旧的 `SMOOTHNAV_API_KEY`
+- 如果后面不再覆盖，运行时就会悄悄回到错误 token
+
+因此当前设计是：
+
+- `run.sh` 在启动前再 source 一次本地 `.local/clauddy.env.sh`
+- 让 repo-local 凭据文件覆盖 shell/conda 中的旧值
+
+这一步是为了保证：
+
+**真正执行实验时使用的是当前确认可用的 Clauddy 凭据，而不是历史遗留环境变量。**
 
 ---
 

@@ -23,3 +23,5 @@ base_UniGoal/third_party/habitat-lab/**/__pycache__/
 smoothnav/__pycache__/
 tests/__pycache__/
 configs/__pycache__/
+
+.local/

@@ -9,6 +9,13 @@ export __EGL_VENDOR_LIBRARY_FILENAMES="${__EGL_VENDOR_LIBRARY_FILENAMES:-/usr/sh
 export CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0}"
 export PYTHONPATH="${ROOT_DIR}:${PYTHONPATH:-}"
 PYTHON_BIN="${PYTHON_BIN:-python3}"
+LOCAL_CLAUDDY_ENV="${ROOT_DIR}/.local/clauddy.env.sh"
+
+if [[ -f "${LOCAL_CLAUDDY_ENV}" ]]; then
+    # Prefer repo-local secrets so experiments can override stale shell/conda env.
+    # shellcheck source=/dev/null
+    source "${LOCAL_CLAUDDY_ENV}"
+fi
 
 MODE=${1:-baseline}
 GOAL_TYPE=${2:-ins-image}
