@@ -79,6 +79,22 @@ class PlannerGen2Tests(unittest.TestCase):
         self.assertEqual(planner.call_count, 1)
         self.assertTrue(trace.planner_calls[0][1]["fallback_triggered"])
 
+    def test_empty_response_short_circuits_extra_planner_retries(self):
+        llm = MockLLM([""])
+        planner = HighLevelPlanner(llm_fn=llm)
+
+        strategy = planner.plan(
+            scene_text="No objects observed yet.",
+            goal_description="mug",
+            explored_regions=[],
+            graph=MockGraph(),
+            agent_pos=(40, 40),
+            map_size=90,
+        )
+
+        self.assertEqual(strategy.target_region, "unexplored north")
+        self.assertEqual(len(llm.calls), 1)
+
     def test_plan_resolves_object_choice_to_object_center(self):
         llm = MockLLM(
             ['{"choice_type":"object","choice_id":"kitchen sink","reasoning":"target likely nearby"}']

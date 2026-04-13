@@ -141,6 +141,10 @@ class LowLevelAgent:
             try:
                 response = self.llm(prompt=prompt)
                 raw_response = response
+                if not str(response).strip():
+                    error_message = "empty_response"
+                    logger.warning("LowLevelAgent received empty response; using fallback.")
+                    break
                 result = self._parse(response)
                 if result:
                     break

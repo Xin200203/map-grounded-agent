@@ -112,6 +112,22 @@ class MonitorGen2Tests(unittest.TestCase):
         self.assertEqual(result.reason, "parse_failure")
         self.assertTrue(trace.monitor_calls[0][1]["fallback_triggered"])
 
+    def test_empty_response_short_circuits_extra_monitor_retries(self):
+        llm = MockLLM([""])
+        agent = LowLevelAgent(llm_fn=llm)
+
+        result = agent.evaluate(
+            strategy=self.strategy,
+            new_nodes=[MockNode("chair", (1, 2))],
+            dist_to_goal=5.0,
+            total_nodes=1,
+            graph=MockGraph([]),
+        )
+
+        self.assertEqual(result.action, LowLevelAction.CONTINUE)
+        self.assertEqual(result.reason, "parse_failure")
+        self.assertEqual(len(llm.calls), 1)
+
     def test_rules_monitor_prefetches_when_near_frontier(self):
         monitor = RuleBasedMonitor(prefetch_near_threshold=12.0)
 

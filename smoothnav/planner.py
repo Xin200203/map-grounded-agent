@@ -234,6 +234,10 @@ class HighLevelPlanner:
             try:
                 response = self.llm(prompt=prompt)
                 raw_response = response
+                if not str(response).strip():
+                    error_message = "empty_response"
+                    logger.warning("HighLevelPlanner received empty response; using fallback.")
+                    break
                 parsed = self._parse(response)
                 if parsed:
                     break

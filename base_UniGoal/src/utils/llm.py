@@ -1,6 +1,7 @@
 import base64
 import json
 import logging
+import os
 import time
 import urllib.error
 import urllib.request
@@ -34,10 +35,47 @@ _PROVIDER_BY_PROTOCOL = {
     "openai-chat-completions": "openai",
 }
 
-_MAX_RETRIES = 3
-_RETRY_DELAYS = [2, 5, 10]
 _REQUEST_TIMEOUT_SECONDS = 120
 _DEFAULT_MAX_TOKENS = 1024
+
+
+def _int_from_env(name, default):
+    raw = os.environ.get(name, "").strip()
+    if not raw:
+        return default
+    try:
+        value = int(raw)
+    except ValueError:
+        logger.warning("Invalid %s=%r; falling back to %s.", name, raw, default)
+        return default
+    return max(1, value)
+
+
+def _retry_delays_from_env(name, default):
+    raw = os.environ.get(name, "").strip()
+    if not raw:
+        return list(default)
+
+    delays = []
+    for piece in raw.split(","):
+        piece = piece.strip()
+        if not piece:
+            continue
+        try:
+            value = float(piece)
+        except ValueError:
+            logger.warning("Invalid retry delay %r in %s=%r; using %s.", piece, name, raw, default)
+            return list(default)
+        delays.append(max(0.0, value))
+
+    if not delays:
+        logger.warning("Empty %s=%r; falling back to %s.", name, raw, default)
+        return list(default)
+    return delays
+
+
+_MAX_RETRIES = _int_from_env("SMOOTHNAV_LLM_MAX_RETRIES", 3)
+_RETRY_DELAYS = _retry_delays_from_env("SMOOTHNAV_LLM_RETRY_DELAYS", [2, 5, 10])
 
 
 def resolve_provider_protocol(api_provider="", api_protocol=""):

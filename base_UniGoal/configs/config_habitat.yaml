@@ -4,13 +4,13 @@ num_processes: 1
 num_eval_episodes: 1000
 cuda: true
 sim_gpu_id: 1
-log_interval: 10
+log_interval: 50
 save_interval: 1
 dump_location: "./outputs/experiments/"
 experiment_id: "experiment_0"
 results_root: "results"
 save_periodic: 50000
-visualize: 1
+visualize: 0
 environment: "habitat"
 env_frame_width: 480
 env_frame_height: 640

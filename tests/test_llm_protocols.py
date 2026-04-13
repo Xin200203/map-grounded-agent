@@ -12,6 +12,8 @@ from src.utils.llm import (  # noqa: E402
     _endpoint_for_protocol,
     _extract_text_from_anthropic_response,
     _extract_text_from_openai_responses,
+    _retry_delays_from_env,
+    _int_from_env,
     resolve_provider_protocol,
 )
 
@@ -30,6 +32,33 @@ class ResolveProviderProtocolTests(unittest.TestCase):
     def test_rejects_provider_protocol_mismatch(self):
         with self.assertRaisesRegex(RuntimeError, "mismatch"):
             resolve_provider_protocol("anthropic", "openai-responses")
+
+
+class RetryConfigTests(unittest.TestCase):
+    def test_retry_count_reads_env_override(self):
+        original = os.environ.get("SMOOTHNAV_TEST_RETRY_COUNT")
+        try:
+            os.environ["SMOOTHNAV_TEST_RETRY_COUNT"] = "2"
+            self.assertEqual(_int_from_env("SMOOTHNAV_TEST_RETRY_COUNT", 3), 2)
+        finally:
+            if original is None:
+                os.environ.pop("SMOOTHNAV_TEST_RETRY_COUNT", None)
+            else:
+                os.environ["SMOOTHNAV_TEST_RETRY_COUNT"] = original
+
+    def test_retry_delays_reads_csv_env_override(self):
+        original = os.environ.get("SMOOTHNAV_TEST_RETRY_DELAYS")
+        try:
+            os.environ["SMOOTHNAV_TEST_RETRY_DELAYS"] = "1, 3, 5"
+            self.assertEqual(
+                _retry_delays_from_env("SMOOTHNAV_TEST_RETRY_DELAYS", [2, 5, 10]),
+                [1.0, 3.0, 5.0],
+            )
+        finally:
+            if original is None:
+                os.environ.pop("SMOOTHNAV_TEST_RETRY_DELAYS", None)
+            else:
+                os.environ["SMOOTHNAV_TEST_RETRY_DELAYS"] = original
 
 
 class EndpointResolutionTests(unittest.TestCase):

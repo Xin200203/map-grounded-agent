@@ -48,3 +48,4 @@ docs/
   - 说明为什么当前项目新增了 `api_provider` / `api_protocol`
   - 给出后续排障顺序，避免重复掉进 `chat.completions` 兼容性误判
   - 补充当前真实跑通实验所使用的工程细节，包括 `httpx + Anthropic headers`、本地凭据文件和 conda 覆盖顺序
+  - 记录 184 服务器上的实验加速经验，包括更快的 retry profile、空响应短路 fallback 和轻量化默认运行配置

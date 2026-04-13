@@ -238,6 +238,66 @@ export SMOOTHNAV_API_KEY="..."
   - 响应模型被映射成别的模型
   - `content` 为空
 
+---
+
+## 2026-04-13 实验加速补充
+
+在 184 服务器上进入真实 `smoothnav text 5` 运行后，又确认了一类和“协议正确”不同层的问题：
+
+- GPU 不是瓶颈
+- CPU 也不是主要瓶颈
+- 真正拖慢实验的是 Clauddy 偶发返回：
+  - `HTTP 400 Claude service overloaded`
+  - `HTTP 503 No available accounts`
+
+如果按最初实现直接运行，慢点会被放大两次：
+
+1. `src/utils/llm.py` 会先做多次 API retry/backoff。
+2. `planner.py` / `low_level_agent.py` 在拿到空响应后，还会把整轮 LLM 调用再次重做。
+
+这会把一次短暂的服务抖动放大成几十秒。
+
+### 当前采用的加速策略
+
+为了在不明显改变成功路径语义的前提下提升实验吞吐，当前工程采用了以下策略：
+
+1. `run.sh` 默认注入更快的 LLM retry profile：
+
+```bash
+export SMOOTHNAV_LLM_MAX_RETRIES=2
+export SMOOTHNAV_LLM_RETRY_DELAYS=1,3
+```
+
+说明：
+
+- 仍保留 retry，避免把偶发抖动直接当成失败
+- 但把一次失败请求的等待时间从原先的 `2+5+10` 秒，收缩到 `1+3` 秒
+- 如果需要恢复更保守策略，可以在 shell 中显式覆盖这两个环境变量
+
+2. `HighLevelPlanner` 和 `LowLevelAgent` 在收到空响应时不再做额外的二次放大 retry：
+
+- 空响应意味着底层 LLM wrapper 已经完成了自己的 retry 并最终失败
+- 此时直接走 fallback 更合理
+- 对真正“有内容但 JSON 解析失败”的情况，仍然保留原本的 parser retry 语义
+
+3. 默认实验配置改为更轻量：
+
+- `visualize: 0`
+- `log_interval: 50`
+
+这样可以减少不必要的图像可视化和频繁日志 I/O。
+
+### 当前建议
+
+后续如果再次遇到“实验跑得很慢”，排查优先级建议如下：
+
+1. 先看日志里是否大量出现 `400 overloaded` / `503 no available accounts`
+2. 再看当前 `SMOOTHNAV_LLM_MAX_RETRIES` 和 `SMOOTHNAV_LLM_RETRY_DELAYS`
+3. 再看是否误开了 `visualize`
+4. 最后才看 GPU 利用率
+
+因为在当前这条实验链路里，最常见的慢点并不是算力，而是上游服务可用性和失败路径放大。
+
 因此工程上必须把“`HTTP 200`”和“真的有有效文本输出”分开看。
 
 ### 3. 当前推荐的运行顺序

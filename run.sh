@@ -8,6 +8,8 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export __EGL_VENDOR_LIBRARY_FILENAMES="${__EGL_VENDOR_LIBRARY_FILENAMES:-/usr/share/glvnd/egl_vendor.d/10_nvidia.json}"
 export CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0}"
 export PYTHONPATH="${ROOT_DIR}:${PYTHONPATH:-}"
+export SMOOTHNAV_LLM_MAX_RETRIES="${SMOOTHNAV_LLM_MAX_RETRIES:-2}"
+export SMOOTHNAV_LLM_RETRY_DELAYS="${SMOOTHNAV_LLM_RETRY_DELAYS:-1,3}"
 PYTHON_BIN="${PYTHON_BIN:-python3}"
 LOCAL_CLAUDDY_ENV="${ROOT_DIR}/.local/clauddy.env.sh"
 
@@ -26,6 +28,7 @@ cd "${ROOT_DIR}/base_UniGoal"
 
 echo "Running SmoothNav: mode=$MODE, goal=$GOAL_TYPE, episodes=$NUM_EVAL"
 echo "Results will be written under ${ROOT_DIR}/results"
+echo "LLM retry profile: attempts=${SMOOTHNAV_LLM_MAX_RETRIES}, delays=${SMOOTHNAV_LLM_RETRY_DELAYS}"
 
 "${PYTHON_BIN}" -m smoothnav.main \
     --config-file configs/config_habitat.yaml \
