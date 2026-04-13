@@ -4,12 +4,20 @@ from types import SimpleNamespace
 
 
 CONTROLLER_PROFILE_DEFAULTS = {
-    "baseline-periodic": {
+    "baseline-explore": {
         "mode": "baseline",
         "controller_enable_monitor": False,
         "controller_monitor_policy": "off",
         "controller_enable_prefetch": False,
         "controller_replan_policy": "baseline_explore",
+        "controller_enable_stuck_replan": False,
+    },
+    "baseline-periodic": {
+        "mode": "smoothnav",
+        "controller_enable_monitor": False,
+        "controller_monitor_policy": "off",
+        "controller_enable_prefetch": False,
+        "controller_replan_policy": "fixed_interval",
         "controller_enable_stuck_replan": False,
     },
     "smoothnav-full": {
@@ -60,7 +68,7 @@ def available_controller_profiles():
 
 
 def infer_controller_profile(mode: str) -> str:
-    return "baseline-periodic" if mode == "baseline" else "smoothnav-full"
+    return "baseline-explore" if mode == "baseline" else "smoothnav-full"
 
 
 def controller_config_dict(args) -> dict:

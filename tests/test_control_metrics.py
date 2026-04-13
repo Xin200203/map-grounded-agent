@@ -112,6 +112,59 @@ class ControlMetricsTests(unittest.TestCase):
             self.assertEqual(metrics["decision_delay_steps"], 0.0)
             self.assertEqual(metrics["goal_update_delay_steps"], 0.0)
 
+    def test_compute_run_metrics_can_ignore_phantom_episode_files(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            trace_dir = os.path.join(tmpdir, "step_traces")
+            os.makedirs(trace_dir, exist_ok=True)
+
+            valid_payload = [
+                {
+                    "step_idx": 0,
+                    "new_node_count": 1,
+                    "graph_delta": {"new_rooms": []},
+                    "planner_called": True,
+                    "monitor_decision": "ESCALATE",
+                    "strategy_switched": True,
+                    "pending_created": False,
+                    "pending_promoted": False,
+                    "goal_updated": True,
+                }
+            ]
+            phantom_payload = [
+                {
+                    "step_idx": 0,
+                    "new_node_count": 1,
+                    "graph_delta": {"new_rooms": []},
+                    "planner_called": False,
+                    "monitor_decision": None,
+                    "strategy_switched": False,
+                    "pending_created": False,
+                    "pending_promoted": False,
+                    "goal_updated": False,
+                }
+            ]
+
+            with open(
+                os.path.join(trace_dir, "episode_000000.jsonl"),
+                "w",
+                encoding="utf-8",
+            ) as handle:
+                for row in valid_payload:
+                    handle.write(json.dumps(row) + "\n")
+
+            with open(
+                os.path.join(trace_dir, "episode_000001.jsonl"),
+                "w",
+                encoding="utf-8",
+            ) as handle:
+                for row in phantom_payload:
+                    handle.write(json.dumps(row) + "\n")
+
+            metrics = compute_run_control_metrics(tmpdir, episode_ids=[0])
+
+            self.assertEqual(metrics["strategy_switch_count"], 1.0)
+            self.assertEqual(metrics["decision_delay_event_count"], 1)
+
 
 if __name__ == "__main__":
     unittest.main()

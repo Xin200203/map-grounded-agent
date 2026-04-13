@@ -24,6 +24,12 @@ def _mean(values):
     return float(sum(values) / len(values)) if values else 0.0
 
 
+def _episode_id_from_path(path):
+    stem = os.path.splitext(os.path.basename(path))[0]
+    _, _, suffix = stem.partition("episode_")
+    return int(suffix) if suffix else None
+
+
 def compute_episode_control_metrics(steps):
     strategy_switch_count = 0
     pending_created_count = 0
@@ -83,8 +89,13 @@ def compute_episode_control_metrics(steps):
     }
 
 
-def compute_run_control_metrics(run_dir):
+def compute_run_control_metrics(run_dir, episode_ids=None):
     trace_paths = sorted(glob(os.path.join(run_dir, "step_traces", "episode_*.jsonl")))
+    if episode_ids is not None:
+        allowed_ids = {int(episode_id) for episode_id in episode_ids}
+        trace_paths = [
+            path for path in trace_paths if _episode_id_from_path(path) in allowed_ids
+        ]
     if not trace_paths:
         return {
             "strategy_switch_count": 0.0,

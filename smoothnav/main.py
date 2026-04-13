@@ -59,7 +59,7 @@ def get_config():
     parser.add_argument("--goal", default="", type=str)
     parser.add_argument("--real_world", action="store_true")
     parser.add_argument("--mode", default="smoothnav", choices=["smoothnav", "baseline"],
-                        help="smoothnav: three-tier hierarchical; baseline: per-interval (UniGoal)")
+                        help="smoothnav: semantic controller family; baseline: frontier-explore UniGoal baseline")
     parser.add_argument("--stuck_threshold", default=15, type=int)
     parser.add_argument("--num_eval", default=0, type=int,
                         help="override num_eval_episodes (0=use config)")
@@ -320,7 +320,7 @@ def main():
     _reset_graph_goal(args, graph, infos)
     goal_description = _goal_description_from_infos(args, infos)
     smoothness.reset()
-    active_episode_id = int(infos.get("episode_no", 0))
+    active_episode_id = 0
     step = 0
 
     print(f"SmoothNav [{args.mode}] starting, {args.num_episodes} episodes")
@@ -345,6 +345,9 @@ def main():
                 episode_results.append(
                     {
                         "episode": completed_episode_id,
+                        "habitat_episode_no": int(
+                            infos.get("episode_no", completed_episode_id)
+                        ),
                         "success": success,
                         "spl": spl,
                         "high_level_calls": high_planner.call_count,
@@ -355,6 +358,14 @@ def main():
 
                 if len(episode_success) == args.num_episodes:
                     finished = True
+                    if args.visualize:
+                        video_path = os.path.join(
+                            args.visualization_dir,
+                            "videos",
+                            f"eps_{completed_episode_id:06d}.mp4",
+                        )
+                        agent.save_visualization(video_path)
+                    break
 
                 if args.visualize:
                     video_path = os.path.join(
@@ -373,7 +384,7 @@ def main():
                 controller_state = ControllerState()
                 _reset_graph_goal(args, graph, infos)
                 goal_description = _goal_description_from_infos(args, infos)
-                active_episode_id = int(infos.get("episode_no", completed_episode_id + 1))
+                active_episode_id = completed_episode_id + 1
 
             bev_map.mapping(rgbd, infos)
 
@@ -929,7 +940,12 @@ def main():
                 }
             )
 
-        summary.update(compute_run_control_metrics(args.run_dir))
+        summary.update(
+            compute_run_control_metrics(
+                args.run_dir,
+                episode_ids=[result["episode"] for result in episode_results],
+            )
+        )
 
         log = f"\n{'=' * 60}\nFinal Results ({args.mode}):\n"
         for key, value in summary.items():

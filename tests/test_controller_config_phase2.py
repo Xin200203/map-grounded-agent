@@ -11,7 +11,7 @@ from smoothnav.controller_config import resolve_controller_config
 
 
 class ControllerConfigPhase2Tests(unittest.TestCase):
-    def test_infers_baseline_periodic_profile_from_mode(self):
+    def test_infers_baseline_explore_profile_from_mode(self):
         args = SimpleNamespace(
             mode="baseline",
             num_local_steps=40,
@@ -27,9 +27,33 @@ class ControllerConfigPhase2Tests(unittest.TestCase):
 
         resolved = resolve_controller_config(args)
 
-        self.assertEqual(resolved.controller_profile, "baseline-periodic")
+        self.assertEqual(resolved.controller_profile, "baseline-explore")
         self.assertFalse(resolved.controller_enable_monitor)
         self.assertEqual(resolved.controller_replan_policy, "baseline_explore")
+
+    def test_baseline_periodic_profile_is_semantic_fixed_interval_baseline(self):
+        args = SimpleNamespace(
+            mode="smoothnav",
+            num_local_steps=40,
+            controller_profile="baseline-periodic",
+            controller_enable_monitor=None,
+            controller_monitor_policy=None,
+            controller_enable_prefetch=None,
+            controller_replan_policy=None,
+            controller_enable_stuck_replan=None,
+            controller_fixed_plan_interval_steps=None,
+            controller_prefetch_near_threshold=None,
+        )
+
+        resolved = resolve_controller_config(args)
+
+        self.assertEqual(resolved.mode, "smoothnav")
+        self.assertEqual(resolved.controller_profile, "baseline-periodic")
+        self.assertFalse(resolved.controller_enable_monitor)
+        self.assertEqual(resolved.controller_monitor_policy, "off")
+        self.assertFalse(resolved.controller_enable_prefetch)
+        self.assertEqual(resolved.controller_replan_policy, "fixed_interval")
+        self.assertFalse(resolved.controller_enable_stuck_replan)
 
     def test_rules_only_profile_selects_rules_monitor(self):
         args = SimpleNamespace(
