@@ -33,6 +33,12 @@ from ..utils.fmm import pose_utils as pu
 from ..utils.camera import get_camera_matrix
 from ..utils.map import remove_small_frontiers
 from ..utils.llm import LLM, VLM
+from smoothnav.frontier_scoring import (
+    choose_frontier_locations,
+    select_bias_candidate_indices,
+    select_distance_candidate_indices,
+    summarize_frontier_selection,
+)
 
 sys.path.append('third_party/Grounded-Segment-Anything/')
 from grounded_sam_demo import load_model, get_grounding_output
@@ -193,6 +199,8 @@ class Graph():
         self.edge_list = []
         self.group_nodes = []
         self.init_room_nodes()
+        self.last_goal_debug = {}
+        self.last_selected_frontier = None
         self.is_navigation = is_navigation
         self.set_cfg()
         
@@ -789,6 +797,35 @@ Please provide the relationship you can determine from the image.
         return image
 
     def get_goal(self, goal=None):
+        semantic_bias_weight = float(
+            getattr(self.args, "graph_semantic_bias_weight", 1.0) or 1.0
+        )
+        topk_limit = int(getattr(self.args, "graph_goal_topk", 5) or 5)
+        frontier_min_size = int(
+            getattr(self.args, "graph_frontier_min_size", 20) or 20
+        )
+        distance_threshold = float(
+            getattr(self.args, "graph_goal_distance_threshold", 1.2) or 1.2
+        )
+        bias_candidate_topk = int(
+            getattr(self.args, "graph_bias_candidate_topk", 0) or 0
+        )
+        bias_candidate_radius = float(
+            getattr(self.args, "graph_bias_candidate_radius", 0.0) or 0.0
+        )
+        allow_raw_frontier_fallback = bool(
+            getattr(self.args, "graph_allow_raw_frontier_fallback", True)
+        )
+        allow_relaxed_distance_fallback = bool(
+            getattr(self.args, "graph_allow_relaxed_distance_fallback", True)
+        )
+        bias_input = (
+            goal.tolist()
+            if hasattr(goal, "tolist")
+            else list(goal)
+            if isinstance(goal, (list, tuple, np.ndarray))
+            else goal
+        )
         fbe_map = torch.zeros_like(self.full_map[0,0])
         if self.full_map.shape[1] == 1:
             fbe_map[self.fbe_free_map[0,0]>0] = 1
@@ -803,12 +840,55 @@ Please provide the relationship you can determine from the image.
         selem = skimage.morphology.disk(1)
         fbe_cpp[skimage.morphology.binary_dilation(fbe_cp.cpu().numpy(), selem)] = 0 # don't know space is 0 dialate unknown space
         
-        diff = fbe_map - fbe_cpp # intersection between unknown area and free area 
-        frontier_map = diff == 1
-        frontier_map = remove_small_frontiers(frontier_map, min_size=20)
-        frontier_locations = torch.stack([torch.where(frontier_map)[0], torch.where(frontier_map)[1]]).T
-        num_frontiers = len(torch.where(frontier_map)[0])
+        diff = fbe_map - fbe_cpp # intersection between unknown area and free area
+        raw_frontier_map = diff == 1
+        raw_frontier_locations = torch.stack(
+            [torch.where(raw_frontier_map)[0], torch.where(raw_frontier_map)[1]]
+        ).T
+        filtered_frontier_map = remove_small_frontiers(
+            raw_frontier_map, min_size=frontier_min_size
+        )
+        filtered_frontier_locations = torch.stack(
+            [torch.where(filtered_frontier_map)[0], torch.where(filtered_frontier_map)[1]]
+        ).T
+        frontier_choice = choose_frontier_locations(
+            raw_frontier_locations.cpu().numpy(),
+            filtered_frontier_locations.cpu().numpy(),
+            allow_raw_frontier_fallback=allow_raw_frontier_fallback,
+        )
+        frontier_locations = frontier_choice["frontier_locations"]
+        raw_frontier_count = frontier_choice["raw_frontier_count"]
+        filtered_frontier_count = frontier_choice["filtered_frontier_count"]
+        frontier_fallback_mode = frontier_choice["frontier_fallback_mode"]
+        num_frontiers = int(len(frontier_locations))
         if num_frontiers == 0:
+            self.last_goal_debug = {
+                "bias_input": bias_input,
+                "semantic_bias_weight": semantic_bias_weight,
+                "raw_frontier_count": int(raw_frontier_count),
+                "filtered_frontier_count": int(filtered_frontier_count),
+                "frontier_filter_fallback_mode": frontier_fallback_mode,
+                "distance_threshold_used": distance_threshold,
+                "candidate_distance_fallback_mode": "",
+                "num_frontiers": 0,
+                "num_candidate_frontiers": 0,
+                "candidate_frontier_count_after_bias_filter": 0,
+                "selected_frontier": None,
+                "selected_frontier_score": None,
+                "selected_frontier_score_breakdown": {},
+                "selected_frontier_same_as_prev": False,
+                "selected_frontier_same_as_previous": False,
+                "topk_frontiers": [],
+                "top1_top2_gap": None,
+                "base_score_std": None,
+                "bias_score_std": None,
+                "selected_from_bias_filtered_subset": False,
+                "used_raw_frontier_fallback": bool(
+                    frontier_choice["used_raw_frontier_fallback"]
+                ),
+                "used_relaxed_distance_fallback": False,
+                "no_goal_reason": "no_frontiers",
+            }
             return None
         
         input_pose = np.zeros(7)
@@ -822,24 +902,64 @@ Please provide the relationship you can determine from the image.
         state = [start[0] + 1, start[1] + 1]
         planner.set_goal(state)
         fmm_dist = planner.fmm_dist[::-1]
-        frontier_locations += 1
-        frontier_locations = frontier_locations.cpu().numpy()
+        frontier_locations = np.asarray(frontier_locations, dtype=int) + 1
         distances = fmm_dist[frontier_locations[:,0],frontier_locations[:,1]] / 20
-        
-        distance_threshold = 1.2
-        idx_16 = np.where(distances>=distance_threshold)
+
+        distance_selection = select_distance_candidate_indices(
+            distances,
+            distance_threshold=distance_threshold,
+            allow_relaxed_distance_fallback=allow_relaxed_distance_fallback,
+        )
+        idx_16 = distance_selection["candidate_indices"]
+        distance_threshold_used = distance_selection["distance_threshold_used"]
+        candidate_distance_fallback_mode = distance_selection["candidate_fallback_mode"]
         distances_16 = distances[idx_16]
-        distances_16_inverse = 10 - (np.clip(distances_16, 0, 10 + distance_threshold) - distance_threshold)
+        distances_16_inverse = 10 - (
+            np.clip(distances_16, 0, 10 + distance_threshold_used) - distance_threshold_used
+        )
         frontier_locations_16 = frontier_locations[idx_16]
         self.frontier_locations = frontier_locations
         self.frontier_locations_16 = frontier_locations_16
         if len(distances_16) == 0:
+            self.last_goal_debug = {
+                "bias_input": bias_input,
+                "semantic_bias_weight": semantic_bias_weight,
+                "raw_frontier_count": int(raw_frontier_count),
+                "filtered_frontier_count": int(filtered_frontier_count),
+                "frontier_filter_fallback_mode": frontier_fallback_mode,
+                "distance_threshold_used": distance_threshold_used,
+                "candidate_distance_fallback_mode": candidate_distance_fallback_mode,
+                "num_frontiers": int(num_frontiers),
+                "num_candidate_frontiers": 0,
+                "candidate_frontier_count_after_bias_filter": 0,
+                "selected_frontier": None,
+                "selected_frontier_score": None,
+                "selected_frontier_score_breakdown": {},
+                "selected_frontier_same_as_prev": False,
+                "selected_frontier_same_as_previous": False,
+                "topk_frontiers": [],
+                "top1_top2_gap": None,
+                "base_score_std": None,
+                "bias_score_std": None,
+                "selected_from_bias_filtered_subset": False,
+                "used_raw_frontier_fallback": bool(
+                    frontier_choice["used_raw_frontier_fallback"]
+                ),
+                "used_relaxed_distance_fallback": bool(
+                    distance_selection["used_relaxed_distance_fallback"]
+                ),
+                "no_goal_reason": "no_candidate_frontiers",
+            }
             return None
-        num_16_frontiers = len(idx_16[0])  # 175
+        num_16_frontiers = len(idx_16)  # candidate frontier count
         scores = np.zeros((num_16_frontiers))
-        
-        scores += distances_16_inverse
-        if isinstance(goal, list) or isinstance(goal, np.ndarray):
+        base_scores = distances_16_inverse.copy()
+        scores += base_scores
+        bias_scores = np.zeros((num_16_frontiers))
+        bias_distances_16 = None
+        candidate_indices = np.arange(num_16_frontiers)
+        selected_from_bias_filtered_subset = False
+        if isinstance(goal, (list, tuple, np.ndarray)):
             goal = list(goal)
 
             planner = FMMPlanner(traversible)
@@ -848,15 +968,136 @@ Please provide the relationship you can determine from the image.
             fmm_dist = planner.fmm_dist[::-1]
             distances = fmm_dist[frontier_locations[:,0],frontier_locations[:,1]] / 20
             
-            distances_16 = distances[idx_16]
-            distances_16_inverse = 1 - (np.clip(distances_16, 0, 10 + distance_threshold) - distance_threshold) / 10
-            if len(distances_16) == 0:
+            bias_distances_16 = distances[idx_16]
+            bias_scores = 1 - (np.clip(bias_distances_16, 0, 10 + distance_threshold) - distance_threshold) / 10
+            if len(bias_distances_16) == 0:
+                self.last_goal_debug = {
+                    "bias_input": bias_input,
+                    "semantic_bias_weight": semantic_bias_weight,
+                    "raw_frontier_count": int(raw_frontier_count),
+                    "filtered_frontier_count": int(filtered_frontier_count),
+                    "frontier_filter_fallback_mode": frontier_fallback_mode,
+                    "distance_threshold_used": distance_threshold_used,
+                    "candidate_distance_fallback_mode": candidate_distance_fallback_mode,
+                    "num_frontiers": int(num_frontiers),
+                    "num_candidate_frontiers": int(num_16_frontiers),
+                    "candidate_frontier_count_after_bias_filter": 0,
+                    "selected_frontier": None,
+                    "selected_frontier_score": None,
+                    "selected_frontier_score_breakdown": {},
+                    "selected_frontier_same_as_prev": False,
+                    "selected_frontier_same_as_previous": False,
+                    "topk_frontiers": [],
+                    "top1_top2_gap": None,
+                    "base_score_std": None,
+                    "bias_score_std": None,
+                    "selected_from_bias_filtered_subset": False,
+                    "used_raw_frontier_fallback": bool(
+                        frontier_choice["used_raw_frontier_fallback"]
+                    ),
+                    "used_relaxed_distance_fallback": bool(
+                        distance_selection["used_relaxed_distance_fallback"]
+                    ),
+                    "no_goal_reason": "no_bias_candidates",
+                }
                 return None
-            scores += distances_16_inverse
+            scores += semantic_bias_weight * bias_scores
 
-        idx_16_max = idx_16[0][np.argmax(scores)]
+            candidate_indices, selected_from_bias_filtered_subset = (
+                select_bias_candidate_indices(
+                    num_16_frontiers,
+                    bias_distances_16,
+                    bias_candidate_topk=bias_candidate_topk,
+                    bias_candidate_radius=bias_candidate_radius,
+                )
+            )
+
+        candidate_count_after_bias_filter = int(len(candidate_indices))
+        if candidate_count_after_bias_filter == 0:
+            self.last_goal_debug = {
+                "bias_input": bias_input,
+                "semantic_bias_weight": semantic_bias_weight,
+                "raw_frontier_count": int(raw_frontier_count),
+                "filtered_frontier_count": int(filtered_frontier_count),
+                "frontier_filter_fallback_mode": frontier_fallback_mode,
+                "distance_threshold_used": distance_threshold_used,
+                "candidate_distance_fallback_mode": candidate_distance_fallback_mode,
+                "num_frontiers": int(num_frontiers),
+                "num_candidate_frontiers": int(num_16_frontiers),
+                "candidate_frontier_count_after_bias_filter": 0,
+                "selected_frontier": None,
+                "selected_frontier_score": None,
+                "selected_frontier_score_breakdown": {},
+                "selected_frontier_same_as_prev": False,
+                "selected_frontier_same_as_previous": False,
+                "topk_frontiers": [],
+                "top1_top2_gap": None,
+                "base_score_std": None,
+                "bias_score_std": None,
+                "selected_from_bias_filtered_subset": selected_from_bias_filtered_subset,
+                "used_raw_frontier_fallback": bool(
+                    frontier_choice["used_raw_frontier_fallback"]
+                ),
+                "used_relaxed_distance_fallback": bool(
+                    distance_selection["used_relaxed_distance_fallback"]
+                ),
+                "no_goal_reason": "empty_bias_filtered_subset",
+            }
+            return None
+
+        selection_summary = summarize_frontier_selection(
+            frontier_locations_16,
+            distances_16,
+            base_scores,
+            bias_distances_16,
+            bias_scores,
+            scores,
+            candidate_indices,
+            topk_limit=topk_limit,
+            semantic_bias_weight=semantic_bias_weight,
+            last_selected_frontier=self.last_selected_frontier,
+        )
+        best_candidate_local = selection_summary["best_local_idx"]
+        idx_16_max = idx_16[best_candidate_local]
         goal = frontier_locations[idx_16_max] - 1
         self.scores = scores
+        selected_frontier = selection_summary["selected_frontier"]
+        selected_same = selection_summary["selected_same"]
+        topk_frontiers = selection_summary["topk_frontiers"]
+        top1_top2_gap = selection_summary["top1_top2_gap"]
+        selected_frontier_score_breakdown = selection_summary[
+            "selected_frontier_score_breakdown"
+        ]
+        self.last_goal_debug = {
+            "bias_input": bias_input,
+            "semantic_bias_weight": semantic_bias_weight,
+            "raw_frontier_count": int(raw_frontier_count),
+            "filtered_frontier_count": int(filtered_frontier_count),
+            "frontier_filter_fallback_mode": frontier_fallback_mode,
+            "distance_threshold_used": distance_threshold_used,
+            "candidate_distance_fallback_mode": candidate_distance_fallback_mode,
+            "num_frontiers": int(num_frontiers),
+            "num_candidate_frontiers": int(num_16_frontiers),
+            "candidate_frontier_count_after_bias_filter": candidate_count_after_bias_filter,
+            "selected_frontier": selected_frontier,
+            "selected_frontier_score": float(scores[best_candidate_local]),
+            "selected_frontier_score_breakdown": selected_frontier_score_breakdown,
+            "selected_frontier_same_as_prev": bool(selected_same),
+            "selected_frontier_same_as_previous": bool(selected_same),
+            "topk_frontiers": topk_frontiers,
+            "top1_top2_gap": top1_top2_gap,
+            "base_score_std": selection_summary["base_score_std"],
+            "bias_score_std": selection_summary["bias_score_std"],
+            "selected_from_bias_filtered_subset": bool(selected_from_bias_filtered_subset),
+            "used_raw_frontier_fallback": bool(
+                frontier_choice["used_raw_frontier_fallback"]
+            ),
+            "used_relaxed_distance_fallback": bool(
+                distance_selection["used_relaxed_distance_fallback"]
+            ),
+            "no_goal_reason": "",
+        }
+        self.last_selected_frontier = selected_frontier
         return goal
 
     def get_traversible(self, map_pred, pose_pred):
@@ -929,6 +1170,8 @@ Please provide the relationship you can determine from the image.
         self.group_nodes = []
         self.init_room_nodes()
         self.edge_list = []
+        self.last_goal_debug = {}
+        self.last_selected_frontier = None
 
     def graph_corr(self, goal, graph):
         prompt = self.prompt_graph_corr_0.format(graph.center_node.caption, goal)

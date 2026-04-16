@@ -225,6 +225,11 @@ def setup_run_environment(args, argv, prompt_versions):
             "provider": getattr(args, "api_provider", ""),
             "protocol": getattr(args, "api_protocol", ""),
         },
+        "trace": {
+            "enable_controller_trace": bool(
+                getattr(args, "enable_controller_trace", True)
+            ),
+        },
         "controller": controller_config_dict(args),
     }
     _write_json(args.manifest_path, manifest)

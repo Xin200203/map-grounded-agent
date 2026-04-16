@@ -11,6 +11,10 @@ CONTROLLER_PROFILE_DEFAULTS = {
         "controller_enable_prefetch": False,
         "controller_replan_policy": "baseline_explore",
         "controller_enable_stuck_replan": False,
+        "controller_stuck_suppression_steps": 0,
+        "controller_direction_reuse_limit": 0,
+        "controller_grounding_noop_replan_threshold": 0,
+        "controller_same_frontier_reuse_threshold": 0,
     },
     "baseline-periodic": {
         "mode": "smoothnav",
@@ -19,14 +23,22 @@ CONTROLLER_PROFILE_DEFAULTS = {
         "controller_enable_prefetch": False,
         "controller_replan_policy": "fixed_interval",
         "controller_enable_stuck_replan": False,
+        "controller_stuck_suppression_steps": 0,
+        "controller_direction_reuse_limit": 0,
+        "controller_grounding_noop_replan_threshold": 2,
+        "controller_same_frontier_reuse_threshold": 2,
     },
     "smoothnav-full": {
         "mode": "smoothnav",
         "controller_enable_monitor": True,
-        "controller_monitor_policy": "llm",
+        "controller_monitor_policy": "llm_escalation",
         "controller_enable_prefetch": True,
         "controller_replan_policy": "event",
         "controller_enable_stuck_replan": True,
+        "controller_stuck_suppression_steps": 8,
+        "controller_direction_reuse_limit": 1,
+        "controller_grounding_noop_replan_threshold": 2,
+        "controller_same_frontier_reuse_threshold": 2,
     },
     "smoothnav-no-monitor": {
         "mode": "smoothnav",
@@ -35,6 +47,10 @@ CONTROLLER_PROFILE_DEFAULTS = {
         "controller_enable_prefetch": True,
         "controller_replan_policy": "event",
         "controller_enable_stuck_replan": True,
+        "controller_stuck_suppression_steps": 8,
+        "controller_direction_reuse_limit": 1,
+        "controller_grounding_noop_replan_threshold": 2,
+        "controller_same_frontier_reuse_threshold": 2,
     },
     "smoothnav-rules-only": {
         "mode": "smoothnav",
@@ -43,14 +59,22 @@ CONTROLLER_PROFILE_DEFAULTS = {
         "controller_enable_prefetch": True,
         "controller_replan_policy": "event",
         "controller_enable_stuck_replan": True,
+        "controller_stuck_suppression_steps": 8,
+        "controller_direction_reuse_limit": 1,
+        "controller_grounding_noop_replan_threshold": 2,
+        "controller_same_frontier_reuse_threshold": 2,
     },
     "smoothnav-no-prefetch": {
         "mode": "smoothnav",
         "controller_enable_monitor": True,
-        "controller_monitor_policy": "llm",
+        "controller_monitor_policy": "llm_escalation",
         "controller_enable_prefetch": False,
         "controller_replan_policy": "event",
         "controller_enable_stuck_replan": True,
+        "controller_stuck_suppression_steps": 8,
+        "controller_direction_reuse_limit": 1,
+        "controller_grounding_noop_replan_threshold": 2,
+        "controller_same_frontier_reuse_threshold": 2,
     },
     "smoothnav-fixed-interval": {
         "mode": "smoothnav",
@@ -59,6 +83,10 @@ CONTROLLER_PROFILE_DEFAULTS = {
         "controller_enable_prefetch": False,
         "controller_replan_policy": "fixed_interval",
         "controller_enable_stuck_replan": True,
+        "controller_stuck_suppression_steps": 8,
+        "controller_direction_reuse_limit": 1,
+        "controller_grounding_noop_replan_threshold": 2,
+        "controller_same_frontier_reuse_threshold": 2,
     },
 }
 
@@ -80,6 +108,18 @@ def controller_config_dict(args) -> dict:
         "replan_policy": getattr(args, "controller_replan_policy", ""),
         "enable_stuck_replan": bool(
             getattr(args, "controller_enable_stuck_replan", False)
+        ),
+        "stuck_suppression_steps": int(
+            getattr(args, "controller_stuck_suppression_steps", 0) or 0
+        ),
+        "direction_reuse_limit": int(
+            getattr(args, "controller_direction_reuse_limit", 0) or 0
+        ),
+        "grounding_noop_replan_threshold": int(
+            getattr(args, "controller_grounding_noop_replan_threshold", 0) or 0
+        ),
+        "same_frontier_reuse_threshold": int(
+            getattr(args, "controller_same_frontier_reuse_threshold", 0) or 0
         ),
         "fixed_plan_interval_steps": int(
             getattr(args, "controller_fixed_plan_interval_steps", 0) or 0
@@ -104,6 +144,10 @@ def resolve_controller_config(args):
         "controller_enable_prefetch",
         "controller_replan_policy",
         "controller_enable_stuck_replan",
+        "controller_stuck_suppression_steps",
+        "controller_direction_reuse_limit",
+        "controller_grounding_noop_replan_threshold",
+        "controller_same_frontier_reuse_threshold",
         "controller_fixed_plan_interval_steps",
         "controller_prefetch_near_threshold",
     ]:
@@ -140,12 +184,16 @@ def resolve_controller_config(args):
         args.controller_enable_prefetch = False
         args.controller_replan_policy = "baseline_explore"
         args.controller_enable_stuck_replan = False
+        args.controller_stuck_suppression_steps = 0
+        args.controller_direction_reuse_limit = 0
+        args.controller_grounding_noop_replan_threshold = 0
+        args.controller_same_frontier_reuse_threshold = 0
 
     if args.controller_replan_policy not in {"event", "fixed_interval", "baseline_explore"}:
         raise ValueError(
             f"Unsupported replan policy: {args.controller_replan_policy}"
         )
-    if args.controller_monitor_policy not in {"llm", "rules", "off"}:
+    if args.controller_monitor_policy not in {"llm", "llm_escalation", "rules", "off"}:
         raise ValueError(
             f"Unsupported monitor policy: {args.controller_monitor_policy}"
         )

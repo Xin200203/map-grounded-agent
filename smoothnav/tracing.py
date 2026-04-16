@@ -4,6 +4,7 @@ import dataclasses
 import hashlib
 import json
 import os
+from copy import deepcopy
 from datetime import datetime
 
 
@@ -50,11 +51,69 @@ def strategy_to_dict(strategy):
     }
 
 
+_HEAVY_STEP_TRACE_KEYS = {
+    "monitor_trigger_reason",
+    "monitor_trigger_event_types",
+    "goal_epoch",
+    "goal_epoch_advanced",
+    "pending_create_reason",
+    "pending_strategy_type",
+    "pending_promotion_reason",
+    "bias_input",
+    "selected_frontier",
+    "selected_frontier_same_as_prev",
+    "grounding_success",
+    "grounding_changed",
+    "grounding_noop_reason",
+    "local_projection_valid",
+    "topk_frontier_scores",
+    "selected_frontier_score_breakdown",
+    "top1_top2_gap",
+    "base_score_std",
+    "bias_score_std",
+    "candidate_frontier_count_after_bias_filter",
+    "selected_from_bias_filtered_subset",
+    "consecutive_grounding_noops",
+    "same_frontier_reuse_count",
+    "forced_replan_due_to_grounding_failure",
+    "grounding_failure_reason",
+    "grounding_events",
+    "executor_adopted_goal_source",
+    "adopted_goal_source",
+    "adopted_goal_before",
+    "adopted_goal_after",
+    "adopted_goal_epoch",
+    "executor_adoption_changed",
+    "temp_goal_cleared_on_strategy_switch",
+    "temp_goal_suppressed_by_epoch",
+    "executor_stuck_override_suppressed",
+    "controller_stuck_replan_triggered",
+    "stuck_suppression_steps_remaining",
+    "forced_replan_due_to_direction_reuse",
+    "executor_temp_goal_epoch",
+}
+
+
+def _strip_controller_trace(payload):
+    stripped = {}
+    for key, value in payload.items():
+        if key in _HEAVY_STEP_TRACE_KEYS:
+            continue
+        if key == "graph_delta" and isinstance(value, dict):
+            graph_delta = deepcopy(value)
+            graph_delta.pop("node_captions_snapshot", None)
+            stripped[key] = graph_delta
+            continue
+        stripped[key] = value
+    return stripped
+
+
 class RunTracer:
     """Append-only JSONL writers keyed by episode id."""
 
-    def __init__(self, run_dir):
+    def __init__(self, run_dir, enable_controller_trace=True):
         self.run_dir = run_dir
+        self.enable_controller_trace = bool(enable_controller_trace)
         self._handles = {}
 
     def _episode_path(self, subdir, episode_id):
@@ -75,12 +134,18 @@ class RunTracer:
         handle.flush()
 
     def record_step(self, episode_id, payload):
+        if not self.enable_controller_trace:
+            payload = _strip_controller_trace(payload)
         self._write_jsonl("step_traces", episode_id, payload)
 
     def record_planner_call(self, episode_id, payload):
+        if not self.enable_controller_trace:
+            return
         self._write_jsonl("planner_calls", episode_id, payload)
 
     def record_monitor_call(self, episode_id, payload):
+        if not self.enable_controller_trace:
+            return
         self._write_jsonl("monitor_calls", episode_id, payload)
 
     def close(self):

@@ -107,6 +107,7 @@ class SetupRunEnvironmentTests(unittest.TestCase):
                 api_protocol="anthropic-messages",
                 api_key="super-secret-key",
                 base_url="https://example.invalid/v1/",
+                enable_controller_trace=True,
                 controller_profile="smoothnav-full",
                 controller_enable_monitor=True,
                 controller_monitor_policy="llm",
@@ -143,6 +144,7 @@ class SetupRunEnvironmentTests(unittest.TestCase):
             self.assertEqual(manifest["api_env"]["api_key_env"], "SMOOTHNAV_API_KEY")
             self.assertEqual(manifest["api_env"]["provider"], "anthropic")
             self.assertEqual(manifest["api_env"]["protocol"], "anthropic-messages")
+            self.assertTrue(manifest["trace"]["enable_controller_trace"])
             self.assertEqual(manifest["controller"]["profile"], "smoothnav-full")
 
             with open(configured.effective_config_path, "r", encoding="utf-8") as handle:

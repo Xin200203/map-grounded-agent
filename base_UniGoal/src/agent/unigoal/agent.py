@@ -23,6 +23,11 @@ from src.utils.visualization.visualization import (
 )
 from src.utils.visualization.save import save_video
 from src.utils.llm import LLM
+from smoothnav.executor_adoption import (
+    compute_adoption_transition,
+    resolve_strategy_epoch_transition,
+    should_suppress_stuck_override,
+)
 
 from lightglue import LightGlue, SuperPoint, DISK
 from lightglue.utils import load_image, rbd, match_pair , numpy_image_to_torch
@@ -91,6 +96,10 @@ class UniGoal_Agent():
         self.pred_box = []
         self.prompt_text2object = '"chair: 0, sofa: 1, plant: 2, bed: 3, toilet: 4, tv_monitor: 5" The above are the labels corresponding to each category. Which object is described in the following text? Only response the number of the label and not include other text.\nText: {text}'
         torch.set_grad_enabled(False)
+        self.current_strategy_epoch = 0
+        self.temp_goal_epoch = None
+        self.last_adopted_goal_signature = None
+        self.last_adopted_goal_snapshot = None
 
         if args.visualize:
             self.vis_image_background = None
@@ -144,6 +153,10 @@ class UniGoal_Agent():
         self.been_stuck = False
         self.stuck_goal = None
         self.frontier_vis = None
+        self.current_strategy_epoch = 0
+        self.temp_goal_epoch = None
+        self.last_adopted_goal_signature = None
+        self.last_adopted_goal_snapshot = None
 
         if args.visualize:
             self.vis_image_background = init_vis_image(self.envs.goal_name, self.args)
@@ -217,13 +230,81 @@ class UniGoal_Agent():
         goal_map[goal[0], goal[1]] = 1
         return goal_map
 
+    def _goal_map_summary(self, goal_map):
+        coords = np.argwhere(goal_map > 0)
+        if coords.size == 0:
+            return None
+        center = coords.mean(axis=0)
+        return [int(round(center[0])), int(round(center[1]))]
+
+    def _finalize_goal_adoption(self, planner_inputs, source, strategy_epoch,
+                                stale_temp_goal_cleared=False,
+                                stuck_override_suppressed=False):
+        goal_epoch = int(planner_inputs.get('goal_epoch', 0) or 0)
+        adopted_goal_summary = self._goal_map_summary(planner_inputs['goal'])
+        adoption_transition = compute_adoption_transition(
+            self.last_adopted_goal_snapshot,
+            source=source,
+            goal_summary=adopted_goal_summary,
+            goal_epoch=goal_epoch,
+        )
+        self.last_adopted_goal_signature = adoption_transition['signature']
+        self.last_adopted_goal_snapshot = adoption_transition['adopted_after']
+        self.last_override_info.update(
+            {
+                'adopted_goal_source': source,
+                'adopted_goal_summary': adopted_goal_summary,
+                'adopted_goal_changed': adoption_transition['adopted_changed'],
+                'adopted_goal_before': adoption_transition['adopted_before'],
+                'adopted_goal_after': adoption_transition['adopted_after'],
+                'goal_epoch': goal_epoch,
+                'strategy_epoch': int(strategy_epoch),
+                'temp_goal_epoch': (
+                    int(self.temp_goal_epoch) if self.temp_goal_epoch is not None else None
+                ),
+                'stale_temp_goal_cleared': bool(stale_temp_goal_cleared),
+                'temp_goal_cleared_on_strategy_switch': bool(stale_temp_goal_cleared),
+                'temp_goal_suppressed_by_epoch': bool(stale_temp_goal_cleared),
+                'stuck_override_suppressed': bool(stuck_override_suppressed),
+            }
+        )
+        return planner_inputs
+
     def instance_discriminator(self, planner_inputs, id_lo_whwh_speci):
+        incoming_strategy_epoch = int(planner_inputs.get('strategy_epoch', 0) or 0)
+        suppress_stuck_override = bool(planner_inputs.get('suppress_stuck_override', False))
+        epoch_transition = resolve_strategy_epoch_transition(
+            current_strategy_epoch=self.current_strategy_epoch,
+            incoming_strategy_epoch=incoming_strategy_epoch,
+            has_temp_goal=self.temp_goal is not None,
+            temp_goal_epoch=self.temp_goal_epoch,
+        )
+        stale_temp_goal_cleared = epoch_transition['stale_temp_goal_cleared']
+        self.current_strategy_epoch = epoch_transition['next_strategy_epoch']
+        if stale_temp_goal_cleared:
+            self.temp_goal = None
+            self.temp_goal_epoch = None
+
         self.last_override_info = {
             'global_goal_override': False,
             'visible_target_override': False,
             'temp_goal_override': False,
             'stuck_goal_override': False,
             'found_goal': bool(id_lo_whwh_speci),
+            'adopted_goal_source': 'unknown',
+            'adopted_goal_summary': None,
+            'adopted_goal_changed': False,
+            'adopted_goal_before': None,
+            'adopted_goal_after': None,
+            'goal_epoch': int(planner_inputs.get('goal_epoch', 0) or 0),
+            'strategy_epoch': incoming_strategy_epoch,
+            'temp_goal_epoch': (
+                int(self.temp_goal_epoch) if self.temp_goal_epoch is not None else None
+            ),
+            'stale_temp_goal_cleared': bool(stale_temp_goal_cleared),
+            'temp_goal_cleared_on_strategy_switch': bool(stale_temp_goal_cleared),
+            'temp_goal_suppressed_by_epoch': bool(stale_temp_goal_cleared),
+            'stuck_override_suppressed': False,
         }
         # Get pose prediction and global policy planning window
         start_x, start_y, start_o, gx1, gx2, gy1, gy2 = \
@@ -238,18 +319,33 @@ class UniGoal_Agent():
         start = pu.threshold_poses(start, map_pred.shape)
 
         goal_mask = self.rgbd[4+self.envs.gt_goal_idx, :, :]
+        if should_suppress_stuck_override(
+            been_stuck=self.been_stuck,
+            suppress_stuck_override=suppress_stuck_override,
+        ):
+            self.last_override_info['stuck_override_suppressed'] = True
 
         if self.instance_imagegoal is None and self.text_goal is None:
             # not initialized
-            return planner_inputs
+            return self._finalize_goal_adoption(
+                planner_inputs,
+                source='uninitialized',
+                strategy_epoch=incoming_strategy_epoch,
+                stale_temp_goal_cleared=stale_temp_goal_cleared,
+            )
         elif self.global_goal is not None:
             planner_inputs['found_goal'] = 1
             self.last_override_info['global_goal_override'] = True
             self.last_override_info['visible_target_override'] = True
             goal_map = pu.threshold_pose_map(self.global_goal, gx1, gx2, gy1, gy2)
             planner_inputs['goal'] = goal_map
-            return planner_inputs
-        elif self.been_stuck:
+            return self._finalize_goal_adoption(
+                planner_inputs,
+                source='global_goal',
+                strategy_epoch=incoming_strategy_epoch,
+                stale_temp_goal_cleared=stale_temp_goal_cleared,
+            )
+        elif self.been_stuck and not suppress_stuck_override:
             
             planner_inputs['found_goal'] = 0
             self.last_override_info['stuck_goal_override'] = True
@@ -270,6 +366,12 @@ class UniGoal_Agent():
                 goal = pu.threshold_poses(goal, map_pred.shape)
             planner_inputs['goal'] = np.zeros((self.local_width, self.local_height))
             planner_inputs['goal'][int(goal[0]), int(goal[1])] = 1
+            return self._finalize_goal_adoption(
+                planner_inputs,
+                source='stuck_goal',
+                strategy_epoch=incoming_strategy_epoch,
+                stale_temp_goal_cleared=stale_temp_goal_cleared,
+            )
         elif planner_inputs['found_goal'] == 1:
             id_lo_whwh_speci = sorted(id_lo_whwh_speci, 
                 key=lambda s: (s[2][2]-s[2][0])**2+(s[2][3]-s[2][1])**2, reverse=True)
@@ -287,6 +389,7 @@ class UniGoal_Agent():
                 self.last_override_info['temp_goal_override'] = True
                 goal_map = pu.threshold_pose_map(self.temp_goal, gx1, gx2, gy1, gy2)
                 goal_dis = self.compute_temp_goal_distance(map_pred, goal_map, start, planning_window)
+                adopted_source = 'temp_goal_visible'
             else:
                 goal_map = self.compute_ins_goal_map(whwh, start, start_o)
                 if not np.any(goal_map>0) :
@@ -302,14 +405,17 @@ class UniGoal_Agent():
 
 
                 goal_dis = self.compute_temp_goal_distance(map_pred, goal_map, start, planning_window)
+                adopted_source = 'visible_target_candidate'
 
             if goal_dis is None:
                 self.temp_goal = None
+                self.temp_goal_epoch = None
                 planner_inputs['goal'] = planner_inputs['exp_goal']
                 selem = skimage.morphology.disk(3)
                 goal_map = skimage.morphology.dilation(goal_map, selem)
                 self.goal_map_mask[gx1:gx2, gy1:gy2][goal_map > 0] = 0
                 print(f"Rank: {self.envs.rank}, timestep: {self.envs.timestep},  temp goal unavigable !")
+                adopted_source = 'exp_goal_visible_fallback'
             else:
                 if self.args.goal_type == 'ins-image' and match_points > 100:
                     planner_inputs['found_goal'] = 1
@@ -320,6 +426,8 @@ class UniGoal_Agent():
                     self.global_goal = global_goal
                     planner_inputs['goal'] = goal_map
                     self.temp_goal = None
+                    self.temp_goal_epoch = None
+                    adopted_source = 'visible_target_global_goal'
                 else:
                     if (self.args.goal_type == 'ins-image' and goal_dis < 50) or (self.args.goal_type == 'text' and goal_dis < 15):
                         if (self.args.goal_type == 'ins-image' and match_points > 90) or self.args.goal_type == 'text':
@@ -331,12 +439,16 @@ class UniGoal_Agent():
                             self.global_goal = global_goal
                             planner_inputs['goal'] = goal_map
                             self.temp_goal = None
+                            self.temp_goal_epoch = None
+                            adopted_source = 'visible_target_global_goal'
                         else:
                             planner_inputs['goal'] = planner_inputs['exp_goal']
                             self.temp_goal = None
+                            self.temp_goal_epoch = None
                             selem = skimage.morphology.disk(1)
                             goal_map = skimage.morphology.dilation(goal_map, selem)
                             self.goal_map_mask[gx1:gx2, gy1:gy2][goal_map > 0] = 0
+                            adopted_source = 'exp_goal_visible_fallback'
                     else:
                         new_goal_map = goal_map * self.goal_map_mask[gx1:gx2, gy1:gy2]
                         if np.any(new_goal_map > 0):
@@ -344,13 +456,24 @@ class UniGoal_Agent():
                             temp_goal = np.zeros((self.global_width, self.global_height))
                             temp_goal[gx1:gx2, gy1:gy2] = new_goal_map
                             self.temp_goal = temp_goal
+                            self.temp_goal_epoch = incoming_strategy_epoch
+                            adopted_source = 'visible_target_temp_goal'
                         else:
                             planner_inputs['goal'] = planner_inputs['exp_goal']
                             self.temp_goal = None
-            return planner_inputs
+                            self.temp_goal_epoch = None
+                            adopted_source = 'exp_goal_visible_fallback'
+            return self._finalize_goal_adoption(
+                planner_inputs,
+                source=adopted_source,
+                strategy_epoch=incoming_strategy_epoch,
+                stale_temp_goal_cleared=stale_temp_goal_cleared,
+                stuck_override_suppressed=suppress_stuck_override and self.been_stuck,
+            )
 
         else:
             planner_inputs['goal'] = planner_inputs['exp_goal']
+            adopted_source = 'exp_goal'
             if self.temp_goal is not None:  
                 self.last_override_info['temp_goal_override'] = True
                 goal_map = pu.threshold_pose_map(self.temp_goal, gx1, gx2, gy1, gy2)
@@ -360,6 +483,7 @@ class UniGoal_Agent():
                 if np.any(new_goal_map > 0):
                     if goal_dis is not None:
                         planner_inputs['goal'] = new_goal_map
+                        adopted_source = 'temp_goal_persisted'
                         if goal_dis < 100:
                             if self.args.goal_type == 'ins-image':
                                 index = self.local_feature_match_lightglue()
@@ -370,17 +494,26 @@ class UniGoal_Agent():
                                 new_goal_map = skimage.morphology.dilation(new_goal_map, selem)
                                 self.goal_map_mask[gx1:gx2, gy1:gy2][new_goal_map > 0] = 0
                                 self.temp_goal = None
+                                self.temp_goal_epoch = None
+                                adopted_source = 'exp_goal_temp_goal_cleared'
                     else:
                         selem = skimage.morphology.disk(3)
                         new_goal_map = skimage.morphology.dilation(new_goal_map, selem)
                         self.goal_map_mask[gx1:gx2, gy1:gy2][new_goal_map > 0] = 0
                         self.temp_goal = None
+                        self.temp_goal_epoch = None
                         print(f"Rank: {self.envs.rank}, timestep: {self.envs.timestep},  temp goal unavigable !")
                 else:
                     self.temp_goal = None
-                    
-                    
-            return planner_inputs
+                    self.temp_goal_epoch = None
+
+            return self._finalize_goal_adoption(
+                planner_inputs,
+                source=adopted_source,
+                strategy_epoch=incoming_strategy_epoch,
+                stale_temp_goal_cleared=stale_temp_goal_cleared,
+                stuck_override_suppressed=suppress_stuck_override and self.been_stuck,
+            )
 
 
     def step(self, agent_input, override_action=None):

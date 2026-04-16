@@ -61,6 +61,39 @@ class TracingTests(unittest.TestCase):
             self.assertEqual(step_record["payload"]["step_idx"], 3)
             self.assertEqual(step_record["payload"]["reason"], "trace")
 
+    def test_controller_trace_can_be_disabled(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tracer = RunTracer(tmpdir, enable_controller_trace=False)
+            tracer.record_step(
+                1,
+                {
+                    "step_idx": 2,
+                    "goal_updated": True,
+                    "grounding_events": [{"changed": False}],
+                    "topk_frontier_scores": [{"frontier": [1, 2]}],
+                    "adopted_goal_source": "temp_goal",
+                },
+            )
+            tracer.record_planner_call(1, {"planner": {"called": True}})
+            tracer.record_monitor_call(1, {"monitor": {"action": "CONTINUE"}})
+            tracer.close()
+
+            step_path = os.path.join(tmpdir, "step_traces", "episode_000001.jsonl")
+            planner_path = os.path.join(tmpdir, "planner_calls", "episode_000001.jsonl")
+            monitor_path = os.path.join(tmpdir, "monitor_calls", "episode_000001.jsonl")
+
+            self.assertTrue(os.path.exists(step_path))
+            self.assertFalse(os.path.exists(planner_path))
+            self.assertFalse(os.path.exists(monitor_path))
+
+            with open(step_path, "r", encoding="utf-8") as handle:
+                step_record = json.loads(handle.readline())
+            self.assertEqual(step_record["step_idx"], 2)
+            self.assertTrue(step_record["goal_updated"])
+            self.assertNotIn("grounding_events", step_record)
+            self.assertNotIn("topk_frontier_scores", step_record)
+            self.assertNotIn("adopted_goal_source", step_record)
+
 
 if __name__ == "__main__":
     unittest.main()

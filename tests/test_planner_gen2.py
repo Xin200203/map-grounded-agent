@@ -42,9 +42,10 @@ class MockRoomNode:
 
 
 class MockGraph:
-    def __init__(self, nodes=None, room_nodes=None):
+    def __init__(self, nodes=None, room_nodes=None, frontier_locations_16=None):
         self.nodes = nodes or []
         self.room_nodes = room_nodes or []
+        self.frontier_locations_16 = frontier_locations_16 or []
 
     def get_edges(self):
         return []
@@ -78,6 +79,10 @@ class PlannerGen2Tests(unittest.TestCase):
         self.assertEqual(strategy.bias_position, (10, 40))
         self.assertEqual(planner.call_count, 1)
         self.assertTrue(trace.planner_calls[0][1]["fallback_triggered"])
+        self.assertEqual(
+            trace.planner_calls[0][1]["resolved_bias_position"],
+            (10, 40),
+        )
 
     def test_empty_response_short_circuits_extra_planner_retries(self):
         llm = MockLLM([""])
@@ -115,6 +120,63 @@ class PlannerGen2Tests(unittest.TestCase):
         self.assertEqual(strategy.target_region, "object: kitchen sink")
         self.assertEqual(strategy.anchor_object, "kitchen sink")
         self.assertEqual(strategy.bias_position, (123, 456))
+
+    def test_direction_choice_uses_frontier_cluster_when_available(self):
+        llm = MockLLM(
+            ['{"choice_type":"direction","choice_id":"north","reasoning":"explore north frontiers"}']
+        )
+        planner = HighLevelPlanner(llm_fn=llm)
+        graph = MockGraph(
+            frontier_locations_16=[
+                [10, 40],
+                [12, 42],
+                [15, 39],
+                [60, 60],
+            ]
+        )
+
+        strategy = planner.plan(
+            scene_text="No objects observed yet.",
+            goal_description="mug",
+            explored_regions=[],
+            graph=graph,
+            agent_pos=(40, 40),
+            map_size=90,
+        )
+
+        self.assertEqual(strategy.target_region, "unexplored north")
+        self.assertEqual(strategy.bias_position, (12, 40))
+
+    def test_planner_trace_includes_resolution_debug_fields(self):
+        llm = MockLLM(
+            ['{"choice_type":"object","choice_id":"kitchen sink","reasoning":"target likely nearby"}']
+        )
+        planner = HighLevelPlanner(llm_fn=llm)
+        trace = MockTraceWriter()
+        node = MockNode("kitchen sink", (123, 456))
+        graph = MockGraph(nodes=[node], room_nodes=[MockRoomNode("kitchen", [node])])
+
+        planner.plan(
+            scene_text="ROOMS AND OBJECTS:\n  kitchen: kitchen sink",
+            goal_description="mug",
+            explored_regions=[],
+            graph=graph,
+            agent_pos=(300, 300),
+            map_size=720,
+            episode_id=1,
+            step_idx=4,
+            trace_writer=trace,
+        )
+
+        payload = trace.planner_calls[0][1]
+        self.assertEqual(payload["trace_kind"], "planner_call")
+        self.assertEqual(payload["choice_type"], "object")
+        self.assertEqual(payload["resolved_bias_position"], (123, 456))
+        self.assertEqual(payload["planner_choice_distribution"]["object"], 1)
+        self.assertEqual(
+            payload["resolved_object_candidates"][0]["center"],
+            [123, 456],
+        )
 
 
 if __name__ == "__main__":

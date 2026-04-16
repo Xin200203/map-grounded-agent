@@ -12,6 +12,7 @@ from typing import List, Optional, Tuple
 from dataclasses import dataclass, field
 
 from smoothnav.tracing import hash_text
+from smoothnav.types import StageGoal, stage_goal_from_strategy
 
 logger = logging.getLogger(__name__)
 PLANNER_PROMPT_SCHEMA_VERSION = "smoothnav_planner_v1"
@@ -46,6 +47,7 @@ Rules:
 2. Use common sense: kitchens have appliances/food, bedrooms have beds, bathrooms have toilets, etc.
 3. Do NOT revisit already-searched regions.
 4. If no room seems promising, pick a direction to explore unknown areas.
+5. Prefer observed room/object evidence over generic direction exploration whenever it is plausible.
 
 Output JSON only:
 {{"choice_type": "object" or "room" or "direction", "choice_id": "<object name, room id, or direction>", "reasoning": "<1-2 sentence explanation>"}}"""
@@ -134,7 +136,7 @@ def build_choices_text(graph, explored_regions: List[str]) -> str:
 
 
 def resolve_bias_position(parsed: dict, graph, agent_pos: Tuple[int, int],
-                          map_size: int) -> Optional[Tuple[int, int]]:
+                          map_size: int, return_debug: bool = False):
     """Convert structured choice to map coordinates for get_goal().
 
     Uses choice_type + choice_id from constrained LLM output.
@@ -142,15 +144,45 @@ def resolve_bias_position(parsed: dict, graph, agent_pos: Tuple[int, int],
     """
     choice_type = parsed.get('choice_type', '').lower().strip()
     choice_id = parsed.get('choice_id', '').strip()
+    debug = {
+        "choice_type": choice_type,
+        "resolved_object_candidates": [],
+        "direction_bias_mode": "",
+    }
     if not choice_id:
-        return None
+        return (None, debug) if return_debug else None
     choice_lower = choice_id.lower()
 
     if choice_type == 'object':
+        candidates = []
         for node in graph.nodes:
             if (hasattr(node, 'caption') and choice_lower in node.caption.lower()
                     and node.center is not None):
-                return (int(node.center[0]), int(node.center[1]))
+                distance = (
+                    abs(int(node.center[0]) - int(agent_pos[0]))
+                    + abs(int(node.center[1]) - int(agent_pos[1]))
+                )
+                candidates.append(
+                    (
+                        distance,
+                        int(node.center[0]),
+                        int(node.center[1]),
+                        node.caption,
+                    )
+                )
+        if candidates:
+            candidates.sort()
+            debug["resolved_object_candidates"] = [
+                {
+                    "caption": caption,
+                    "agent_distance": int(distance),
+                    "center": [int(cx), int(cy)],
+                }
+                for distance, cx, cy, caption in candidates[:5]
+            ]
+            _, cx, cy, _ = candidates[0]
+            bias = (cx, cy)
+            return (bias, debug) if return_debug else bias
 
     elif choice_type == 'room':
         for rn in graph.room_nodes:
@@ -159,7 +191,8 @@ def resolve_bias_position(parsed: dict, graph, agent_pos: Tuple[int, int],
                 if centers:
                     cx = int(sum(c[0] for c in centers) / len(centers))
                     cy = int(sum(c[1] for c in centers) / len(centers))
-                    return (cx, cy)
+                    bias = (cx, cy)
+                    return (bias, debug) if return_debug else bias
 
     elif choice_type == 'direction':
         direction_offsets = {
@@ -170,12 +203,34 @@ def resolve_bias_position(parsed: dict, graph, agent_pos: Tuple[int, int],
         }
         for dir_name, (dr, dc) in direction_offsets.items():
             if dir_name == choice_lower:
+                frontier_locations = getattr(graph, 'frontier_locations_16', None)
+                if frontier_locations is not None and len(frontier_locations) > 0:
+                    scored = []
+                    for coord in frontier_locations:
+                        fx, fy = int(coord[0]), int(coord[1])
+                        dx = fx - int(agent_pos[0])
+                        dy = fy - int(agent_pos[1])
+                        projection = dx * dr + dy * dc
+                        if projection <= 0:
+                            continue
+                        lateral = abs(dx * dc - dy * dr)
+                        scored.append((projection, -lateral, fx, fy))
+                    if scored:
+                        scored.sort(reverse=True)
+                        top = scored[: min(15, len(scored))]
+                        bx = int(round(sum(item[2] for item in top) / len(top)))
+                        by = int(round(sum(item[3] for item in top) / len(top)))
+                        debug["direction_bias_mode"] = "frontier_cluster"
+                        bias = (bx, by)
+                        return (bias, debug) if return_debug else bias
                 offset = map_size // 3
                 bx = int(min(max(agent_pos[0] + dr * offset, 0), map_size - 1))
                 by = int(min(max(agent_pos[1] + dc * offset, 0), map_size - 1))
-                return (bx, by)
+                debug["direction_bias_mode"] = "fixed_offset"
+                bias = (bx, by)
+                return (bias, debug) if return_debug else bias
 
-    return None
+    return (None, debug) if return_debug else None
 
 
 class HighLevelPlanner:
@@ -190,9 +245,11 @@ class HighLevelPlanner:
         self.llm = llm_fn
         self.max_retries = max_retries
         self._call_count: int = 0
+        self._choice_counts = {"object": 0, "room": 0, "direction": 0}
 
     def reset(self):
         self._call_count = 0
+        self._choice_counts = {"object": 0, "room": 0, "direction": 0}
 
     @property
     def call_count(self) -> int:
@@ -254,12 +311,23 @@ class HighLevelPlanner:
 
         # Resolve structured choice to map coordinates
         bias = None
+        resolution_debug = {
+            "resolved_object_candidates": [],
+            "direction_bias_mode": "",
+        }
         if graph is not None:
-            bias = resolve_bias_position(parsed, graph, agent_pos, map_size)
+            bias, resolution_debug = resolve_bias_position(
+                parsed,
+                graph,
+                agent_pos,
+                map_size,
+                return_debug=True,
+            )
 
         # Map choice_type/choice_id to Strategy fields
         choice_type = parsed.get('choice_type', 'direction')
         choice_id = parsed.get('choice_id', '')
+        self._choice_counts[choice_type] = self._choice_counts.get(choice_type, 0) + 1
         if choice_type == 'object':
             target_region = f"object: {choice_id}"
             anchor_object = choice_id
@@ -283,6 +351,7 @@ class HighLevelPlanner:
                 episode_id,
                 {
                     "step_idx": step_idx,
+                    "trace_kind": "planner_call",
                     "schema_version": PLANNER_PROMPT_SCHEMA_VERSION,
                     "prompt_hash": hash_text(prompt),
                     "raw_prompt": prompt,
@@ -290,7 +359,17 @@ class HighLevelPlanner:
                     "parsed_result": parsed,
                     "fallback_triggered": used_fallback,
                     "error_message": error_message,
+                    "choice_type": choice_type,
+                    "choice_id": choice_id,
                     "resolved_bias": bias,
+                    "resolved_bias_position": bias,
+                    "resolved_object_candidates": resolution_debug.get(
+                        "resolved_object_candidates", []
+                    ),
+                    "direction_bias_mode": resolution_debug.get(
+                        "direction_bias_mode", ""
+                    ),
+                    "planner_choice_distribution": dict(self._choice_counts),
                     "strategy": {
                         "target_region": strategy.target_region,
                         "bias_position": strategy.bias_position,
@@ -306,6 +385,46 @@ class HighLevelPlanner:
         logger.info(f"HighLevelPlanner: type={choice_type} id={choice_id} "
                      f"bias={strategy.bias_position} reason={strategy.reasoning}")
         return strategy
+
+    def plan_stage_goal(self, mission_state, world_state, reason: str,
+                        episode_id: Optional[int] = None,
+                        step_idx: Optional[int] = None,
+                        trace_writer=None) -> StageGoal:
+        """Layer-2 planner interface that returns a StageGoal contract."""
+
+        graph = world_state.graph if world_state is not None else None
+        explored_regions = (
+            list(getattr(world_state, "explored_regions", []) or [])
+            if world_state is not None
+            else []
+        )
+        scene_text = serialize_for_planner(graph, explored_regions) if graph else ""
+        pose = getattr(world_state, "pose", {}) if world_state is not None else {}
+        agent_pos = (
+            int(pose.get("map_x", 360)) if isinstance(pose, dict) else 360,
+            int(pose.get("map_y", 360)) if isinstance(pose, dict) else 360,
+        )
+        map_size = (
+            int(getattr(world_state.bev_map, "args", None).map_size)
+            if world_state is not None
+            and getattr(world_state, "bev_map", None) is not None
+            and getattr(getattr(world_state, "bev_map", None), "args", None) is not None
+            and hasattr(getattr(world_state.bev_map, "args"), "map_size")
+            else 720
+        )
+        strategy = self.plan(
+            scene_text=scene_text,
+            goal_description=getattr(mission_state, "mission_text", ""),
+            explored_regions=explored_regions,
+            escalate_reason=reason or getattr(mission_state, "replan_reason", None) or "",
+            graph=graph,
+            agent_pos=agent_pos,
+            map_size=map_size,
+            episode_id=episode_id,
+            step_idx=step_idx,
+            trace_writer=trace_writer,
+        )
+        return stage_goal_from_strategy(strategy)
 
     def _parse(self, response: str) -> Optional[dict]:
         """Parse JSON from LLM response."""

@@ -9,6 +9,7 @@ save_interval: 1
 dump_location: "./outputs/experiments/"
 experiment_id: "experiment_0"
 results_root: "results"
+enable_controller_trace: true
 save_periodic: 50000
 visualize: 0
 environment: "habitat"
@@ -82,9 +83,21 @@ base_url_env: "SMOOTHNAV_BASE_URL"
 # Phase 2 controller profiles and ablations
 controller_profile: ""
 controller_enable_monitor: true
-controller_monitor_policy: "llm"
+controller_monitor_policy: "llm_escalation"
 controller_enable_prefetch: true
 controller_replan_policy: "event"
 controller_enable_stuck_replan: true
+controller_stuck_suppression_steps: 8
+controller_direction_reuse_limit: 1
+controller_grounding_noop_replan_threshold: 2
+controller_same_frontier_reuse_threshold: 2
 controller_fixed_plan_interval_steps: 40
 controller_prefetch_near_threshold: 10.0
+graph_frontier_min_size: 20
+graph_goal_distance_threshold: 1.2
+graph_allow_raw_frontier_fallback: true
+graph_allow_relaxed_distance_fallback: true
+graph_semantic_bias_weight: 4.0
+graph_bias_candidate_topk: 24
+graph_bias_candidate_radius: 8.0
+graph_goal_topk: 5

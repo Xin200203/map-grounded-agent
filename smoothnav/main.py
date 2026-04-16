@@ -28,26 +28,42 @@ from smoothnav.controller_config import (
 from smoothnav.controller_logic import (
     build_graph_delta,
     handle_frontier_reached,
+    handle_grounding_failure,
     handle_stuck_replan,
     is_room_target,
     maybe_call_monitor,
     maybe_promote_pending,
     plan_strategy,
+    update_grounding_failure_state,
 )
 from smoothnav.controller_state import ControllerState
+from smoothnav.controller_runtime import compact_layered_payload, layered_trace_payload
+from smoothnav.budget_context import BudgetGovernor
+from smoothnav.evidence_ledger import EvidenceLedger
+from smoothnav.executor_adapter import ExecutorAdapter, null_geometric_goal
 from smoothnav.experiment_io import resolve_api_config, setup_run_environment
+from smoothnav.geometric_grounder import GeometricGrounder
 from smoothnav.low_level_agent import (
     DisabledMonitor,
+    ESCALATION_ONLY_MONITOR_SCHEMA_VERSION,
     LOW_LEVEL_PROMPT_SCHEMA_VERSION,
     LowLevelAction,
     LowLevelAgent,
+    EscalationOnlyMonitor,
     RULE_MONITOR_SCHEMA_VERSION,
     RuleBasedMonitor,
 )
+from smoothnav.mission_state import MissionProgressManager
 from smoothnav.metrics import SmoothnessMetrics
+from smoothnav.pending_proposals import PendingProposalManager
 from smoothnav.planner import PLANNER_PROMPT_SCHEMA_VERSION, HighLevelPlanner
-from smoothnav.strategy_grounding import apply_strategy
+from smoothnav.tactical_arbiter import TacticalArbiter
+from smoothnav.task_belief import TaskBeliefUpdater
+from smoothnav.task_spec import parse_task_spec
+from smoothnav.terminal_arbitration import TerminalArbiter, TerminalDecision
 from smoothnav.tracing import RunTracer, strategy_to_dict
+from smoothnav.types import TacticalMode, TerminalOutcome, stage_goal_from_strategy
+from smoothnav.world_state import WorldStateBuilder
 
 
 def get_config():
@@ -65,6 +81,20 @@ def get_config():
                         help="override num_eval_episodes (0=use config)")
     parser.add_argument("--results-root", default="", type=str,
                         help="optional override for results root directory")
+    parser.add_argument(
+        "--enable-controller-trace",
+        dest="enable_controller_trace",
+        action="store_const",
+        const=True,
+        default=None,
+    )
+    parser.add_argument(
+        "--disable-controller-trace",
+        dest="enable_controller_trace",
+        action="store_const",
+        const=False,
+        default=None,
+    )
     parser.add_argument(
         "--api-provider",
         dest="api_provider",
@@ -87,7 +117,7 @@ def get_config():
         "--monitor-policy",
         dest="controller_monitor_policy",
         default=None,
-        choices=["llm", "rules", "off"],
+        choices=["llm", "llm_escalation", "rules", "off"],
     )
     parser.add_argument(
         "--replan-policy",
@@ -149,6 +179,30 @@ def get_config():
         const=False,
         default=None,
     )
+    parser.add_argument(
+        "--stuck-suppression-steps",
+        dest="controller_stuck_suppression_steps",
+        default=None,
+        type=int,
+    )
+    parser.add_argument(
+        "--direction-reuse-limit",
+        dest="controller_direction_reuse_limit",
+        default=None,
+        type=int,
+    )
+    parser.add_argument(
+        "--grounding-noop-replan-threshold",
+        dest="controller_grounding_noop_replan_threshold",
+        default=None,
+        type=int,
+    )
+    parser.add_argument(
+        "--same-frontier-reuse-threshold",
+        dest="controller_same_frontier_reuse_threshold",
+        default=None,
+        type=int,
+    )
     parsed_args = parser.parse_args()
     controller_cli_overrides = {
         key
@@ -159,12 +213,15 @@ def get_config():
     with open(parsed_args.config_file, "r") as file:
         config = yaml.safe_load(file)
     args_dict = dict(config)
+    nullable_passthrough_keys = {"enable_controller_trace"}
     for key, value in vars(parsed_args).items():
         if key == "results_root":
             if value:
                 args_dict[key] = value
             elif key not in args_dict:
                 args_dict[key] = value
+        elif key in nullable_passthrough_keys and value is None:
+            continue
         elif value is not None and key.startswith("controller_"):
             args_dict[key] = value
         elif value is None and key.startswith("controller_"):
@@ -195,6 +252,8 @@ def get_config():
             "monitor": (
                 RULE_MONITOR_SCHEMA_VERSION
                 if args.controller_monitor_policy == "rules"
+                else ESCALATION_ONLY_MONITOR_SCHEMA_VERSION
+                if args.controller_monitor_policy == "llm_escalation"
                 else LOW_LEVEL_PROMPT_SCHEMA_VERSION
             ),
         },
@@ -239,7 +298,10 @@ def _configure_logging(args):
 
 def main():
     args = get_config()
-    tracer = RunTracer(args.run_dir)
+    tracer = RunTracer(
+        args.run_dir,
+        enable_controller_trace=getattr(args, "enable_controller_trace", True),
+    )
     _configure_logging(args)
     logging.info(
         "SmoothNav starting: mode=%s profile=%s run_id=%s",
@@ -259,6 +321,26 @@ def main():
     graph = Graph(args)
     envs = construct_envs(args)
     agent = UniGoal_Agent(args, envs)
+    executor_adapter = ExecutorAdapter(agent)
+    grounder = GeometricGrounder()
+    mission_manager = MissionProgressManager()
+    world_builder = WorldStateBuilder()
+    pending_manager = PendingProposalManager(max_pending=2)
+    budget_governor = BudgetGovernor(
+        planner_call_budget=8,
+        adjudicator_call_budget=8,
+        window_steps=100,
+        forced_cooldown_after_replan=0,
+        belief_summarization_interval=50,
+    )
+    terminal_arbiter = TerminalArbiter(
+        max_no_progress_steps=max(args.stuck_threshold * 8, 40),
+        max_grounding_noops=max(args.controller_grounding_noop_replan_threshold * 6, 12),
+        max_stuck_steps=max(args.stuck_threshold * 4, 30),
+    )
+    tactical_arbiter = TacticalArbiter(
+        direction_reuse_limit=args.controller_direction_reuse_limit
+    )
 
     llm_sonnet = LLM(
         args.base_url,
@@ -277,6 +359,18 @@ def main():
             api_protocol=args.api_protocol,
         )
         low_agent = LowLevelAgent(llm_fn=llm_haiku)
+    elif args.controller_monitor_policy == "llm_escalation":
+        llm_haiku = LLM(
+            args.base_url,
+            args.api_key,
+            args.llm_model_fast,
+            api_provider=args.api_provider,
+            api_protocol=args.api_protocol,
+        )
+        low_agent = EscalationOnlyMonitor(
+            llm_fn=llm_haiku,
+            prefetch_near_threshold=args.controller_prefetch_near_threshold,
+        )
     elif args.controller_monitor_policy == "rules":
         low_agent = RuleBasedMonitor(
             prefetch_near_threshold=args.controller_prefetch_near_threshold
@@ -325,9 +419,87 @@ def main():
     obs, rgbd, done, infos = agent.step(agent_input)
     _reset_graph_goal(args, graph, infos)
     goal_description = _goal_description_from_infos(args, infos)
+    mission_manager.reset(goal_description, args.goal_type)
+    task_spec = parse_task_spec(
+        goal_description,
+        args.goal_type,
+        task_id="episode_000000",
+    )
+    evidence_ledger = EvidenceLedger()
+    belief_updater = TaskBeliefUpdater(task_spec, evidence_ledger)
+    task_belief = belief_updater.belief
     smoothness.reset()
     active_episode_id = 0
     step = 0
+    grounding_events = []
+    world_state = None
+    terminal_decision = TerminalDecision(
+        outcome=TerminalOutcome.RUNNING,
+        termination_confidence=0.0,
+        reason="not_started",
+    )
+
+    def apply_strategy_with_trace(strategy, trigger):
+        result, geometric_goal = grounder.ground_strategy(
+            strategy,
+            graph,
+            bev_map,
+            args,
+            global_goals,
+            task_belief=task_belief,
+            world_state=world_state,
+            goal_epoch=controller_state.goal_epoch,
+        )
+        apply_strategy_with_trace.last_result = result
+        apply_strategy_with_trace.last_geometric_goal = geometric_goal
+        mission_manager.note_stage_goal(strategy, replan_reason=trigger)
+        belief_updater.note_active_stage(
+            stage_goal_from_strategy(
+                strategy,
+                task_epoch=task_belief.task_epoch,
+                belief_epoch=task_belief.belief_epoch,
+                world_epoch=getattr(world_state, "world_epoch", 0) if world_state else 0,
+                stage_epoch=controller_state.strategy_epoch,
+            )
+        )
+        update_grounding_failure_state(controller_state, result)
+        event = result.to_dict()
+        event["trigger"] = trigger
+        event["strategy"] = strategy_to_dict(strategy)
+        event["geometric_goal"] = geometric_goal.to_dict()
+        event["consecutive_grounding_noops"] = (
+            controller_state.consecutive_grounding_noops
+        )
+        event["same_frontier_reuse_count"] = (
+            controller_state.same_frontier_reuse_count
+        )
+        grounding_events.append(event)
+        logging.info(
+            "Grounding[%s]: success=%s changed=%s noop=%s frontier=%s projected=%s",
+            trigger,
+            result.success,
+            result.changed,
+            result.noop_type or "",
+            result.selected_frontier,
+            result.projected_goal,
+        )
+        return result
+
+    apply_strategy_with_trace.last_result = None
+    apply_strategy_with_trace.last_geometric_goal = None
+    planner_budget_denial_events = []
+
+    def plan_strategy_budgeted(*, fallback_strategy=None, allow_none=False, **kwargs):
+        if not budget_governor.can_call_planner(step):
+            event = {
+                "step_idx": step,
+                "reason": kwargs.get("escalate_reason", "planner_call"),
+                "fallback": "none" if allow_none else "current_strategy",
+            }
+            planner_budget_denial_events.append(event)
+            logging.warning("Planner budget denied: %s", event)
+            return None if allow_none else fallback_strategy
+        return plan_strategy(**kwargs)
 
     print(f"SmoothNav [{args.mode}] starting, {args.num_episodes} episodes")
 
@@ -356,6 +528,21 @@ def main():
                         ),
                         "success": success,
                         "spl": spl,
+                        "terminal_outcome": (
+                            terminal_decision.outcome.value
+                            if terminal_decision is not None
+                            and terminal_decision.outcome != TerminalOutcome.RUNNING
+                            else (
+                                TerminalOutcome.SUCCESS.value
+                                if success
+                                else TerminalOutcome.FAILURE_NO_PROGRESS_TIMEOUT.value
+                            )
+                        ),
+                        "terminal_decision": (
+                            terminal_decision.to_dict()
+                            if terminal_decision is not None
+                            else None
+                        ),
                         "high_level_calls": high_planner.call_count,
                         "low_level_calls": low_agent.call_count,
                         **sm_result.to_dict(),
@@ -388,8 +575,26 @@ def main():
                 high_planner.reset()
                 low_agent.reset()
                 controller_state = ControllerState()
+                world_builder.reset()
+                pending_manager.reset()
+                budget_governor.reset()
+                tactical_arbiter.reset()
                 _reset_graph_goal(args, graph, infos)
                 goal_description = _goal_description_from_infos(args, infos)
+                mission_manager.reset(goal_description, args.goal_type)
+                task_spec = parse_task_spec(
+                    goal_description,
+                    args.goal_type,
+                    task_id=f"episode_{completed_episode_id + 1:06d}",
+                )
+                evidence_ledger = EvidenceLedger()
+                belief_updater = TaskBeliefUpdater(task_spec, evidence_ledger)
+                task_belief = belief_updater.belief
+                terminal_decision = TerminalDecision(
+                    outcome=TerminalOutcome.RUNNING,
+                    termination_confidence=0.0,
+                    reason="reset",
+                )
                 active_episode_id = completed_episode_id + 1
 
             bev_map.mapping(rgbd, infos)
@@ -417,8 +622,15 @@ def main():
             planner_reasons = []
             monitor_decision = None
             monitor_reason = ""
+            monitor_trigger_reason = ""
+            monitor_trigger_event_types = []
             low_level_action = None
             graph_delta = None
+            world_state = None
+            tactical_decision = None
+            executor_command = None
+            executor_feedback = None
+            budget_state = budget_governor.update(step)
             step_episode_id = active_episode_id
             current_strategy_before = (
                 controller_state.current_strategy.target_region
@@ -432,6 +644,18 @@ def main():
             )
             pending_created = False
             pending_promoted = False
+            pending_created_and_promoted_same_step = False
+            pending_create_reason = ""
+            pending_strategy_type = ""
+            pending_promotion_reason = ""
+            pending_proposal_created = None
+            pending_proposal_adopted = None
+            forced_replan_due_to_direction_reuse = False
+            forced_replan_due_to_grounding_failure = False
+            controller_stuck_replan_triggered = False
+            grounding_failure_reason = ""
+            grounding_events = []
+            apply_strategy_with_trace.last_result = None
 
             near_goal = np.linalg.norm(
                 np.array([bev_map.local_row, bev_map.local_col]) - np.array(global_goals)
@@ -458,7 +682,8 @@ def main():
                 if controller_state.needs_initial_plan:
                     graph.set_full_map(bev_map.full_map)
                     graph.set_full_pose(bev_map.full_pose)
-                    controller_state.current_strategy = plan_strategy(
+                    controller_state.current_strategy = plan_strategy_budgeted(
+                        fallback_strategy=controller_state.current_strategy,
                         high_planner=high_planner,
                         graph=graph,
                         controller_state=controller_state,
@@ -470,7 +695,10 @@ def main():
                         step_idx=step,
                         trace_writer=tracer,
                     )
-                    apply_strategy(controller_state.current_strategy, graph, bev_map, args, global_goals)
+                    apply_strategy_with_trace(
+                        controller_state.current_strategy,
+                        "episode_start",
+                    )
                     planner_reasons.append("episode_start")
                     controller_state.needs_initial_plan = False
                     frontier_reached = False
@@ -500,14 +728,49 @@ def main():
                     dist_to_goal=dist_to_goal,
                 )
                 controller_state.prev_room_object_counts = graph_delta.room_object_counts
+                controller_state.prev_node_captions = graph_delta.node_captions_snapshot
+                world_state = world_builder.build(
+                    step_idx=step,
+                    pose={
+                        **pose_before,
+                        "map_x": float(agent_map_x),
+                        "map_y": float(agent_map_y),
+                    },
+                    local_pose=pose_pred,
+                    graph=graph,
+                    bev_map=bev_map,
+                    controller_state=controller_state,
+                    graph_delta=graph_delta,
+                    agent=agent,
+                )
+                task_belief = belief_updater.update(world_state)
+                budget_state = budget_governor.update(step)
+                tactical_decision = tactical_arbiter.decide(
+                    world_state=world_state,
+                    mission_state=mission_manager.state,
+                    current_strategy=controller_state.current_strategy,
+                    pending_strategy=controller_state.pending_strategy,
+                    needs_initial_plan=controller_state.needs_initial_plan,
+                    no_frontiers=(
+                        apply_strategy_with_trace.last_result is not None
+                        and apply_strategy_with_trace.last_result.graph_no_goal_reason
+                        == "no_frontiers"
+                    ),
+                )
 
-                if graph_delta.has_new_rooms and args.controller_replan_policy == "event":
+                if (
+                    tactical_decision is not None
+                    and tactical_decision.mode == TacticalMode.REPLAN_REQUIRED
+                    and tactical_decision.reason == "new_room_discovered"
+                    and args.controller_replan_policy == "event"
+                ):
                     if (
                         controller_state.current_strategy
                         and not is_room_target(controller_state.current_strategy.target_region)
                         and not controller_state.needs_initial_plan
                     ):
-                        controller_state.current_strategy = plan_strategy(
+                        controller_state.current_strategy = plan_strategy_budgeted(
+                            fallback_strategy=controller_state.current_strategy,
                             high_planner=high_planner,
                             graph=graph,
                             controller_state=controller_state,
@@ -518,8 +781,13 @@ def main():
                             episode_id=step_episode_id,
                             step_idx=step,
                             trace_writer=tracer,
+                            mission_state=mission_manager.state,
+                            world_state=world_state,
                         )
-                        apply_strategy(controller_state.current_strategy, graph, bev_map, args, global_goals)
+                        apply_strategy_with_trace(
+                            controller_state.current_strategy,
+                            "new_room_discovered",
+                        )
                         planner_reasons.append("new_room_discovered")
                         is_planning = True
                         logging.info(
@@ -528,8 +796,12 @@ def main():
                             controller_state.current_strategy.target_region,
                         )
 
-                if args.controller_enable_monitor:
-                    monitor_called, low_result = maybe_call_monitor(
+                if (
+                    args.controller_enable_monitor
+                    and tactical_decision is not None
+                    and tactical_decision.should_call_monitor
+                ):
+                    monitor_called, low_result, monitor_trigger_event_types = maybe_call_monitor(
                         low_agent=low_agent,
                         controller_state=controller_state,
                         graph_delta=graph_delta,
@@ -538,11 +810,14 @@ def main():
                         step_idx=step,
                         trace_writer=tracer,
                     )
+                    if not monitor_called and graph_delta.has_new_nodes:
+                        controller_state.prev_node_count = len(graph.nodes)
                 else:
-                    monitor_called, low_result = False, None
+                    monitor_called, low_result, monitor_trigger_event_types = False, None, []
                     if graph_delta.has_new_nodes:
                         controller_state.prev_node_count = len(graph.nodes)
                 if monitor_called:
+                    monitor_trigger_reason = ", ".join(monitor_trigger_event_types)
                     controller_state.prev_node_count = len(graph.nodes)
                     low_level_action = low_result.action
                     monitor_decision = low_result.action.name
@@ -550,7 +825,10 @@ def main():
                     if low_result.action == LowLevelAction.ADJUST:
                         if low_result.adjust_bias is not None:
                             controller_state.current_strategy.bias_position = low_result.adjust_bias
-                            apply_strategy(controller_state.current_strategy, graph, bev_map, args, global_goals)
+                            apply_strategy_with_trace(
+                                controller_state.current_strategy,
+                                "monitor_adjust",
+                            )
                             logging.info(
                                 "Step %s: ADJUST bias -> %s reason=%s",
                                 step,
@@ -562,7 +840,9 @@ def main():
                             args.controller_enable_prefetch
                             and controller_state.pending_strategy is None
                         ):
-                            controller_state.pending_strategy = plan_strategy(
+                            controller_state.pending_strategy = plan_strategy_budgeted(
+                                fallback_strategy=controller_state.pending_strategy,
+                                allow_none=True,
                                 high_planner=high_planner,
                                 graph=graph,
                                 controller_state=controller_state,
@@ -573,20 +853,35 @@ def main():
                                 episode_id=step_episode_id,
                                 step_idx=step,
                                 trace_writer=tracer,
+                                mission_state=mission_manager.state,
+                                world_state=world_state,
                             )
-                            planner_reasons.append("monitor_prefetch")
-                            is_planning = True
-                            logging.info(
-                                "Step %s: PREFETCH -> %s",
-                                step,
-                                controller_state.pending_strategy.target_region,
-                            )
+                            if controller_state.pending_strategy is not None:
+                                planner_reasons.append("monitor_prefetch")
+                                is_planning = True
+                                pending_created = True
+                                pending_create_reason = "monitor_prefetch"
+                                pending_strategy_type = (
+                                    "object"
+                                    if controller_state.pending_strategy.target_region.startswith("object:")
+                                    else "room"
+                                    if is_room_target(
+                                        controller_state.pending_strategy.target_region
+                                    )
+                                    else "direction"
+                                )
+                                logging.info(
+                                    "Step %s: PREFETCH -> %s",
+                                    step,
+                                    controller_state.pending_strategy.target_region,
+                                )
                     elif low_result.action == LowLevelAction.ESCALATE:
                         if is_room_target(controller_state.current_strategy.target_region):
                             controller_state.explored_regions.append(
                                 f"{controller_state.current_strategy.target_region} (searched, not found)"
                             )
-                        controller_state.current_strategy = plan_strategy(
+                        controller_state.current_strategy = plan_strategy_budgeted(
+                            fallback_strategy=controller_state.current_strategy,
                             high_planner=high_planner,
                             graph=graph,
                             controller_state=controller_state,
@@ -597,9 +892,14 @@ def main():
                             episode_id=step_episode_id,
                             step_idx=step,
                             trace_writer=tracer,
+                            mission_state=mission_manager.state,
+                            world_state=world_state,
                         )
                         controller_state.pending_strategy = None
-                        apply_strategy(controller_state.current_strategy, graph, bev_map, args, global_goals)
+                        apply_strategy_with_trace(
+                            controller_state.current_strategy,
+                            "monitor_escalate",
+                        )
                         planner_reasons.append("monitor_escalate")
                         is_planning = True
                         logging.info(
@@ -608,17 +908,22 @@ def main():
                             controller_state.current_strategy.target_region,
                         )
 
-                if maybe_promote_pending(
+                pending_promotion = maybe_promote_pending(
                     controller_state=controller_state,
                     graph=graph,
                     bev_map=bev_map,
                     args=args,
                     global_goals=global_goals,
-                    apply_strategy_fn=apply_strategy,
-                ):
+                    apply_strategy_fn=lambda strategy, graph, bev_map, args, global_goals: apply_strategy_with_trace(
+                        strategy,
+                        "pending_promotion",
+                    ),
+                )
+                if pending_promotion["promoted"]:
                     pending_promoted = True
+                    pending_promotion_reason = pending_promotion["reason"]
 
-                if handle_frontier_reached(
+                frontier_result = handle_frontier_reached(
                     controller_state=controller_state,
                     graph_delta=graph_delta,
                     graph=graph,
@@ -628,27 +933,51 @@ def main():
                     high_planner=high_planner,
                     goal_description=goal_description,
                     agent_pos=(int(agent_map_x), int(agent_map_y)),
-                    apply_strategy_fn=apply_strategy,
+                    apply_strategy_fn=lambda strategy, graph, bev_map, args, global_goals: apply_strategy_with_trace(
+                        strategy,
+                        "frontier_reached",
+                    ),
                     episode_id=step_episode_id,
                     step_idx=step,
                     trace_writer=tracer,
-                ):
+                    mission_state=mission_manager.state,
+                    world_state=world_state,
+                )
+                if frontier_result["handled"]:
                     planner_reasons.append("frontier_reached")
                     is_planning = True
+                    pending_promoted = pending_promoted or frontier_result["pending_promoted"]
+                    if frontier_result["pending_promotion_reason"]:
+                        pending_promotion_reason = frontier_result["pending_promotion_reason"]
+                    forced_replan_due_to_direction_reuse = frontier_result[
+                        "forced_replan_due_to_direction_reuse"
+                    ]
 
                 if (
                     args.controller_enable_prefetch
                     and args.controller_replan_policy == "event"
-                    and
-                    dist_to_goal < 10
                     and controller_state.pending_strategy is None
                     and low_level_action != LowLevelAction.PREFETCH
                     and not frontier_reached
                     and not controller_state.needs_initial_plan
                     and controller_state.current_strategy
-                    and is_room_target(controller_state.current_strategy.target_region)
+                    and (
+                        getattr(graph_delta, "frontier_near", False)
+                        or dist_to_goal < args.controller_prefetch_near_threshold
+                        or (
+                            not is_room_target(
+                                controller_state.current_strategy.target_region
+                            )
+                            and (
+                                getattr(graph_delta, "has_new_rooms", False)
+                                or getattr(graph_delta, "has_room_object_increase", False)
+                            )
+                        )
+                    )
                 ):
-                    controller_state.pending_strategy = plan_strategy(
+                    controller_state.pending_strategy = plan_strategy_budgeted(
+                        fallback_strategy=controller_state.pending_strategy,
+                        allow_none=True,
                         high_planner=high_planner,
                         graph=graph,
                         controller_state=controller_state,
@@ -659,14 +988,26 @@ def main():
                         episode_id=step_episode_id,
                         step_idx=step,
                         trace_writer=tracer,
+                        mission_state=mission_manager.state,
+                        world_state=world_state,
                     )
-                    planner_reasons.append("auto_prefetch")
-                    is_planning = True
-                    logging.info(
-                        "Step %s: Auto-PREFETCH -> %s",
-                        step,
-                        controller_state.pending_strategy.target_region,
-                    )
+                    if controller_state.pending_strategy is not None:
+                        planner_reasons.append("auto_prefetch")
+                        is_planning = True
+                        pending_created = True
+                        pending_create_reason = "auto_prefetch"
+                        pending_strategy_type = (
+                            "object"
+                            if controller_state.pending_strategy.target_region.startswith("object:")
+                            else "room"
+                            if is_room_target(controller_state.pending_strategy.target_region)
+                            else "direction"
+                        )
+                        logging.info(
+                            "Step %s: Auto-PREFETCH -> %s",
+                            step,
+                            controller_state.pending_strategy.target_region,
+                        )
 
                 if (
                     args.controller_replan_policy == "fixed_interval"
@@ -675,7 +1016,8 @@ def main():
                     and step > 0
                     and step % args.controller_fixed_plan_interval_steps == 0
                 ):
-                    controller_state.current_strategy = plan_strategy(
+                    controller_state.current_strategy = plan_strategy_budgeted(
+                        fallback_strategy=controller_state.current_strategy,
                         high_planner=high_planner,
                         graph=graph,
                         controller_state=controller_state,
@@ -686,15 +1028,56 @@ def main():
                         episode_id=step_episode_id,
                         step_idx=step,
                         trace_writer=tracer,
+                        mission_state=mission_manager.state,
+                        world_state=world_state,
                     )
                     controller_state.pending_strategy = None
-                    apply_strategy(controller_state.current_strategy, graph, bev_map, args, global_goals)
+                    apply_strategy_with_trace(
+                        controller_state.current_strategy,
+                        "fixed_interval_refresh",
+                    )
                     planner_reasons.append("fixed_interval_refresh")
                     is_planning = True
 
-                if args.controller_enable_stuck_replan and handle_stuck_replan(
+                if (
+                    args.controller_enable_stuck_replan
+                    and tactical_decision is not None
+                    and tactical_decision.mode == TacticalMode.RECOVERY
+                    and handle_stuck_replan(
+                        controller_state=controller_state,
+                        graph_delta=graph_delta,
+                        graph=graph,
+                        bev_map=bev_map,
+                        args=args,
+                        global_goals=global_goals,
+                        high_planner=high_planner,
+                        goal_description=goal_description,
+                        agent_pos=(int(agent_map_x), int(agent_map_y)),
+                        apply_strategy_fn=lambda strategy, graph, bev_map, args, global_goals: apply_strategy_with_trace(
+                            strategy,
+                            "stuck_replan",
+                        ),
+                        episode_id=step_episode_id,
+                        step_idx=step,
+                        trace_writer=tracer,
+                        mission_state=mission_manager.state,
+                        world_state=world_state,
+                    )
+                ):
+                    planner_reasons.append("stuck_replan")
+                    is_planning = True
+                    controller_stuck_replan_triggered = True
+                    controller_state.executor_stuck_suppression_steps = int(
+                        getattr(args, "controller_stuck_suppression_steps", 0) or 0
+                    )
+
+                grounding_failure = handle_grounding_failure(
                     controller_state=controller_state,
-                    graph_delta=graph_delta,
+                    last_grounding_result=(
+                        apply_strategy_with_trace.last_result
+                        if hasattr(apply_strategy_with_trace, "last_result")
+                        else None
+                    ),
                     graph=graph,
                     bev_map=bev_map,
                     args=args,
@@ -702,13 +1085,21 @@ def main():
                     high_planner=high_planner,
                     goal_description=goal_description,
                     agent_pos=(int(agent_map_x), int(agent_map_y)),
-                    apply_strategy_fn=apply_strategy,
+                    apply_strategy_fn=lambda strategy, graph, bev_map, args, global_goals: apply_strategy_with_trace(
+                        strategy,
+                        "grounding_failure_replan",
+                    ),
                     episode_id=step_episode_id,
                     step_idx=step,
                     trace_writer=tracer,
-                ):
-                    planner_reasons.append("stuck_replan")
+                    mission_state=mission_manager.state,
+                    world_state=world_state,
+                )
+                if grounding_failure["replanned"]:
+                    planner_reasons.append("grounding_failure_replan")
                     is_planning = True
+                    forced_replan_due_to_grounding_failure = True
+                    grounding_failure_reason = grounding_failure["grounding_failure_reason"]
 
                 smoothness.record_from_habitat(
                     x=start_x,
@@ -762,7 +1153,32 @@ def main():
                     dist_to_goal=dist_to_goal,
                 )
                 controller_state.prev_room_object_counts = graph_delta.room_object_counts
+                controller_state.prev_node_captions = graph_delta.node_captions_snapshot
                 controller_state.prev_node_count = len(graph.nodes)
+                world_state = world_builder.build(
+                    step_idx=step,
+                    pose={
+                        **pose_before,
+                        "map_x": float(agent_map_x),
+                        "map_y": float(agent_map_y),
+                    },
+                    local_pose=pose_pred,
+                    graph=graph,
+                    bev_map=bev_map,
+                    controller_state=controller_state,
+                    graph_delta=graph_delta,
+                    agent=agent,
+                )
+                task_belief = belief_updater.update(world_state)
+                budget_state = budget_governor.update(step)
+                tactical_decision = tactical_arbiter.decide(
+                    world_state=world_state,
+                    mission_state=mission_manager.state,
+                    current_strategy=controller_state.current_strategy,
+                    pending_strategy=controller_state.pending_strategy,
+                    needs_initial_plan=controller_state.needs_initial_plan,
+                    no_frontiers=False,
+                )
 
                 smoothness.record_from_habitat(
                     x=start_x,
@@ -777,6 +1193,12 @@ def main():
             controller_state.monitor_call_count = low_agent.call_count
             planner_called = high_planner.call_count > planner_calls_before
             monitor_called = monitor_called or (low_agent.call_count > monitor_calls_before)
+            if planner_called:
+                for _ in range(high_planner.call_count - planner_calls_before):
+                    budget_state = budget_governor.record_planner_call(step)
+            if monitor_called:
+                for _ in range(low_agent.call_count - monitor_calls_before):
+                    budget_state = budget_governor.record_adjudicator_call(step)
             goal_after = list(global_goals)
             controller_state.last_goal = list(goal_after)
             current_strategy_after = (
@@ -790,10 +1212,12 @@ def main():
                 else None
             )
             strategy_switched = (
-                current_strategy_before is not None
-                and current_strategy_after != current_strategy_before
+                current_strategy_before != current_strategy_after
+                and current_strategy_after is not None
             )
-            pending_created = (
+            if strategy_switched:
+                controller_state.direction_reuse_count = 0
+            pending_created = pending_created or (
                 pending_strategy_before is None and pending_strategy_after is not None
             )
             if (
@@ -802,12 +1226,92 @@ def main():
                 and current_strategy_after == pending_strategy_before
             ):
                 pending_promoted = True
+            pending_created_and_promoted_same_step = pending_created and pending_promoted
+            if pending_created and controller_state.pending_strategy is not None:
+                pending_stage_goal = stage_goal_from_strategy(
+                    controller_state.pending_strategy,
+                    task_epoch=task_belief.task_epoch,
+                    belief_epoch=task_belief.belief_epoch,
+                    world_epoch=getattr(world_state, "world_epoch", 0) if world_state else 0,
+                    stage_epoch=controller_state.strategy_epoch + 1,
+                )
+                if pending_stage_goal is not None:
+                    pending_proposal_created = pending_manager.create(
+                        pending_stage_goal,
+                        task_belief=task_belief,
+                        world_state=world_state,
+                        created_reason=pending_create_reason or "legacy_pending_created",
+                    )
+            if pending_promoted:
+                pending_proposal_adopted = pending_manager.adopt_best(
+                    task_belief=task_belief,
+                    world_state=world_state,
+                    ledger=evidence_ledger,
+                    reason=pending_promotion_reason or "legacy_pending_promoted",
+                )
+                if pending_proposal_adopted is None and controller_state.current_strategy is not None:
+                    adopted_stage_goal = stage_goal_from_strategy(
+                        controller_state.current_strategy,
+                        task_epoch=task_belief.task_epoch,
+                        belief_epoch=task_belief.belief_epoch,
+                        world_epoch=getattr(world_state, "world_epoch", 0) if world_state else 0,
+                        stage_epoch=controller_state.strategy_epoch + 1,
+                    )
+                    if adopted_stage_goal is not None:
+                        pending_proposal_created = pending_manager.create(
+                            adopted_stage_goal,
+                            task_belief=task_belief,
+                            world_state=world_state,
+                            created_reason="promoted_without_recorded_pending",
+                        )
+                        pending_proposal_adopted = pending_manager.adopt_best(
+                            task_belief=task_belief,
+                            world_state=world_state,
+                            ledger=evidence_ledger,
+                            reason=pending_promotion_reason or "legacy_pending_promoted",
+                        )
             goal_updated = goal_after != goal_before
+            goal_epoch_advanced = False
+            if goal_updated:
+                controller_state.goal_epoch += 1
+                goal_epoch_advanced = True
+            grounding_attempt_count = len(grounding_events)
+            grounding_noop_count = sum(
+                1 for event in grounding_events if not event.get("changed", False)
+            )
+            grounding_changed_count = sum(
+                1 for event in grounding_events if event.get("changed", False)
+            )
+            control_epoch_advanced = False
+            if current_strategy_after is not None and (
+                strategy_switched
+                or grounding_changed_count > 0
+                or controller_state.strategy_epoch == 0
+            ):
+                controller_state.strategy_epoch += 1
+                control_epoch_advanced = True
+
+            latest_grounding = grounding_events[-1] if grounding_events else {}
 
             goal_maps = np.zeros((args.local_width, args.local_height))
             gx = int(np.clip(global_goals[0], 0, args.local_width - 1))
             gy = int(np.clip(global_goals[1], 0, args.local_height - 1))
             goal_maps[gx, gy] = 1
+            latest_geometric_goal = (
+                apply_strategy_with_trace.last_geometric_goal
+                if apply_strategy_with_trace.last_geometric_goal is not None
+                else null_geometric_goal()
+            )
+            executor_command = executor_adapter.build_command(
+                geometric_goal=latest_geometric_goal,
+                strategy_epoch=controller_state.strategy_epoch,
+                goal_epoch=controller_state.goal_epoch,
+                allow_target_lock=True,
+                allow_recovery=not (
+                    controller_state.executor_stuck_suppression_steps > 0
+                ),
+                clear_temp_goal=False,
+            )
 
             agent_input = {
                 "map_pred": bev_map.local_map[0, 0, :, :].cpu().numpy(),
@@ -817,6 +1321,12 @@ def main():
                 "exp_goal": goal_maps.copy(),
                 "new_goal": 0,
                 "found_goal": 0,
+                "strategy_epoch": controller_state.strategy_epoch,
+                "goal_epoch": controller_state.goal_epoch,
+                "step_idx": step,
+                "suppress_stuck_override": (
+                    controller_state.executor_stuck_suppression_steps > 0
+                ),
                 "wait": wait_env or finished,
                 "sem_map": bev_map.local_map[0, 4:11, :, :].cpu().numpy(),
             }
@@ -827,7 +1337,28 @@ def main():
                     bev_map.local_map[0, 4:11, :, :].argmax(0).cpu().numpy()
                 )
 
-            obs, rgbd, done, infos = agent.step(agent_input)
+            executor_result = executor_adapter.step(agent_input, executor_command)
+            obs = executor_result.obs
+            rgbd = executor_result.rgbd
+            done = executor_result.done
+            infos = executor_result.infos
+            executor_feedback = executor_result.executor_feedback
+            if world_state is not None:
+                task_belief = belief_updater.update(
+                    world_state,
+                    executor_feedback=executor_feedback,
+                )
+            terminal_decision = terminal_arbiter.decide(
+                done=done,
+                infos=infos,
+                task_belief=task_belief,
+                budget_state=budget_state,
+                controller_state=controller_state,
+                latest_grounding=apply_strategy_with_trace.last_result,
+                executor_feedback=executor_feedback,
+            )
+            if controller_state.executor_stuck_suppression_steps > 0:
+                controller_state.executor_stuck_suppression_steps -= 1
 
             pose_after = getattr(agent, "last_pose_after_action", None)
             if pose_after is None:
@@ -847,6 +1378,24 @@ def main():
                     "heading": float(start_o),
                 }
             )
+            layered_payload = compact_layered_payload(
+                layered_trace_payload(
+                    world_state=world_state,
+                    mission_state=mission_manager.state,
+                    task_spec=task_spec,
+                    task_belief=task_belief,
+                    evidence_ledger=evidence_ledger,
+                    pending_proposals=pending_manager,
+                    current_strategy=controller_state.current_strategy,
+                    pending_strategy=controller_state.pending_strategy,
+                    tactical_decision=tactical_decision,
+                    geometric_goal=latest_geometric_goal,
+                    executor_command=executor_command,
+                    executor_feedback=executor_feedback,
+                    budget_state=budget_state,
+                    terminal_decision=terminal_decision,
+                )
+            )
 
             tracer.record_step(
                 step_episode_id,
@@ -854,14 +1403,23 @@ def main():
                     "episode_id": step_episode_id,
                     "step_idx": step,
                     "mode": args.mode,
+                    **layered_payload,
                     "pose_before": pose_before,
                     "pose_after": pose_after,
                     "graph_node_count": getattr(graph_delta, "graph_node_count", len(graph.nodes)),
                     "new_node_count": len(getattr(graph_delta, "new_nodes", [])),
                     "new_node_captions": getattr(graph_delta, "new_node_captions", []),
                     "graph_delta": {
+                        "event_types": getattr(graph_delta, "event_types", []),
+                        "current_strategy_type": getattr(
+                            graph_delta, "current_strategy_type", "none"
+                        ),
                         "new_rooms": getattr(graph_delta, "new_rooms", []),
                         "room_object_count_changes": getattr(graph_delta, "room_object_count_changes", {}),
+                        "room_object_count_increase_rooms": getattr(
+                            graph_delta, "room_object_count_increase_rooms", []
+                        ),
+                        "node_caption_changed": getattr(graph_delta, "node_caption_changed", False),
                         "frontier_near": getattr(graph_delta, "frontier_near", False),
                         "frontier_reached": getattr(graph_delta, "frontier_reached", False),
                         "no_progress": getattr(graph_delta, "no_progress", False),
@@ -873,23 +1431,160 @@ def main():
                     "planner_called": planner_called,
                     "planner_calls_this_step": high_planner.call_count - planner_calls_before,
                     "planner_reasons": planner_reasons,
+                    "planner_budget_denials": [
+                        event
+                        for event in planner_budget_denial_events
+                        if event.get("step_idx") == step
+                    ],
                     "monitor_called": monitor_called,
                     "monitor_calls_this_step": low_agent.call_count - monitor_calls_before,
                     "monitor_decision": monitor_decision,
                     "monitor_reason": monitor_reason,
+                    "monitor_trigger_reason": monitor_trigger_reason,
+                    "monitor_trigger_event_types": monitor_trigger_event_types,
                     "goal_before": goal_before,
                     "goal_after": goal_after,
                     "goal_updated": goal_updated,
+                    "goal_epoch": controller_state.goal_epoch,
+                    "goal_epoch_advanced": goal_epoch_advanced,
+                    "task_epoch": task_belief.task_epoch,
+                    "belief_epoch": task_belief.belief_epoch,
+                    "stage_epoch": controller_state.strategy_epoch,
+                    "mode_epoch": (
+                        tactical_decision.mode_epoch
+                        if tactical_decision is not None
+                        else None
+                    ),
+                    "world_epoch": (
+                        world_state.world_epoch if world_state is not None else None
+                    ),
+                    "evidence_ids_used": list(
+                        task_belief.evidence_ids_used_recently
+                    ),
+                    "pending_proposal_epoch": pending_manager.proposal_epoch,
+                    "pending_proposal_created": (
+                        pending_proposal_created.to_dict()
+                        if pending_proposal_created is not None
+                        else None
+                    ),
+                    "pending_proposal_adopted": (
+                        pending_proposal_adopted.to_dict()
+                        if pending_proposal_adopted is not None
+                        else None
+                    ),
                     "strategy_switched": strategy_switched,
                     "pending_created": pending_created,
+                    "pending_created_and_promoted_same_step": (
+                        pending_created_and_promoted_same_step
+                    ),
+                    "pending_create_reason": pending_create_reason,
+                    "pending_strategy_type": pending_strategy_type,
                     "pending_promoted": pending_promoted,
+                    "pending_promotion_reason": pending_promotion_reason,
+                    "grounding_events": grounding_events,
+                    "grounding_attempt_count": grounding_attempt_count,
+                    "grounding_noop_count": grounding_noop_count,
+                    "grounding_changed_count": grounding_changed_count,
+                    "bias_input": latest_grounding.get("bias_input"),
+                    "selected_frontier": latest_grounding.get("selected_frontier"),
+                    "selected_frontier_same_as_prev": latest_grounding.get(
+                        "selected_frontier_same_as_prev",
+                        latest_grounding.get("selected_frontier_same_as_previous"),
+                    ),
+                    "grounding_success": latest_grounding.get("success"),
+                    "grounding_changed": latest_grounding.get("changed"),
+                    "grounding_noop_reason": latest_grounding.get("noop_reason"),
+                    "grounding_no_goal_reason": latest_grounding.get(
+                        "graph_no_goal_reason"
+                    ),
+                    "local_projection_valid": latest_grounding.get("local_projection_valid"),
+                    "topk_frontier_scores": latest_grounding.get("topk_frontier_scores", []),
+                    "selected_frontier_score_breakdown": latest_grounding.get(
+                        "selected_frontier_score_breakdown", {}
+                    ),
+                    "top1_top2_gap": latest_grounding.get("top1_top2_gap"),
+                    "candidate_frontier_count_after_bias_filter": latest_grounding.get(
+                        "candidate_frontier_count_after_bias_filter"
+                    ),
+                    "raw_frontier_count": latest_grounding.get("raw_frontier_count"),
+                    "filtered_frontier_count": latest_grounding.get(
+                        "filtered_frontier_count"
+                    ),
+                    "frontier_filter_fallback_mode": latest_grounding.get(
+                        "frontier_filter_fallback_mode"
+                    ),
+                    "candidate_distance_fallback_mode": latest_grounding.get(
+                        "candidate_distance_fallback_mode"
+                    ),
+                    "used_raw_frontier_fallback": latest_grounding.get(
+                        "used_raw_frontier_fallback"
+                    ),
+                    "used_relaxed_distance_fallback": latest_grounding.get(
+                        "used_relaxed_distance_fallback"
+                    ),
+                    "selected_from_bias_filtered_subset": latest_grounding.get(
+                        "selected_from_bias_filtered_subset"
+                    ),
+                    "consecutive_grounding_noops": controller_state.consecutive_grounding_noops,
+                    "same_frontier_reuse_count": controller_state.same_frontier_reuse_count,
+                    "forced_replan_due_to_grounding_failure": (
+                        forced_replan_due_to_grounding_failure
+                    ),
+                    "grounding_failure_reason": grounding_failure_reason,
+                    "strategy_epoch": controller_state.strategy_epoch,
+                    "control_epoch_advanced": control_epoch_advanced,
                     "controller_profile": args.controller_profile,
                     "controller_monitor_policy": args.controller_monitor_policy,
                     "controller_replan_policy": args.controller_replan_policy,
+                    "terminal_outcome": terminal_decision.outcome.value,
+                    "terminal_decision": terminal_decision.to_dict(),
+                    "budget_state_trace": budget_state.to_dict(),
                     "visible_target_override": bool(agent.last_override_info.get("visible_target_override")),
                     "temp_goal_override": bool(agent.last_override_info.get("temp_goal_override")),
                     "stuck_goal_override": bool(agent.last_override_info.get("stuck_goal_override")),
                     "global_goal_override": bool(agent.last_override_info.get("global_goal_override")),
+                    "executor_adopted_goal_source": agent.last_override_info.get("adopted_goal_source"),
+                    "executor_feedback_trace": (
+                        executor_feedback.to_dict()
+                        if executor_feedback is not None
+                        else None
+                    ),
+                    "adopted_goal_source": agent.last_override_info.get("adopted_goal_source"),
+                    "adopted_goal_before": agent.last_override_info.get("adopted_goal_before"),
+                    "adopted_goal_after": agent.last_override_info.get("adopted_goal_after"),
+                    "adopted_goal_epoch": agent.last_override_info.get("goal_epoch"),
+                    "executor_adopted_goal_summary": agent.last_override_info.get("adopted_goal_summary"),
+                    "executor_adopted_goal_changed": bool(
+                        agent.last_override_info.get("adopted_goal_changed")
+                    ),
+                    "executor_adoption_changed": bool(
+                        agent.last_override_info.get("adopted_goal_changed")
+                    ),
+                    "executor_strategy_epoch": agent.last_override_info.get("strategy_epoch"),
+                    "executor_temp_goal_epoch": agent.last_override_info.get("temp_goal_epoch"),
+                    "stale_temp_goal_cleared": bool(
+                        agent.last_override_info.get("stale_temp_goal_cleared")
+                    ),
+                    "temp_goal_cleared_on_strategy_switch": bool(
+                        agent.last_override_info.get("temp_goal_cleared_on_strategy_switch")
+                    ),
+                    "temp_goal_suppressed_by_epoch": bool(
+                        agent.last_override_info.get("temp_goal_suppressed_by_epoch")
+                    ),
+                    "stuck_override_suppressed": bool(
+                        agent.last_override_info.get("stuck_override_suppressed")
+                    ),
+                    "executor_stuck_override_suppressed": bool(
+                        agent.last_override_info.get("stuck_override_suppressed")
+                    ),
+                    "controller_stuck_replan_triggered": controller_stuck_replan_triggered,
+                    "stuck_suppression_steps_remaining": (
+                        controller_state.executor_stuck_suppression_steps
+                    ),
+                    "direction_reuse_count": controller_state.direction_reuse_count,
+                    "forced_replan_due_to_direction_reuse": (
+                        forced_replan_due_to_direction_reuse
+                    ),
                     "action": agent.last_action,
                     "sensor_pose_delta": infos.get("sensor_pose"),
                     "done": done,
@@ -932,6 +1627,11 @@ def main():
         summary["avg_low_level_calls"] = float(np.mean(
             [r["low_level_calls"] for r in episode_results]
         )) if episode_results else 0
+        terminal_outcome_counts = {}
+        for result in episode_results:
+            outcome = result.get("terminal_outcome", TerminalOutcome.RUNNING.value)
+            terminal_outcome_counts[outcome] = terminal_outcome_counts.get(outcome, 0) + 1
+        summary["terminal_outcomes"] = terminal_outcome_counts
 
         if episode_smoothness:
             summary.update(
