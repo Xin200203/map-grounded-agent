@@ -203,6 +203,16 @@ backbone 共享改动（frontier 价值评分、关系裁剪、文本可见接�
 - **单门冗余 ≠ 全体冗余**：组合变体 e3e（四门全关）作为最后强证伪在跑（default temp，与对照一致）。若 e3e 也不退化 → 正式切 **Plan B**（效率+退化鲁棒叙事，E2 分解为主表，门控降为设计原则+纵深防御分析）；若 e3e 崩溃 → 门控故事以"冗余保护、联合必要"的形式保留。
 - **方法论教训（入论文实验设置）**：默认温度下 LLM 选择的混沌放大使 n=12 的行为轨迹分歧巨大（e3d 的 obj 选择 3 vs full 的 33，仅 patience 一键之差不可能致此）；后续新条件（Sonnet 轴、复跑）统一钉 `SMOOTHNAV_LLM_TEMPERATURE=0`；已跑套件内部温度一致、结论不受影响。
 
+## 5.0.3 n=48 终裁（2026-07-06 03:40，Claim）
+
+**cross-48（12 场景 × 4 集，matched）：periodic SR 6/48=0.125、SPL 0.035；full SR 5/48=0.104、SPL 0.042；配对 4W/6L/38T。**
+
+- Claim：在本基准（HM3D val 跨场景 text-goal）+ DeepSeek 通道下，**控制器复杂度不改变 outcome**——n=48 下 full 与 periodic 不可区分；成功率上限由感知/语义信号质量决定（基线 ~10–12%）。4 月的正向差与本轮早期正向差均为小样本涨落。
+- 这决定了论文的两条可行路径：
+  - **路径 α（首选，需资源）**：引入 LLM 强度轴。4 月 Sonnet 数据显示 outcome 在强 LLM 下分离（intact 0.6 vs 0.533、s6 SPL 2.8×）；若 Sonnet 条件复测证实"强语义信号下控制器把语义转化为 outcome 增益、弱信号下维持控制质量但无法拯救 outcome"，则论文主张变为**条件化的控制器价值定理**——机制表（已坐实）+ 双通道 outcome 对照。需官方 Anthropic key（约 $50–150）。
+  - **路径 β（无新资源）**：纯机制/系统论文——outcome 诚实报告为 null，主张收缩为"同预算下控制质量大幅改善（出窗 14×、override 5×、churn 控制）+ 纵深防御量化 + 可回放归因体系"。ICRA 接收风险显著更高（审稿人问 so what）。
+- 待决输入：e3e（联合必要性，661 已失守）与 no-prefetch n=48（若其 SR 优势保持，"减少 LLM churn → 更好 outcome"可成头条发现）。
+
 ## 5.1 E1 中期观察（2026-07-06 01:00，Observation，套件未全部完成）
 
 - **intact-15 已完成两 profile**（DeepSeek 通道）：baseline-periodic SR 7/15=0.467、SPL≈0.128；smoothnav-full SR 6/15=0.400、SPL≈0.122。**与 4 月 Sonnet 结果（full 0.6 > periodic 0.533）排序翻转**，且两者绝对值都大幅低于 Sonnet 时代——通道质量对全系统影响显著。SR 差距为 1 集（6 vs 7，n=15），在噪声区间内，先按"平局"解读。逐集：full 独得 291/296，periodic 独得 289/293/299。
