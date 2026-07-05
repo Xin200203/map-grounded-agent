@@ -58,7 +58,8 @@ def collect_profile_runs(suite_root: str, profile: str):
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--suite-root", required=True)
+    parser.add_argument("--suite-root", required=True, nargs="+",
+                        help="One or more suite roots; episodes merge, first root wins on conflict")
     parser.add_argument(
         "--profiles",
         nargs="+",
@@ -69,7 +70,13 @@ def main() -> int:
                         help="Optional explicit episode order for display")
     args = parser.parse_args()
 
-    data = {p: collect_profile_runs(args.suite_root, p) for p in args.profiles}
+    data = {}
+    for profile in args.profiles:
+        merged = {}
+        for root in args.suite_root:
+            for episode_id, rec in collect_profile_runs(root, profile).items():
+                merged.setdefault(episode_id, rec)
+        data[profile] = merged
     for profile, runs in data.items():
         print(f"# {profile}: {len(runs)} completed episodes")
 
