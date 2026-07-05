@@ -154,6 +154,13 @@ backbone 共享改动（frontier 价值评分、关系裁剪、文本可见接�
 - 所有远端 run 用显式 episode 套件（不用 num_eval 隐式切片），运行目录名带日期 + 代号（e1_main_20260707 等）。
 - 代码改动随做随提交推送，远端只 pull 不手改。
 
+## 5.1 E1 中期观察（2026-07-06 01:00，Observation，套件未全部完成）
+
+- **intact-15 已完成两 profile**（DeepSeek 通道）：baseline-periodic SR 7/15=0.467、SPL≈0.128；smoothnav-full SR 6/15=0.400、SPL≈0.122。**与 4 月 Sonnet 结果（full 0.6 > periodic 0.533）排序翻转**，且两者绝对值都大幅低于 Sonnet 时代——通道质量对全系统影响显著。SR 差距为 1 集（6 vs 7，n=15），在噪声区间内，先按"平局"解读。逐集：full 独得 291/296，periodic 独得 289/293/299。
+- **cross-12 前 3 共同集**：full SR 0.333/SPL 0.284（复现 4 月），两 baseline 全零（4 月 periodic 曾拿下 661，本轮丢失）。若后续保持，cross 将出现 4 月不存在的 SR 分化。
+- **中期假设（Hypothesis，待 cross 完成检验）**：门控/恢复机制的价值随"LLM 语义决策可靠性下降 + 场景难度上升"而放大——intact+弱 LLM 下周期重规划已够用（平局），cross+弱 LLM 下 baseline 崩溃而 full 存活。若成立，论文主表叙事从"处处更强"调整为"弱语义条件下的优雅退化/鲁棒性"，且可考虑引入 LLM 强度作为实验轴（Sonnet 复测需官方 Anthropic key，约 $50–150，届时请示）。
+- E2 已提前启动（no-monitor / fixed-interval × cross-12，GPU 5/6，2026-07-06 00:51）——两者在任何叙事分支下都需要。
+
 ## 6. 修订记录
 
 - 2026-07-05 v1：初版（故事定版为 evidence-gated semantic authority；E0–E5 矩阵；G1/G2 gate；Plan A/B/C 分叉）。
