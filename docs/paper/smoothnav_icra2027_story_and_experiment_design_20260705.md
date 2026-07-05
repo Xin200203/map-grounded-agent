@@ -45,18 +45,52 @@
 
 ## 2. 实验矩阵
 
-### 2.0 套件定义（先决）
+### 2.0 套件定义（已定版，2026-07-05）
 
-- **intact-15**：dev15 已知完好场景块（沿用 phase2_revalidation 的 episode 集，保证与历史可比）。
-- **cross-15**：从 loadability audit 通过的 HM3D val 场景中取 **5 场景 × 3 episodes**（含历史 hard case 228/527 与 positive anchor 661，其余按 episode id 均匀采样固定），一次定版后不再改动。
+- **intact-15**：episodes **286–300**（scene MHPLjHsuG27，与 4 月 s3_dev15 完全一致，保证历史可比）。
+- **cross-12**：4 月 post-repair loadability audit 全部 12 个通过项，**12 个 episode 分属 12 个不同场景**、5 类目标（比原计划 5 场景×3 集的场景多样性更强）：
+
+| ep | 类目 | 场景 | 备注 |
+|---|---|---|---|
+| 228 | tv_monitor | 00862-LT9Jq6dN3Ea | 历史 hard case |
+| 527 | chair | 00821-eF36g7L6Z9M | 历史 hard case |
+| 661 | chair | 00814-p53SfW6mjZe | positive anchor（须保护） |
+| 64 | chair | 00823-7MXmsvcQjpJ | |
+| 159 | sofa | 00824-Dd4bFSTQ8gi | |
+| 358 | tv_monitor | 00871-VBzV5z6i1WS | |
+| 486 | chair | 00891-cvZr5TUy5C5 | |
+| 574 | plant | 00815-h1zeeAwLh9Z | |
+| 717 | plant | 00844-q5QZSEeHe5g | |
+| 778 | plant | 00813-svBbv1Pavdk | |
+| 859 | plant | 00831-yr17PDCnDDW | |
+| 955 | bed | 00839-zt1RVoi7PcG | |
+
 - 所有 profile 跑**同一 episode 集**（matched pairing），报告逐 episode win/loss/tie + 聚合 SR/SPL。
-- 统一运行配置：Sonnet 4.5（config_habitat_sonnet45.yaml 基础上加 controller trace + snapshot 开关），temperature 默认，`grounding_snapshot_policy=target`。
+- 统一运行配置：controller trace 开、`grounding_snapshot_policy=target`；LLM 通道见 2.0.1。
 
-### E0：决定性在线验证（阻塞 BEV 支线，第 1 优先）
+### 2.0.1 LLM 通道现状（2026-07-05 实测，E1 的唯一阻塞项）
 
-- 内容：新代码在 ep228 跑 1 个在线 episode，`SMOOTHNAV_TASK_FRAME_CAPSULE_POLICY=target`。
-- 判据（4/30 遗留 P0）：capsule 中 `semantic_instance_footprints` 非零、`object_footprint_pixel_count>0`、planner 空响应率 <10%、target branch covered。
-- 分叉：过 → E3e 纳入矩阵；不过 → BEV/MLLM 移 future work，问题记录为上游感知稀疏（引用诊断，不再投入修复）。
+- Clauddy Anthropic 通道：**两侧均不可用**。远端 key → HTTP 503 “this group only allows Claude Code clients”（网关组策略收紧）；本地 key → HTTP 401 Invalid token（已失效）。
+- DashScope deepseek-v4-pro 通道：代码/配置齐备（4 月已在线验证），但 `DASHSCOPE_API_KEY` 不在服务器上。
+- 候选决策：(a) 换/修 Clauddy 组；(b) 提供 DashScope key，全套实验统一用 deepseek-v4-pro（成本低、4 月无空响应记录；故事主张与具体 LLM 无关，用可公开获取的模型反而利于复现叙事）；(c) 官方 Anthropic API key。**主表与消融必须同一通道同一模型。**
+
+### 2.0.2 E1 点火命令（通道恢复后直接执行）
+
+```bash
+# 73 服务器，密钥就绪后（CONFIG_FILE 按通道决策替换）：
+cd /mnt/sdd/xxy/SmoothNav
+for p in baseline-explore baseline-periodic smoothnav-full; do gpu=$((i++)); \
+  CONFIG_FILE=base_UniGoal/configs/<决策后的配置>.yaml \
+  bash scripts/launch_profile_suite_background.sh "$p" \
+  results/e1_main_cross12_$(date +%Y%m%d) "228 527 661 64 159 358 486 574 717 778 859 955" "$gpu" e1_cross_$p; done
+# intact-15 同理：episodes "286 ... 300"，results/e1_main_intact15_<date>
+```
+
+### E0：决定性在线验证（阻塞 BEV 支线，第 1 优先；已拆分）
+
+- **E0a（感知侧，LLM 无关，2026-07-05 已启动）**：新代码在 ep228 跑 1 个在线 episode，capsule/snapshot policy=target，`SMOOTHNAV_LLM_MAX_RETRIES=0` 快速失败（planner 走确定性 fallback，不影响 footprint 判据）。判据：capsule 中 `semantic_instance_footprints` 非零、`object_footprint_pixel_count>0`。运行目录 `results/e0_footprint_probe_20260705/`。
+- **E0b（planner 通道健康，依赖 2.0.1 通道决策）**：通道恢复后重跑 ep228 完整探针，判据：planner 空响应率 <10%、target branch covered。
+- 分叉：E0a 过 → E3e 纳入矩阵；不过 → BEV/MLLM 移 future work，问题记录为上游感知稀疏（引用诊断，不再投入修复）。
 
 ### E1：主表（3 profile × 2 套件 = 90 episodes）
 
