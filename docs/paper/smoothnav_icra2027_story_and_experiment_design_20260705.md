@@ -154,6 +154,19 @@ backbone 共享改动（frontier 价值评分、关系裁剪、文本可见接�
 - 所有远端 run 用显式 episode 套件（不用 num_eval 隐式切片），运行目录名带日期 + 代号（e1_main_20260707 等）。
 - 代码改动随做随提交推送，远端只 pull 不手改。
 
+## 5.0 G1 正式判定（2026-07-06 01:20，基于 periodic+full 双套件完整数据；explore 尚在收尾）
+
+**判定：G1 未通过（outcome 层），但机制层出现大效应分离；按预案调整证据结构，不改故事内核。**
+
+- Outcome 层（Observation）：cross-12 SR 平局（2/12 vs 2/12），聚合 SPL full 2×（0.087 vs 0.042）但由 ep661 单集驱动，配对 1W/2L/9T；intact-15 SR 6 vs 7（1 集差）、SPL≈平。n=12/15 无法分辨 1–2 集差异——**回溯确认 4 月的"优势"同为 1 集差，整个项目至今的 SR 层证据（正负两向）都欠功效**。
+- 机制层（Observation，大效应）：cross-12 上 `out_of_local_window` **43（periodic）vs 3（full）**（14×）；executor override 率 **0.0285 vs 0.0053**（5×；intact 侧 0.018 vs 0.0058，3×）；planner 调用数相同（10.4 vs 10.3）——同预算下层间冲突与不可执行目标大幅减少。intact 场景两 profile 出窗均为 0 → **出窗是跨场景特有失败模式，且恰被修复机制消灭**。
+- 证据结构调整（故事内核不变，仍是 evidence-gated authority）：
+  1. 主证据 = 机制效应表（出窗/override/noop 分布，大效应）+ outcome 非劣；
+  2. cross-48 扩样（12 场景 × 4 集）检验 outcome 效应是否在更高功效下显形——**已启动**（periodic/full × 36 新集，GPU 3/7，01:17；episodes: 65 79 93 160 170 180 229 248 267 359 372 385 487 500 513 528 543 558 575 585 595 662 674 686 718 734 750 779 788 797 860 886 912 956 970 984）；
+  3. E2 机制消融（no-monitor/fixed-interval/rules-only/no-prefetch × cross-12）**已全部在跑**；
+  4. E3 gate-off 消融押大效应（若去门控导致灾难性震荡，n=12 可分辨），待 GPU；
+  5. LLM 强度轴（Sonnet 条件复测，把"April vs 现在"的通道差异变成受控实验轴）——待用户批准官方 Anthropic key（预算约 $50–150）。
+
 ## 5.1 E1 中期观察（2026-07-06 01:00，Observation，套件未全部完成）
 
 - **intact-15 已完成两 profile**（DeepSeek 通道）：baseline-periodic SR 7/15=0.467、SPL≈0.128；smoothnav-full SR 6/15=0.400、SPL≈0.122。**与 4 月 Sonnet 结果（full 0.6 > periodic 0.533）排序翻转**，且两者绝对值都大幅低于 Sonnet 时代——通道质量对全系统影响显著。SR 差距为 1 集（6 vs 7，n=15），在噪声区间内，先按"平局"解读。逐集：full 独得 291/296，periodic 独得 289/293/299。
