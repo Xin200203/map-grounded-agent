@@ -23,5 +23,12 @@ base_UniGoal/third_party/habitat-lab/**/__pycache__/
 smoothnav/__pycache__/
 tests/__pycache__/
 configs/__pycache__/
+scripts/__pycache__/
 
 .local/
+.omx/state/
+.omx/context/
+.omx/interviews/
+.omx/tmux-hook.json
+analysis/external_repos/
+analysis/*.tmp.json

@@ -22,19 +22,22 @@
 3. `planning/smoothnav_first_batch_task_sheet_20260416.md`
    - 看第一批实验如何实际落地执行
    - 精确到先推哪个分支、73 上跑哪些命令、每一批结果出来后看哪些键决定是否进入下一批
-4. `implementation/phase2_dev5_failure_taxonomy_20260413.md`
+4. `planning/cross_scene_semantic_target_theory_and_experiment_guide_20260423.md`
+   - 看 repaired cross-scene 阶段的理论分析、问题建模和下一阶段探索实验路线
+   - 重点说明 “如何稳定地产生高质量、可行动、持续更新的 semantic target”
+5. `implementation/phase2_dev5_failure_taxonomy_20260413.md`
    - 看第一轮 `dev5` 的修复前实验基线，理解问题最初是如何暴露出来的
-5. `implementation/phase2_code_level_diagnostic_20260413.md`
+6. `implementation/phase2_code_level_diagnostic_20260413.md`
    - 看问题如何被收紧到具体函数和条件
-6. `implementation/phase2_patch_status_20260413.md`
+7. `implementation/phase2_patch_status_20260413.md`
    - 看当前代码已经完成了哪些修复、哪些还只是部分完成
-7. `implementation/phase2_next_patch_decision_sheet_20260415.md`
+8. `implementation/phase2_next_patch_decision_sheet_20260415.md`
    - 看 `dev5_patch` 之后下一轮 patch 的最小决策面
    - 直接用于安排 `get_goal_none`、`pending` 统计、monitor 收缩和 baseline 回退检查
-8. `implementation/phase2_shared_path_regression_audit_20260415.md`
+9. `implementation/phase2_shared_path_regression_audit_20260415.md`
    - 看 `baseline-periodic` 回退为什么优先要按 shared `graph/grounding` 路径来审
    - 说明这轮已经加入的 raw frontier / relaxed distance fallback
-9. `implementation/module_refactor_status_20260415.md`
+10. `implementation/module_refactor_status_20260415.md`
    - 看模块级重构如何把当前系统迁移到 `WorldState / MissionState / TacticalDecision / GeometricGoal / ExecutorCommand`
    - 说明哪些层已经串进主循环，哪些仍是后续行为改进项
 
@@ -56,6 +59,7 @@ docs/
 │   └── phase2_patch_status_20260413.md
 ├── planning/
 │   ├── project_state_briefing_20260408.md
+│   ├── cross_scene_semantic_target_theory_and_experiment_guide_20260423.md
 │   ├── smoothnav_experiment_plan_20260416.md
 │   ├── smoothnav_first_batch_task_sheet_20260416.md
 │   └── smoothnav_implementation_master_plan_20260412.md
