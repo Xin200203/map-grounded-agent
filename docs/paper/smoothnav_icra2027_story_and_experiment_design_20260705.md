@@ -168,6 +168,24 @@ backbone 共享改动（frontier 价值评分、关系裁剪、文本可见接�
   4. E3 gate-off 消融押大效应（若去门控导致灾难性震荡，n=12 可分辨），待 GPU；
   5. LLM 强度轴（Sonnet 条件复测，把"April vs 现在"的通道差异变成受控实验轴）——待用户批准官方 Anthropic key（预算约 $50–150）。
 
+## 5.0.1 E1 定稿 + E2 消融分解（2026-07-06 02:00，Claim 候选——E2 差 no-prefetch 收尾）
+
+**E1 cross-12 定稿**（DeepSeek 通道，SR 全部 2/12 持平）：explore SPL 0.048 / periodic 0.042（oow=43）/ full **0.087**（oow=3）。intact-15：explore 0.333/0.089、periodic 0.467/0.128、full 0.400/0.122。（注意：baseline-explore 走 baseline 模式管线，无 apply_strategy 记账，其 oow=0 与 smoothnav 系 profile **不可比**；oow 对比仅限 smoothnav-mode profiles。）
+
+**E2 消融分解（cross-12，SR 全部 2/12 持平）——双因子结构**：
+
+| profile | 调度 | 恢复机制 | monitor | SPL | oow | hi_calls |
+|---|---|---|---|---|---|---|
+| baseline-periodic | 周期 | 无 | 无 | 0.042 | 43 | 10.4 |
+| smoothnav-fixed-interval | 周期 | 有 | 无 | 0.037 | 7 | 8.0 |
+| smoothnav-no-monitor | 事件 | 有 | 无 | **0.085** | 3 | 10.2 |
+| smoothnav-rules-only | 事件 | 有 | 规则 | 0.088 | 7 | 15.5 |
+| smoothnav-full | 事件 | 有 | LLM-esc | **0.087** | 3 | 10.2 |
+
+1. **恢复/锚定机制消灭出窗**（43→7），事件调度再抛光（→3）；
+2. **事件驱动调度(+prefetch) 是 SPL 的来源**（0.037→0.085，2.3×；对照组恢复机制相同）；
+3. **monitor 无独立增益**（full≈no-monitor；rules-only 同结果多花 50% planner 调用）——论文中 monitor 降为附录/工程细节，主贡献聚焦「事件调度 + gated grounding core」。
+
 ## 5.1 E1 中期观察（2026-07-06 01:00，Observation，套件未全部完成）
 
 - **intact-15 已完成两 profile**（DeepSeek 通道）：baseline-periodic SR 7/15=0.467、SPL≈0.128；smoothnav-full SR 6/15=0.400、SPL≈0.122。**与 4 月 Sonnet 结果（full 0.6 > periodic 0.533）排序翻转**，且两者绝对值都大幅低于 Sonnet 时代——通道质量对全系统影响显著。SR 差距为 1 集（6 vs 7，n=15），在噪声区间内，先按"平局"解读。逐集：full 独得 291/296，periodic 独得 289/293/299。
