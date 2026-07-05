@@ -159,7 +159,8 @@ backbone 共享改动（frontier 价值评分、关系裁剪、文本可见接�
 **判定：G1 未通过（outcome 层），但机制层出现大效应分离；按预案调整证据结构，不改故事内核。**
 
 - Outcome 层（Observation）：cross-12 SR 平局（2/12 vs 2/12），聚合 SPL full 2×（0.087 vs 0.042）但由 ep661 单集驱动，配对 1W/2L/9T；intact-15 SR 6 vs 7（1 集差）、SPL≈平。n=12/15 无法分辨 1–2 集差异——**回溯确认 4 月的"优势"同为 1 集差，整个项目至今的 SR 层证据（正负两向）都欠功效**。
-- 机制层（Observation，大效应）：cross-12 上 `out_of_local_window` **43（periodic）vs 3（full）**（14×）；executor override 率 **0.0285 vs 0.0053**（5×；intact 侧 0.018 vs 0.0058，3×）；planner 调用数相同（10.4 vs 10.3）——同预算下层间冲突与不可执行目标大幅减少。intact 场景两 profile 出窗均为 0 → **出窗是跨场景特有失败模式，且恰被修复机制消灭**。
+- 机制层（Observation，大效应）：cross-12 上 `out_of_local_window` **43（periodic）vs 3（full）**（14×）；executor override 率 **0.0285 vs 0.0053**（5×；intact 侧 0.018 vs 0.0058，3×）；planner 调用数相同（10.4 vs 10.3）——同预算下层间冲突与不可执行目标大幅减少。intact 场景两 profile 出窗均为 0 → **出窗是跨场景特有失败模式**。
+- 机制归因（Observation，trace 级，`scripts/analyze_out_of_window_mechanism.py`）：**优势来自"避免"而非"修复"**。periodic 触发共享修复路径 20 次但当步成功仅 1 次、19 次搁置且仅 3 次事后恢复（16 次目标永久滞留）；full 全程仅产生 3 次出窗（grounding 总次数相当 193 vs 184）。因果链：事件驱动 bias 时效性 + target-anchor 局部窗口重投影 → 出窗目标从源头不产生；周期式陈旧远距 bias 则让事后修复也无力回天。这是论文机制表的核心行。
 - 证据结构调整（故事内核不变，仍是 evidence-gated authority）：
   1. 主证据 = 机制效应表（出窗/override/noop 分布，大效应）+ outcome 非劣；
   2. cross-48 扩样（12 场景 × 4 集）检验 outcome 效应是否在更高功效下显形——**已启动**（periodic/full × 36 新集，GPU 3/7，01:17；episodes: 65 79 93 160 170 180 229 248 267 359 372 385 487 500 513 528 543 558 575 585 595 662 674 686 718 734 750 779 788 797 860 886 912 956 970 984）；
