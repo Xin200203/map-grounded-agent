@@ -185,6 +185,7 @@ backbone 共享改动（frontier 价值评分、关系裁剪、文本可见接�
 1. **恢复/锚定机制消灭出窗**（43→7），事件调度再抛光（→3）；
 2. **事件驱动调度(+prefetch) 是 SPL 的来源**（0.037→0.085，2.3×；对照组恢复机制相同）；
 3. **monitor 无独立增益**（full≈no-monitor；rules-only 同结果多花 50% planner 调用）——论文中 monitor 降为附录/工程细节，主贡献聚焦「事件调度 + gated grounding core」。
+4. **no-prefetch 意外成为全场最佳**（SR 4/12=0.333、SPL 0.116、planner 调用近减半 5.6）：胜集 = full 胜集(661@0.853,717) ∪ baseline 胜集(717,859) + 358——锚定机制无损，而 prefetch 的 pending 晋升疑似在 frontier 到达时挤掉有效策略（`handle_frontier_reached` 的 stale-pending 保护只覆盖 specificity ≤ 当前的情形）。n=12 属 Observation；已加入 E1X 扩样（n=48 裁决）。若坐实，推荐默认 profile 改为 event+recovery+anchor 而不带 prefetch，且这本身是门控故事的又一例证：**未经证据门控的策略切换（pending 晋升）有害**。
 
 ## 5.1 E1 中期观察（2026-07-06 01:00，Observation，套件未全部完成）
 
