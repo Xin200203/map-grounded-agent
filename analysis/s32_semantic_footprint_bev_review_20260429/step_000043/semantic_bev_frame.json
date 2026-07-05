@@ -1,0 +1,2322 @@
+{
+  "agent": {
+    "agent_channel_distance": 25.0,
+    "coord_rc": [
+      347,
+      356
+    ],
+    "display_coord_source": "full_map.channel_2_current_agent",
+    "display_repaired_from_map_current_channel": true,
+    "heading_deg": null,
+    "map_current_channel_coord_rc": [
+      347,
+      356
+    ],
+    "on_free_or_near_free": true,
+    "on_known_or_near_known": true,
+    "raw_coord_rc": [
+      372,
+      356
+    ],
+    "raw_on_known_or_near_known": true,
+    "source": "full_map.channel_2_current_agent",
+    "within_map_bounds": true
+  },
+  "base_layers": {
+    "active_semantic_category_count": 0,
+    "current_agent_channel_pixels": 25,
+    "has_free": true,
+    "has_known": true,
+    "has_language_query_heatmap": false,
+    "has_obstacle": true,
+    "has_semantic_channels": false,
+    "past_agent_channel_pixels": 291,
+    "semantic_channel_count": 16
+  },
+  "branch_decision_table": [
+    {
+      "anchor_score": 0.0,
+      "anchor_value": 0.0,
+      "candidate_count": 123,
+      "canonical_direction": "north",
+      "dead_end_risk": 0.0,
+      "direct_score": 0.0,
+      "direct_value": 0.0,
+      "evidence_level": "geometry_only",
+      "geometry_value": 1.0,
+      "id": "B1",
+      "info_gain": 1.0,
+      "info_gain_score": 1.0,
+      "representative_coord": [
+        287,
+        368
+      ],
+      "revisit_penalty": 0.0,
+      "risk_flags": [],
+      "room_prior_score": 0.0,
+      "room_prior_value": 0.0,
+      "schema_version": "smoothnav.branch_decision_table.v2",
+      "semantic_support": [
+        {
+          "distance": 82.61,
+          "id": "O001",
+          "source": "object_center_prior"
+        },
+        {
+          "distance": 73.25,
+          "id": "O002",
+          "source": "object_center_prior"
+        },
+        {
+          "distance": 78.26,
+          "id": "R001",
+          "source": "localized_room_or_function_area"
+        }
+      ],
+      "target_value_max": 1.0,
+      "target_value_mean": 0.6638,
+      "target_value_rank": 1,
+      "target_value_score": 1.0,
+      "target_visible": false
+    },
+    {
+      "anchor_score": 0.0,
+      "anchor_value": 0.0,
+      "candidate_count": 52,
+      "canonical_direction": "west",
+      "dead_end_risk": 0.0,
+      "direct_score": 0.0,
+      "direct_value": 0.0,
+      "evidence_level": "geometry_only",
+      "geometry_value": 1.0,
+      "id": "B2",
+      "info_gain": 1.0,
+      "info_gain_score": 1.0,
+      "representative_coord": [
+        356,
+        253
+      ],
+      "revisit_penalty": 0.0,
+      "risk_flags": [],
+      "room_prior_score": 0.0,
+      "room_prior_value": 0.0,
+      "schema_version": "smoothnav.branch_decision_table.v2",
+      "semantic_support": [
+        {
+          "distance": 129.25,
+          "id": "R001",
+          "source": "localized_room_or_function_area"
+        }
+      ],
+      "target_value_max": 1.0,
+      "target_value_mean": 0.7966,
+      "target_value_rank": 2,
+      "target_value_score": 1.0,
+      "target_visible": false
+    }
+  ],
+  "branches": [
+    {
+      "candidate_local_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122
+      ],
+      "candidate_point_count": 123,
+      "candidate_points": [
+        {
+          "actionable": true,
+          "agent_distance": 6.71831521398992,
+          "coord": [
+            287,
+            368
+          ],
+          "final_score": 11.863798435884677,
+          "local_idx": 55
+        },
+        {
+          "actionable": true,
+          "agent_distance": 6.618529152329579,
+          "coord": [
+            268,
+            369
+          ],
+          "final_score": 11.849440903392592,
+          "local_idx": 3
+        },
+        {
+          "actionable": true,
+          "agent_distance": 6.614828607862532,
+          "coord": [
+            269,
+            369
+          ],
+          "final_score": 11.84113164517838,
+          "local_idx": 7
+        },
+        {
+          "actionable": true,
+          "agent_distance": 6.8046289919499445,
+          "coord": [
+            295,
+            366
+          ],
+          "final_score": 11.83795722290549,
+          "local_idx": 82
+        },
+        {
+          "actionable": true,
+          "agent_distance": 6.7368188544463035,
+          "coord": [
+            288,
+            368
+          ],
+          "final_score": 11.83746396283683,
+          "local_idx": 57
+        },
+        {
+          "actionable": true,
+          "agent_distance": 6.612057450887794,
+          "coord": [
+            270,
+            369
+          ],
+          "final_score": 11.831834140888507,
+          "local_idx": 13
+        },
+        {
+          "actionable": true,
+          "agent_distance": 6.610013812998973,
+          "coord": [
+            271,
+            369
+          ],
+          "final_score": 11.821748161505516,
+          "local_idx": 16
+        },
+        {
+          "actionable": true,
+          "agent_distance": 6.701937342030232,
+          "coord": [
+            283,
+            369
+          ],
+          "final_score": 11.815299278798456,
+          "local_idx": 45
+        }
+      ],
+      "canonical_agent_coord_rc": [
+        347,
+        356
+      ],
+      "canonical_coordinate_frame": "full_map_rc_unflipped",
+      "canonical_direction_from_agent": "north",
+      "canonical_representative_coord_rc": [
+        287,
+        368
+      ],
+      "centroid": [
+        289.0569105691057,
+        385.5853658536585
+      ],
+      "component_label": 1,
+      "decision_roles": [
+        "mllm",
+        "final"
+      ],
+      "decision_table_row": {
+        "anchor_score": 0.0,
+        "anchor_value": 0.0,
+        "candidate_count": 123,
+        "canonical_direction": "north",
+        "dead_end_risk": 0.0,
+        "direct_score": 0.0,
+        "direct_value": 0.0,
+        "evidence_level": "geometry_only",
+        "geometry_value": 1.0,
+        "id": "B1",
+        "info_gain": 1.0,
+        "info_gain_score": 1.0,
+        "representative_coord": [
+          287,
+          368
+        ],
+        "revisit_penalty": 0.0,
+        "risk_flags": [],
+        "room_prior_score": 0.0,
+        "room_prior_value": 0.0,
+        "schema_version": "smoothnav.branch_decision_table.v2",
+        "semantic_support": [
+          {
+            "distance": 82.61,
+            "id": "O001",
+            "source": "object_center_prior"
+          },
+          {
+            "distance": 73.25,
+            "id": "O002",
+            "source": "object_center_prior"
+          },
+          {
+            "distance": 78.26,
+            "id": "R001",
+            "source": "localized_room_or_function_area"
+          }
+        ],
+        "target_value_max": 1.0,
+        "target_value_mean": 0.6638,
+        "target_value_rank": 1,
+        "target_value_score": 1.0,
+        "target_visible": false
+      },
+      "direction_from_agent": "north",
+      "evidence_level": "geometry_only",
+      "id": "B1",
+      "local_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122
+      ],
+      "map_direction_from_agent": "north",
+      "nearby_object_ids": [
+        "O002",
+        "O001"
+      ],
+      "nearby_room_ids": [
+        "R001"
+      ],
+      "nearby_semantic_region_ids": [],
+      "nearby_semantic_region_labels": [],
+      "nearest_object_distance": 73.24616030891995,
+      "nearest_room_distance": 78.26237921249263,
+      "nearest_semantic_region_distance": null,
+      "pixel_count": 123,
+      "representative_coord": [
+        287,
+        368
+      ],
+      "representative_local_idx": 55,
+      "score_terms_aggregate": {
+        "actionability_score_max": 1.0,
+        "base_score_max": 4.589986187001027,
+        "bias_score_max": 0.4013350097634396,
+        "distance_mean": 7.650443329189019,
+        "distance_min": 6.610013812998973,
+        "final_score_max": 11.863798435884677,
+        "novelty_score_max": 0.727810650887574,
+        "planner_prior_score_max": 1.0,
+        "recent_penalty_max": 0.0,
+        "repeat_penalty_max": 0.0,
+        "target_progress_score_max": 0.0
+      },
+      "semantic_target_affinity": 0.25,
+      "target_heatmap_rank": 1,
+      "target_heatmap_score": 0.0,
+      "target_value_max": 1.0,
+      "target_value_mean": 0.6638,
+      "target_value_rank": 1,
+      "target_value_score": 1.0,
+      "target_visible": false,
+      "visit_state": "selected"
+    },
+    {
+      "candidate_local_indices": [
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140,
+        141,
+        142,
+        143,
+        144,
+        145,
+        146,
+        147,
+        148,
+        149,
+        150,
+        151,
+        152,
+        153,
+        154,
+        155,
+        156,
+        157,
+        158,
+        159,
+        160,
+        161,
+        162,
+        163,
+        164,
+        165,
+        166,
+        167,
+        168,
+        169,
+        170,
+        171,
+        172,
+        173,
+        174
+      ],
+      "candidate_point_count": 52,
+      "candidate_points": [
+        {
+          "actionable": true,
+          "agent_distance": 5.173976193665661,
+          "coord": [
+            356,
+            253
+          ],
+          "final_score": 11.629413993826653,
+          "local_idx": 158
+        },
+        {
+          "actionable": true,
+          "agent_distance": 5.129227236131754,
+          "coord": [
+            357,
+            254
+          ],
+          "final_score": 11.619006204000623,
+          "local_idx": 161
+        },
+        {
+          "actionable": true,
+          "agent_distance": 5.169466153546883,
+          "coord": [
+            355,
+            253
+          ],
+          "final_score": 11.616631591245454,
+          "local_idx": 155
+        },
+        {
+          "actionable": true,
+          "agent_distance": 5.079507239536889,
+          "coord": [
+            357,
+            255
+          ],
+          "final_score": 11.608309125439785,
+          "local_idx": 162
+        },
+        {
+          "actionable": true,
+          "agent_distance": 5.115570136899191,
+          "coord": [
+            354,
+            254
+          ],
+          "final_score": 11.598329499630173,
+          "local_idx": 154
+        },
+        {
+          "actionable": true,
+          "agent_distance": 5.0246725507954135,
+          "coord": [
+            356,
+            256
+          ],
+          "final_score": 11.596967162085397,
+          "local_idx": 159
+        },
+        {
+          "actionable": true,
+          "agent_distance": 5.035390951593678,
+          "coord": [
+            358,
+            256
+          ],
+          "final_score": 11.591381781136834,
+          "local_idx": 166
+        },
+        {
+          "actionable": true,
+          "agent_distance": 4.980083624573412,
+          "coord": [
+            357,
+            257
+          ],
+          "final_score": 11.58652289986214,
+          "local_idx": 163
+        }
+      ],
+      "canonical_agent_coord_rc": [
+        347,
+        356
+      ],
+      "canonical_coordinate_frame": "full_map_rc_unflipped",
+      "canonical_direction_from_agent": "west",
+      "canonical_representative_coord_rc": [
+        356,
+        253
+      ],
+      "centroid": [
+        347.63461538461536,
+        255.26923076923077
+      ],
+      "component_label": 2,
+      "decision_roles": [
+        "dry"
+      ],
+      "decision_table_row": {
+        "anchor_score": 0.0,
+        "anchor_value": 0.0,
+        "candidate_count": 52,
+        "canonical_direction": "west",
+        "dead_end_risk": 0.0,
+        "direct_score": 0.0,
+        "direct_value": 0.0,
+        "evidence_level": "geometry_only",
+        "geometry_value": 1.0,
+        "id": "B2",
+        "info_gain": 1.0,
+        "info_gain_score": 1.0,
+        "representative_coord": [
+          356,
+          253
+        ],
+        "revisit_penalty": 0.0,
+        "risk_flags": [],
+        "room_prior_score": 0.0,
+        "room_prior_value": 0.0,
+        "schema_version": "smoothnav.branch_decision_table.v2",
+        "semantic_support": [
+          {
+            "distance": 129.25,
+            "id": "R001",
+            "source": "localized_room_or_function_area"
+          }
+        ],
+        "target_value_max": 1.0,
+        "target_value_mean": 0.7966,
+        "target_value_rank": 2,
+        "target_value_score": 1.0,
+        "target_visible": false
+      },
+      "direction_from_agent": "west",
+      "evidence_level": "geometry_only",
+      "id": "B2",
+      "local_indices": [
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140,
+        141,
+        142,
+        143,
+        144,
+        145,
+        146,
+        147,
+        148,
+        149,
+        150,
+        151,
+        152,
+        153,
+        154,
+        155,
+        156,
+        157,
+        158,
+        159,
+        160,
+        161,
+        162,
+        163,
+        164,
+        165,
+        166,
+        167,
+        168,
+        169,
+        170,
+        171,
+        172,
+        173,
+        174
+      ],
+      "map_direction_from_agent": "west",
+      "nearby_object_ids": [],
+      "nearby_room_ids": [
+        "R001"
+      ],
+      "nearby_semantic_region_ids": [],
+      "nearby_semantic_region_labels": [],
+      "nearest_object_distance": 125.67418191498204,
+      "nearest_room_distance": 129.24782396620841,
+      "nearest_semantic_region_distance": null,
+      "pixel_count": 52,
+      "representative_coord": [
+        356,
+        253
+      ],
+      "representative_local_idx": 158,
+      "score_terms_aggregate": {
+        "actionability_score_max": 1.0,
+        "base_score_max": 6.3690083896390535,
+        "bias_score_max": 0.3784944657717867,
+        "distance_mean": 5.06319831167627,
+        "distance_min": 4.830991610360947,
+        "final_score_max": 11.629413993826653,
+        "novelty_score_max": 0.650887573964497,
+        "planner_prior_score_max": 0.4,
+        "recent_penalty_max": 0.0,
+        "repeat_penalty_max": 0.0,
+        "target_progress_score_max": 0.0
+      },
+      "semantic_target_affinity": 0.1,
+      "target_heatmap_rank": 2,
+      "target_heatmap_score": 0.0,
+      "target_value_max": 1.0,
+      "target_value_mean": 0.7966,
+      "target_value_rank": 2,
+      "target_value_score": 1.0,
+      "target_visible": false,
+      "visit_state": "selected"
+    }
+  ],
+  "coordinate_frame": {
+    "col_axis": "east_right_image_x",
+    "crop": {
+      "c0": 227,
+      "c1": 433,
+      "r0": 236,
+      "r1": 454
+    },
+    "map_shape": [
+      720,
+      720
+    ],
+    "name": "full_map_rc_unflipped",
+    "origin": "full_map[0,0]",
+    "row_axis": "south_down_image_y"
+  },
+  "decision_overlay": {
+    "allowed_branch_ids": [
+      "B2",
+      "B1"
+    ],
+    "dry_selected_branch_id": "B2",
+    "dry_selected_frontier": [
+      357,
+      260
+    ],
+    "final_selected_branch_id": "B1",
+    "final_selected_frontier": [
+      287,
+      368
+    ],
+    "mllm_reason": "",
+    "mllm_selected_branch_id": "B1",
+    "mllm_status": "valid",
+    "planner_prior_applied": true,
+    "prompt_hash": "d28df4abaaae2241a2cc6ff905a966dad4c51896",
+    "ranked_branch_ids": [
+      "B1",
+      "B2"
+    ]
+  },
+  "decision_state": {
+    "array_artifacts": {
+      "field_keys": [
+        "geometry_explored",
+        "geometry_free",
+        "geometry_frontier_mask",
+        "geometry_obstacle",
+        "geometry_unknown",
+        "geometry_visited",
+        "semantic_object_support",
+        "semantic_room_support",
+        "semantic_semantic_support",
+        "semantic_true_semantic",
+        "target_anchor_value",
+        "target_combined_value",
+        "target_deadend_penalty",
+        "target_direct_target_value",
+        "target_geometry_fallback_value",
+        "target_revisit_penalty",
+        "target_room_prior_value"
+      ],
+      "recommended_npz_name": "planner_decision_state_fields.npz"
+    },
+    "branch_decision_table": [
+      {
+        "anchor_score": 0.0,
+        "anchor_value": 0.0,
+        "candidate_count": 123,
+        "canonical_direction": "north",
+        "dead_end_risk": 0.0,
+        "direct_score": 0.0,
+        "direct_value": 0.0,
+        "evidence_level": "geometry_only",
+        "geometry_value": 1.0,
+        "id": "B1",
+        "info_gain": 1.0,
+        "info_gain_score": 1.0,
+        "representative_coord": [
+          287,
+          368
+        ],
+        "revisit_penalty": 0.0,
+        "risk_flags": [],
+        "room_prior_score": 0.0,
+        "room_prior_value": 0.0,
+        "schema_version": "smoothnav.branch_decision_table.v2",
+        "semantic_support": [
+          {
+            "distance": 82.61,
+            "id": "O001",
+            "source": "object_center_prior"
+          },
+          {
+            "distance": 73.25,
+            "id": "O002",
+            "source": "object_center_prior"
+          },
+          {
+            "distance": 78.26,
+            "id": "R001",
+            "source": "localized_room_or_function_area"
+          }
+        ],
+        "target_value_max": 1.0,
+        "target_value_mean": 0.6638,
+        "target_value_rank": 1,
+        "target_value_score": 1.0,
+        "target_visible": false
+      },
+      {
+        "anchor_score": 0.0,
+        "anchor_value": 0.0,
+        "candidate_count": 52,
+        "canonical_direction": "west",
+        "dead_end_risk": 0.0,
+        "direct_score": 0.0,
+        "direct_value": 0.0,
+        "evidence_level": "geometry_only",
+        "geometry_value": 1.0,
+        "id": "B2",
+        "info_gain": 1.0,
+        "info_gain_score": 1.0,
+        "representative_coord": [
+          356,
+          253
+        ],
+        "revisit_penalty": 0.0,
+        "risk_flags": [],
+        "room_prior_score": 0.0,
+        "room_prior_value": 0.0,
+        "schema_version": "smoothnav.branch_decision_table.v2",
+        "semantic_support": [
+          {
+            "distance": 129.25,
+            "id": "R001",
+            "source": "localized_room_or_function_area"
+          }
+        ],
+        "target_value_max": 1.0,
+        "target_value_mean": 0.7966,
+        "target_value_rank": 2,
+        "target_value_score": 1.0,
+        "target_visible": false
+      }
+    ],
+    "branch_table": [
+      {
+        "anchor_score": 0.0,
+        "anchor_value": 0.0,
+        "candidate_count": 123,
+        "canonical_direction": "north",
+        "dead_end_risk": 0.0,
+        "direct_score": 0.0,
+        "direct_value": 0.0,
+        "evidence_level": "geometry_only",
+        "geometry_value": 1.0,
+        "id": "B1",
+        "info_gain": 1.0,
+        "info_gain_score": 1.0,
+        "representative_coord": [
+          287,
+          368
+        ],
+        "revisit_penalty": 0.0,
+        "risk_flags": [],
+        "room_prior_score": 0.0,
+        "room_prior_value": 0.0,
+        "schema_version": "smoothnav.branch_decision_table.v2",
+        "semantic_support": [
+          {
+            "distance": 82.61,
+            "id": "O001",
+            "source": "object_center_prior"
+          },
+          {
+            "distance": 73.25,
+            "id": "O002",
+            "source": "object_center_prior"
+          },
+          {
+            "distance": 78.26,
+            "id": "R001",
+            "source": "localized_room_or_function_area"
+          }
+        ],
+        "target_value_max": 1.0,
+        "target_value_mean": 0.6638,
+        "target_value_rank": 1,
+        "target_value_score": 1.0,
+        "target_visible": false
+      },
+      {
+        "anchor_score": 0.0,
+        "anchor_value": 0.0,
+        "candidate_count": 52,
+        "canonical_direction": "west",
+        "dead_end_risk": 0.0,
+        "direct_score": 0.0,
+        "direct_value": 0.0,
+        "evidence_level": "geometry_only",
+        "geometry_value": 1.0,
+        "id": "B2",
+        "info_gain": 1.0,
+        "info_gain_score": 1.0,
+        "representative_coord": [
+          356,
+          253
+        ],
+        "revisit_penalty": 0.0,
+        "risk_flags": [],
+        "room_prior_score": 0.0,
+        "room_prior_value": 0.0,
+        "schema_version": "smoothnav.branch_decision_table.v2",
+        "semantic_support": [
+          {
+            "distance": 129.25,
+            "id": "R001",
+            "source": "localized_room_or_function_area"
+          }
+        ],
+        "target_value_max": 1.0,
+        "target_value_mean": 0.7966,
+        "target_value_rank": 2,
+        "target_value_score": 1.0,
+        "target_visible": false
+      }
+    ],
+    "canonical_frame": {
+      "agent_rc": [
+        347,
+        356
+      ],
+      "col_axis": "east_right_image_x",
+      "coord_type": "full_map_rc_unflipped",
+      "map_shape": [
+        720,
+        720
+      ],
+      "north_arrow": "image_up_is_north",
+      "notes": [
+        "Planner-critical prompt exposes only this frame",
+        "raw/local/repaired coordinates are debug-only and excluded from branch_table"
+      ],
+      "row_axis": "south_down_image_y"
+    },
+    "coordinate_contract": {
+      "agent_coord_rc": [
+        347,
+        356
+      ],
+      "branch_coord_key": "representative_coord",
+      "branch_direction_key": "canonical_direction",
+      "frame": "full_map_rc_unflipped",
+      "hidden_from_planner_prompt": [
+        "raw_coord_rc",
+        "map_current_channel_coord_rc",
+        "direction_from_agent"
+      ]
+    },
+    "geometry_field": {
+      "available": true,
+      "explored_pixel_count": 16111,
+      "free_pixel_count": 16010,
+      "frontier_pixel_count": 84,
+      "map_shape": [
+        720,
+        720
+      ],
+      "obstacle_pixel_count": 1926,
+      "schema_version": "smoothnav.geometry_field.v1",
+      "unknown_pixel_count": 502289,
+      "visited_pixel_count": 291
+    },
+    "quality_flags": [
+      "agent_display_coord_repaired_from_map_current_channel",
+      "raw_agent_coord_disagrees_with_map_current_channel:25.0",
+      "semantic_channels_present_but_empty",
+      "direct_target_semantic_channel_empty",
+      "target_value_geometry_only"
+    ],
+    "schema_version": "smoothnav.bev_decision_state.v1",
+    "semantic_field": {
+      "active_category_count": 0,
+      "category_masks": [],
+      "localized_objects": [
+        {
+          "caption": "windows",
+          "center_rc": [
+            369,
+            378
+          ],
+          "confidence": 0.5525,
+          "id": "O001",
+          "is_direct_target_object": false,
+          "source": "object_center_prior",
+          "support_radius_px": 14,
+          "target_relevance": 0.0
+        },
+        {
+          "caption": "mirror",
+          "center_rc": [
+            358,
+            386
+          ],
+          "confidence": 0.455,
+          "id": "O002",
+          "is_direct_target_object": false,
+          "source": "object_center_prior",
+          "support_radius_px": 14,
+          "target_relevance": 0.0
+        }
+      ],
+      "localized_rooms": [
+        {
+          "bbox_rc": [
+            348,
+            368,
+            379,
+            396
+          ],
+          "caption": "bedroom",
+          "center_rc": [
+            364,
+            382
+          ],
+          "confidence": 0.55,
+          "id": "R001",
+          "object_ids": [
+            "O002",
+            "O001"
+          ],
+          "room_prior_weight": 0.0,
+          "source": "localized_room_or_function_area"
+        }
+      ],
+      "notes": [
+        "true semantic channels are dense only when full_map[4:] has non-zero masks",
+        "object_support and room_support are pseudo-dense priors with explicit source/confidence",
+        "unlocalized room hypotheses are never rendered as spatial masks"
+      ],
+      "object_supports": [
+        {
+          "caption": "windows",
+          "center_rc": [
+            369,
+            378
+          ],
+          "confidence": 0.5525,
+          "id": "O001",
+          "is_direct_target_object": false,
+          "source": "object_center_prior",
+          "support_radius_px": 14,
+          "target_relevance": 0.0
+        },
+        {
+          "caption": "mirror",
+          "center_rc": [
+            358,
+            386
+          ],
+          "confidence": 0.455,
+          "id": "O002",
+          "is_direct_target_object": false,
+          "source": "object_center_prior",
+          "support_radius_px": 14,
+          "target_relevance": 0.0
+        }
+      ],
+      "room_supports": [
+        {
+          "bbox_rc": [
+            348,
+            368,
+            379,
+            396
+          ],
+          "caption": "bedroom",
+          "center_rc": [
+            364,
+            382
+          ],
+          "confidence": 0.55,
+          "id": "R001",
+          "object_ids": [
+            "O002",
+            "O001"
+          ],
+          "room_prior_weight": 0.0,
+          "source": "localized_room_or_function_area"
+        }
+      ],
+      "schema_version": "smoothnav.semantic_field.v1",
+      "semantic_reliability": "empty",
+      "unlocalized_room_hypotheses": [
+        {
+          "caption": "living room",
+          "confidence": "unlocalized",
+          "geometry_type": "unlocalized_hypothesis",
+          "id": "R002",
+          "object_captions": [],
+          "source": "world_state.room_summary",
+          "spatialization_status": "unlocalized_prior"
+        },
+        {
+          "caption": "bathroom",
+          "confidence": "unlocalized",
+          "geometry_type": "unlocalized_hypothesis",
+          "id": "R003",
+          "object_captions": [],
+          "source": "world_state.room_summary",
+          "spatialization_status": "unlocalized_prior"
+        },
+        {
+          "caption": "kitchen",
+          "confidence": "unlocalized",
+          "geometry_type": "unlocalized_hypothesis",
+          "id": "R004",
+          "object_captions": [],
+          "source": "world_state.room_summary",
+          "spatialization_status": "unlocalized_prior"
+        },
+        {
+          "caption": "dining room",
+          "confidence": "unlocalized",
+          "geometry_type": "unlocalized_hypothesis",
+          "id": "R005",
+          "object_captions": [],
+          "source": "world_state.room_summary",
+          "spatialization_status": "unlocalized_prior"
+        },
+        {
+          "caption": "office room",
+          "confidence": "unlocalized",
+          "geometry_type": "unlocalized_hypothesis",
+          "id": "R006",
+          "object_captions": [],
+          "source": "world_state.room_summary",
+          "spatialization_status": "unlocalized_prior"
+        },
+        {
+          "caption": "gym",
+          "confidence": "unlocalized",
+          "geometry_type": "unlocalized_hypothesis",
+          "id": "R007",
+          "object_captions": [],
+          "source": "world_state.room_summary",
+          "spatialization_status": "unlocalized_prior"
+        },
+        {
+          "caption": "lounge",
+          "confidence": "unlocalized",
+          "geometry_type": "unlocalized_hypothesis",
+          "id": "R008",
+          "object_captions": [],
+          "source": "world_state.room_summary",
+          "spatialization_status": "unlocalized_prior"
+        },
+        {
+          "caption": "laundry room",
+          "confidence": "unlocalized",
+          "geometry_type": "unlocalized_hypothesis",
+          "id": "R009",
+          "object_captions": [],
+          "source": "world_state.room_summary",
+          "spatialization_status": "unlocalized_prior"
+        }
+      ]
+    },
+    "step_idx": 43,
+    "strategy_context": {
+      "anchor_object": "",
+      "target_region": ""
+    },
+    "target_description": "",
+    "target_value_field": {
+      "anchor_value": {
+        "available": true,
+        "mean_positive": 0.0,
+        "peak": 0.0,
+        "positive_pixel_count": 0,
+        "shape": [
+          720,
+          720
+        ]
+      },
+      "available": true,
+      "branch_ranking": [
+        {
+          "evidence_level": "geometry_only",
+          "id": "B1",
+          "target_value_max": 1.0,
+          "target_value_mean": 0.6638,
+          "target_value_score": 1.0,
+          "target_visible": false
+        },
+        {
+          "evidence_level": "geometry_only",
+          "id": "B2",
+          "target_value_max": 1.0,
+          "target_value_mean": 0.7966,
+          "target_value_score": 1.0,
+          "target_visible": false
+        }
+      ],
+      "combined_value": {
+        "available": true,
+        "mean_positive": 0.3371495008468628,
+        "peak": 1.0,
+        "positive_pixel_count": 3578,
+        "shape": [
+          720,
+          720
+        ]
+      },
+      "component_peaks": {
+        "anchor": 0.0,
+        "direct": 0.0,
+        "geometry_only": 1.0,
+        "room_prior": 0.0
+      },
+      "confidence": 0.45,
+      "direct_target_value": {
+        "available": true,
+        "mean_positive": 0.0,
+        "peak": 0.0,
+        "positive_pixel_count": 0,
+        "shape": [
+          720,
+          720
+        ]
+      },
+      "evidence_counts": {
+        "anchor": 0,
+        "direct": 0,
+        "geometry_only": 2,
+        "room_prior": 0
+      },
+      "geometry_fallback_value": {
+        "available": true,
+        "mean_positive": 0.3371495008468628,
+        "peak": 1.0,
+        "positive_pixel_count": 3578,
+        "shape": [
+          720,
+          720
+        ]
+      },
+      "notes": [
+        "combined_value is deterministic PONI-lite/VLFM-lite value, not a learned model",
+        "geometry fallback remains valid when semantic evidence is empty, but branch evidence stays geometry_only"
+      ],
+      "room_prior_value": {
+        "available": true,
+        "mean_positive": 0.0,
+        "peak": 0.0,
+        "positive_pixel_count": 0,
+        "shape": [
+          720,
+          720
+        ]
+      },
+      "schema_version": "smoothnav.target_value_field.v1",
+      "source": "geometry_only",
+      "strongest_source": "geometry_only"
+    },
+    "target_value_state": {
+      "anchor_value": {
+        "available": true,
+        "mean_positive": 0.0,
+        "peak": 0.0,
+        "positive_pixel_count": 0,
+        "shape": [
+          720,
+          720
+        ]
+      },
+      "available": true,
+      "branch_ranking": [
+        {
+          "evidence_level": "geometry_only",
+          "id": "B1",
+          "target_value_max": 1.0,
+          "target_value_mean": 0.6638,
+          "target_value_score": 1.0,
+          "target_visible": false
+        },
+        {
+          "evidence_level": "geometry_only",
+          "id": "B2",
+          "target_value_max": 1.0,
+          "target_value_mean": 0.7966,
+          "target_value_score": 1.0,
+          "target_visible": false
+        }
+      ],
+      "combined_value": {
+        "available": true,
+        "mean_positive": 0.3371495008468628,
+        "peak": 1.0,
+        "positive_pixel_count": 3578,
+        "shape": [
+          720,
+          720
+        ]
+      },
+      "component_peaks": {
+        "anchor": 0.0,
+        "direct": 0.0,
+        "geometry_only": 1.0,
+        "room_prior": 0.0
+      },
+      "confidence": 0.45,
+      "direct_target_value": {
+        "available": true,
+        "mean_positive": 0.0,
+        "peak": 0.0,
+        "positive_pixel_count": 0,
+        "shape": [
+          720,
+          720
+        ]
+      },
+      "evidence_counts": {
+        "anchor": 0,
+        "direct": 0,
+        "geometry_only": 2,
+        "room_prior": 0
+      },
+      "geometry_fallback_value": {
+        "available": true,
+        "mean_positive": 0.3371495008468628,
+        "peak": 1.0,
+        "positive_pixel_count": 3578,
+        "shape": [
+          720,
+          720
+        ]
+      },
+      "notes": [
+        "combined_value is deterministic PONI-lite/VLFM-lite value, not a learned model",
+        "geometry fallback remains valid when semantic evidence is empty, but branch evidence stays geometry_only"
+      ],
+      "room_prior_value": {
+        "available": true,
+        "mean_positive": 0.0,
+        "peak": 0.0,
+        "positive_pixel_count": 0,
+        "shape": [
+          720,
+          720
+        ]
+      },
+      "schema_version": "smoothnav.target_value_field.v1",
+      "source": "geometry_only",
+      "strongest_source": "geometry_only"
+    }
+  },
+  "episode_id": 0,
+  "objects": [
+    {
+      "bbox_rc": null,
+      "caption": "windows",
+      "center_rc": [
+        369,
+        378
+      ],
+      "confidence": 0.85,
+      "detection_pixel_area_sum": 0,
+      "detection_xyxy_count": 0,
+      "display_priority": 4.0,
+      "footprint_confidence": null,
+      "footprint_encoding": "",
+      "footprint_pixel_count": 0,
+      "footprint_rc_indices": [],
+      "footprint_rejected_reason": "",
+      "footprint_seed_cell_count": 0,
+      "footprint_source": "",
+      "id": "O001",
+      "localized": true,
+      "node_index": 0,
+      "num_detections": 4,
+      "pcd_point_count": 0,
+      "source": "world_state.object_summary",
+      "target_match_reason": "no_match",
+      "target_primary_categories": [
+        "television"
+      ],
+      "target_relevance": 0.0,
+      "within_map_bounds": true
+    },
+    {
+      "bbox_rc": null,
+      "caption": "mirror",
+      "center_rc": [
+        358,
+        386
+      ],
+      "confidence": 0.7,
+      "detection_pixel_area_sum": 0,
+      "detection_xyxy_count": 0,
+      "display_priority": 3.0,
+      "footprint_confidence": null,
+      "footprint_encoding": "",
+      "footprint_pixel_count": 0,
+      "footprint_rc_indices": [],
+      "footprint_rejected_reason": "",
+      "footprint_seed_cell_count": 0,
+      "footprint_source": "",
+      "id": "O002",
+      "localized": true,
+      "node_index": 1,
+      "num_detections": 3,
+      "pcd_point_count": 0,
+      "source": "world_state.object_summary",
+      "target_match_reason": "no_match",
+      "target_primary_categories": [
+        "television"
+      ],
+      "target_relevance": 0.0,
+      "within_map_bounds": true
+    }
+  ],
+  "planner_context": {
+    "anchor_object": "",
+    "goal_description": "",
+    "target_region": ""
+  },
+  "provenance": {
+    "frame_hash": "caa957fd9bad25362c6bd85a45dfad3560880708",
+    "frontier_branches_hash": "cf3c2e42f86b92ad65e6c7d8b49f45a11a6b5bb0",
+    "renderer_version": "smoothnav.semantic_bev_renderer.v1",
+    "scoring_input_hash": "fdefbfea9ff6ce5b0e24d19467afd6ce767ef673",
+    "source": "analysis/s22b_capsule_review_20260427/raw/run/task_frame_capsules/episode_000000_step_000043_unexplored_north",
+    "world_state_hash": "7c1fac0b6e8014ed531f470726e6fb5da32f58c9"
+  },
+  "quality_checks": {
+    "agent_on_free_or_near_free": true,
+    "agent_on_known_or_near_known": true,
+    "agent_within_map_bounds": true,
+    "branch_count": 2,
+    "branch_evidence_counts": {
+      "anchor": 0,
+      "direct": 0,
+      "geometry_only": 2,
+      "room_prior": 0
+    },
+    "branches_with_semantic_hints": 2,
+    "localized_object_count": 2,
+    "localized_room_hypothesis_count": 1,
+    "object_count": 2,
+    "room_count": 9,
+    "semantic_region_count": 0,
+    "target_anchor_semantic_region_count": 0,
+    "unlocalized_room_prior_count": 8,
+    "warnings": [
+      "agent_display_coord_repaired_from_map_current_channel",
+      "raw_agent_coord_disagrees_with_map_current_channel:25.0",
+      "semantic_channels_present_but_empty",
+      "direct_target_semantic_channel_empty",
+      "target_value_geometry_only"
+    ]
+  },
+  "replay_outcome": {
+    "new_object_captions_next_capsule": [
+      "cabinet"
+    ],
+    "new_object_count_next_capsule": 1,
+    "next_capsule_step": 98
+  },
+  "room_state": {
+    "localized_room_regions": [
+      {
+        "bbox_rc": [
+          348,
+          368,
+          379,
+          396
+        ],
+        "caption": "bedroom",
+        "center_rc": [
+          364,
+          382
+        ],
+        "confidence": 0.55,
+        "id": "R001",
+        "object_ids": [
+          "O002",
+          "O001"
+        ],
+        "room_prior_weight": 0.0,
+        "source": "localized_room_or_function_area"
+      }
+    ],
+    "schema_version": "smoothnav.room_spatialization_state.v1",
+    "unlocalized_room_priors": [
+      {
+        "caption": "living room",
+        "confidence": "unlocalized",
+        "geometry_type": "unlocalized_hypothesis",
+        "id": "R002",
+        "object_captions": [],
+        "source": "world_state.room_summary",
+        "spatialization_status": "unlocalized_prior"
+      },
+      {
+        "caption": "bathroom",
+        "confidence": "unlocalized",
+        "geometry_type": "unlocalized_hypothesis",
+        "id": "R003",
+        "object_captions": [],
+        "source": "world_state.room_summary",
+        "spatialization_status": "unlocalized_prior"
+      },
+      {
+        "caption": "kitchen",
+        "confidence": "unlocalized",
+        "geometry_type": "unlocalized_hypothesis",
+        "id": "R004",
+        "object_captions": [],
+        "source": "world_state.room_summary",
+        "spatialization_status": "unlocalized_prior"
+      },
+      {
+        "caption": "dining room",
+        "confidence": "unlocalized",
+        "geometry_type": "unlocalized_hypothesis",
+        "id": "R005",
+        "object_captions": [],
+        "source": "world_state.room_summary",
+        "spatialization_status": "unlocalized_prior"
+      },
+      {
+        "caption": "office room",
+        "confidence": "unlocalized",
+        "geometry_type": "unlocalized_hypothesis",
+        "id": "R006",
+        "object_captions": [],
+        "source": "world_state.room_summary",
+        "spatialization_status": "unlocalized_prior"
+      },
+      {
+        "caption": "gym",
+        "confidence": "unlocalized",
+        "geometry_type": "unlocalized_hypothesis",
+        "id": "R007",
+        "object_captions": [],
+        "source": "world_state.room_summary",
+        "spatialization_status": "unlocalized_prior"
+      },
+      {
+        "caption": "lounge",
+        "confidence": "unlocalized",
+        "geometry_type": "unlocalized_hypothesis",
+        "id": "R008",
+        "object_captions": [],
+        "source": "world_state.room_summary",
+        "spatialization_status": "unlocalized_prior"
+      },
+      {
+        "caption": "laundry room",
+        "confidence": "unlocalized",
+        "geometry_type": "unlocalized_hypothesis",
+        "id": "R009",
+        "object_captions": [],
+        "source": "world_state.room_summary",
+        "spatialization_status": "unlocalized_prior"
+      }
+    ]
+  },
+  "rooms": [
+    {
+      "bbox_rc": [
+        348,
+        368,
+        379,
+        396
+      ],
+      "caption": "bedroom",
+      "center_rc": [
+        364,
+        382
+      ],
+      "confidence": "medium",
+      "geometry_type": "member_object_hypothesis",
+      "id": "R001",
+      "localized": true,
+      "object_captions": [
+        "mirror",
+        "windows"
+      ],
+      "object_count": 2,
+      "object_ids": [
+        "O002",
+        "O001"
+      ],
+      "planner_evidence_role": "spatial_room_prior",
+      "source": "world_state.room_summary",
+      "spatialization_status": "localized_region"
+    },
+    {
+      "bbox_rc": null,
+      "caption": "living room",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R002",
+      "localized": false,
+      "object_captions": [],
+      "object_count": 0,
+      "object_ids": [],
+      "planner_evidence_role": "text_room_prior_only",
+      "source": "world_state.room_summary",
+      "spatialization_status": "unlocalized_prior"
+    },
+    {
+      "bbox_rc": null,
+      "caption": "bathroom",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R003",
+      "localized": false,
+      "object_captions": [],
+      "object_count": 0,
+      "object_ids": [],
+      "planner_evidence_role": "text_room_prior_only",
+      "source": "world_state.room_summary",
+      "spatialization_status": "unlocalized_prior"
+    },
+    {
+      "bbox_rc": null,
+      "caption": "kitchen",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R004",
+      "localized": false,
+      "object_captions": [],
+      "object_count": 0,
+      "object_ids": [],
+      "planner_evidence_role": "text_room_prior_only",
+      "source": "world_state.room_summary",
+      "spatialization_status": "unlocalized_prior"
+    },
+    {
+      "bbox_rc": null,
+      "caption": "dining room",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R005",
+      "localized": false,
+      "object_captions": [],
+      "object_count": 0,
+      "object_ids": [],
+      "planner_evidence_role": "text_room_prior_only",
+      "source": "world_state.room_summary",
+      "spatialization_status": "unlocalized_prior"
+    },
+    {
+      "bbox_rc": null,
+      "caption": "office room",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R006",
+      "localized": false,
+      "object_captions": [],
+      "object_count": 0,
+      "object_ids": [],
+      "planner_evidence_role": "text_room_prior_only",
+      "source": "world_state.room_summary",
+      "spatialization_status": "unlocalized_prior"
+    },
+    {
+      "bbox_rc": null,
+      "caption": "gym",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R007",
+      "localized": false,
+      "object_captions": [],
+      "object_count": 0,
+      "object_ids": [],
+      "planner_evidence_role": "text_room_prior_only",
+      "source": "world_state.room_summary",
+      "spatialization_status": "unlocalized_prior"
+    },
+    {
+      "bbox_rc": null,
+      "caption": "lounge",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R008",
+      "localized": false,
+      "object_captions": [],
+      "object_count": 0,
+      "object_ids": [],
+      "planner_evidence_role": "text_room_prior_only",
+      "source": "world_state.room_summary",
+      "spatialization_status": "unlocalized_prior"
+    },
+    {
+      "bbox_rc": null,
+      "caption": "laundry room",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R009",
+      "localized": false,
+      "object_captions": [],
+      "object_count": 0,
+      "object_ids": [],
+      "planner_evidence_role": "text_room_prior_only",
+      "source": "world_state.room_summary",
+      "spatialization_status": "unlocalized_prior"
+    }
+  ],
+  "schema_version": "smoothnav.semantic_bev_frame.v1",
+  "semantic_layers": {
+    "active_categories": [],
+    "active_category_count": 0,
+    "category_names": [
+      "chair",
+      "couch",
+      "potted plant",
+      "bed",
+      "toilet",
+      "tv",
+      "dining-table",
+      "oven",
+      "sink",
+      "refrigerator",
+      "book",
+      "clock",
+      "vase",
+      "cup",
+      "bottle",
+      "other"
+    ],
+    "channel_offset": 4,
+    "direct_target_activation_sum": 0.0,
+    "direct_target_pixel_count": 0,
+    "has_semantic_channels": false,
+    "semantic_channel_count": 16,
+    "target_category_indices": [
+      5
+    ],
+    "target_category_labels": [
+      "tv"
+    ],
+    "total_semantic_pixels": 0
+  },
+  "semantic_regions": [],
+  "step_idx": 43,
+  "target_query_heatmap": {
+    "branch_ranking": [
+      {
+        "id": "B1",
+        "semantic_target_affinity": 0.25,
+        "target_heatmap_score": 0.0
+      },
+      {
+        "id": "B2",
+        "semantic_target_affinity": 0.1,
+        "target_heatmap_score": 0.0
+      }
+    ],
+    "contributions": [],
+    "positive_pixel_count": 0,
+    "source": "none",
+    "target_category_indices": [
+      5
+    ],
+    "target_category_labels": [
+      "tv"
+    ]
+  },
+  "target_value_state": {
+    "anchor_value": {
+      "available": true,
+      "mean_positive": 0.0,
+      "peak": 0.0,
+      "positive_pixel_count": 0,
+      "shape": [
+        720,
+        720
+      ]
+    },
+    "available": true,
+    "branch_ranking": [
+      {
+        "evidence_level": "geometry_only",
+        "id": "B1",
+        "target_value_max": 1.0,
+        "target_value_mean": 0.6638,
+        "target_value_score": 1.0,
+        "target_visible": false
+      },
+      {
+        "evidence_level": "geometry_only",
+        "id": "B2",
+        "target_value_max": 1.0,
+        "target_value_mean": 0.7966,
+        "target_value_score": 1.0,
+        "target_visible": false
+      }
+    ],
+    "combined_value": {
+      "available": true,
+      "mean_positive": 0.3371495008468628,
+      "peak": 1.0,
+      "positive_pixel_count": 3578,
+      "shape": [
+        720,
+        720
+      ]
+    },
+    "component_peaks": {
+      "anchor": 0.0,
+      "direct": 0.0,
+      "geometry_only": 1.0,
+      "room_prior": 0.0
+    },
+    "confidence": 0.45,
+    "direct_target_value": {
+      "available": true,
+      "mean_positive": 0.0,
+      "peak": 0.0,
+      "positive_pixel_count": 0,
+      "shape": [
+        720,
+        720
+      ]
+    },
+    "evidence_counts": {
+      "anchor": 0,
+      "direct": 0,
+      "geometry_only": 2,
+      "room_prior": 0
+    },
+    "geometry_fallback_value": {
+      "available": true,
+      "mean_positive": 0.3371495008468628,
+      "peak": 1.0,
+      "positive_pixel_count": 3578,
+      "shape": [
+        720,
+        720
+      ]
+    },
+    "notes": [
+      "combined_value is deterministic PONI-lite/VLFM-lite value, not a learned model",
+      "geometry fallback remains valid when semantic evidence is empty, but branch evidence stays geometry_only"
+    ],
+    "room_prior_value": {
+      "available": true,
+      "mean_positive": 0.0,
+      "peak": 0.0,
+      "positive_pixel_count": 0,
+      "shape": [
+        720,
+        720
+      ]
+    },
+    "schema_version": "smoothnav.target_value_field.v1",
+    "source": "geometry_only",
+    "strongest_source": "geometry_only"
+  },
+  "trajectory": [
+    [
+      330,
+      357
+    ],
+    [
+      330,
+      361
+    ],
+    [
+      331,
+      360
+    ],
+    [
+      332,
+      359
+    ],
+    [
+      333,
+      358
+    ],
+    [
+      333,
+      362
+    ],
+    [
+      334,
+      358
+    ],
+    [
+      334,
+      362
+    ],
+    [
+      335,
+      359
+    ],
+    [
+      335,
+      363
+    ],
+    [
+      336,
+      360
+    ],
+    [
+      336,
+      364
+    ],
+    [
+      337,
+      361
+    ],
+    [
+      337,
+      365
+    ],
+    [
+      338,
+      358
+    ],
+    [
+      338,
+      362
+    ],
+    [
+      338,
+      366
+    ],
+    [
+      339,
+      363
+    ],
+    [
+      339,
+      367
+    ],
+    [
+      340,
+      364
+    ],
+    [
+      340,
+      368
+    ],
+    [
+      340,
+      372
+    ],
+    [
+      341,
+      365
+    ],
+    [
+      341,
+      369
+    ],
+    [
+      342,
+      362
+    ],
+    [
+      342,
+      366
+    ],
+    [
+      342,
+      370
+    ],
+    [
+      343,
+      366
+    ],
+    [
+      343,
+      370
+    ],
+    [
+      344,
+      366
+    ],
+    [
+      344,
+      370
+    ],
+    [
+      345,
+      355
+    ],
+    [
+      345,
+      359
+    ],
+    [
+      345,
+      363
+    ],
+    [
+      345,
+      367
+    ],
+    [
+      345,
+      371
+    ],
+    [
+      346,
+      355
+    ],
+    [
+      346,
+      359
+    ],
+    [
+      346,
+      363
+    ],
+    [
+      346,
+      367
+    ],
+    [
+      346,
+      371
+    ],
+    [
+      347,
+      355
+    ],
+    [
+      347,
+      359
+    ],
+    [
+      347,
+      363
+    ],
+    [
+      347,
+      367
+    ],
+    [
+      347,
+      371
+    ],
+    [
+      348,
+      355
+    ],
+    [
+      348,
+      359
+    ],
+    [
+      348,
+      363
+    ],
+    [
+      348,
+      367
+    ],
+    [
+      348,
+      371
+    ],
+    [
+      349,
+      355
+    ],
+    [
+      349,
+      359
+    ],
+    [
+      349,
+      363
+    ],
+    [
+      349,
+      367
+    ],
+    [
+      349,
+      371
+    ],
+    [
+      350,
+      364
+    ],
+    [
+      351,
+      363
+    ],
+    [
+      351,
+      367
+    ],
+    [
+      352,
+      366
+    ],
+    [
+      353,
+      362
+    ],
+    [
+      353,
+      366
+    ],
+    [
+      354,
+      362
+    ],
+    [
+      355,
+      361
+    ],
+    [
+      356,
+      360
+    ],
+    [
+      356,
+      364
+    ],
+    [
+      357,
+      363
+    ],
+    [
+      358,
+      360
+    ],
+    [
+      359,
+      359
+    ],
+    [
+      360,
+      358
+    ],
+    [
+      360,
+      362
+    ],
+    [
+      361,
+      361
+    ],
+    [
+      362,
+      360
+    ]
+  ],
+  "trajectory_summary": {
+    "current_agent_pixel_count": 25,
+    "past_agent_pixel_count": 291,
+    "sample_count": 73,
+    "source": "full_map.channel_3_past_agent"
+  }
+}

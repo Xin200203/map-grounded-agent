@@ -1,0 +1,87 @@
+{
+  "active_semantic_category_count": 0,
+  "agent_alignment_ok": true,
+  "agent_display_repaired": true,
+  "branch_count": 2,
+  "branch_evidence_counts": {
+    "anchor": 0,
+    "direct": 0,
+    "geometry_only": 2,
+    "room_prior": 0
+  },
+  "branch_semantic_hint_coverage": 2,
+  "capsule_dir": "analysis/s22b_capsule_review_20260427/raw/run/task_frame_capsules/episode_000000_step_000043_unexplored_north",
+  "direct_target_pixel_count": 0,
+  "dry_branch": "B2",
+  "files": {
+    "debug_image": "analysis/s25_decision_state_bev_review_20260428/step_000043/semantic_annotated_bev_debug.png",
+    "decision_state_image": "analysis/s25_decision_state_bev_review_20260428/step_000043/decision_state_bev_planner.png",
+    "legacy_image": "analysis/s25_decision_state_bev_review_20260428/step_000043/legacy_bev_annotated_branches.png",
+    "planner_decision_state": "analysis/s25_decision_state_bev_review_20260428/step_000043/planner_decision_state.json",
+    "planner_image": "analysis/s25_decision_state_bev_review_20260428/step_000043/semantic_annotated_bev_planner.png",
+    "semantic_bev_frame": "analysis/s25_decision_state_bev_review_20260428/step_000043/semantic_bev_frame.json"
+  },
+  "final_branch": "B1",
+  "has_language_query_heatmap": false,
+  "has_semantic_channels": false,
+  "hashes": {
+    "debug_image": "38033fac58d42b81dfb2f4f506d35eb225d3edd2",
+    "decision_state_image": "b1aec352c4756c0eaa7e5c1f78be911cd464bc35",
+    "legacy_image": "c3e6ae6c7e56dfa6ef4c66a7906275e13917390c",
+    "planner_decision_state": "ef4d69ab58d44c70c20093a5e33bfc528d255729",
+    "planner_image": "890e55a9a82d9cebdb4bcde53b3ab97cec69752b",
+    "semantic_bev_frame": "1882f46f15919cac1ea038b7eecf2bacce6bce19"
+  },
+  "mllm_branch": "B1",
+  "object_count_localized": 2,
+  "out_dir": "analysis/s25_decision_state_bev_review_20260428/step_000043",
+  "planner_prior_applied": true,
+  "quality_warnings": [
+    "agent_display_coord_repaired_from_map_current_channel",
+    "raw_agent_coord_disagrees_with_map_current_channel:25.0",
+    "semantic_channels_present_but_empty",
+    "direct_target_semantic_channel_empty",
+    "target_value_geometry_only"
+  ],
+  "raw_agent_to_map_current_distance": 25.0,
+  "replay_outcome": {
+    "new_object_captions_next_capsule": [
+      "cabinet"
+    ],
+    "new_object_count_next_capsule": 1,
+    "next_capsule_step": 98
+  },
+  "room_hypothesis_count": 1,
+  "semantic_region_count": 0,
+  "step_idx": 43,
+  "target_anchor_semantic_region_count": 0,
+  "target_heatmap_branch_ranking": [
+    {
+      "id": "B1",
+      "semantic_target_affinity": 0.25,
+      "target_heatmap_score": 0.0
+    },
+    {
+      "id": "B2",
+      "semantic_target_affinity": 0.1,
+      "target_heatmap_score": 0.0
+    }
+  ],
+  "target_heatmap_positive_pixel_count": 0,
+  "target_heatmap_source": "none",
+  "target_relevant_object_count": 0,
+  "target_value_branch_ranking": [
+    {
+      "evidence_level": "geometry_only",
+      "id": "B1",
+      "target_value_score": 0.405,
+      "target_visible": false
+    },
+    {
+      "evidence_level": "geometry_only",
+      "id": "B2",
+      "target_value_score": 0.405,
+      "target_visible": false
+    }
+  ]
+}

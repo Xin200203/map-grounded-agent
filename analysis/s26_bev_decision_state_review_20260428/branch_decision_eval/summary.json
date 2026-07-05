@@ -1,0 +1,234 @@
+{
+  "evaluations": [
+    {
+      "active_semantic_category_count": 0,
+      "branch_evidence_counts": {
+        "anchor": 0,
+        "direct": 0,
+        "geometry_only": 3,
+        "room_prior": 0
+      },
+      "direct_target_pixel_count": 0,
+      "dry_branch": "B2",
+      "final_branch": "B2",
+      "final_evidence_level": "geometry_only",
+      "final_heatmap_rank": 2,
+      "final_target_value_rank": 2,
+      "frame_path": "analysis/s26_bev_decision_state_review_20260428/step_000031/semantic_bev_frame.json",
+      "issues": [
+        {
+          "code": "agent_display_repaired",
+          "detail": "raw agent coord differs from map-current by 25.0",
+          "severity": "warning"
+        },
+        {
+          "code": "no_active_semantic_channels",
+          "detail": "MLLM image cannot use dense BEV semantics in this frame.",
+          "severity": "blocker_for_semantic_reasoning"
+        },
+        {
+          "code": "direct_target_channel_empty",
+          "detail": "Target visibility must be false; any target choice is exploration/prior only.",
+          "severity": "target_not_visible"
+        },
+        {
+          "code": "no_target_heatmap",
+          "detail": "No spatial target/query heatmap supports a branch preference.",
+          "severity": "weak_support"
+        }
+      ],
+      "mllm_branch": "",
+      "mllm_evidence_level": "",
+      "mllm_heatmap_rank": null,
+      "mllm_target_value_rank": null,
+      "schema_version": "smoothnav.semantic_bev_branch_decision_eval.v1",
+      "semantic_region_count": 0,
+      "step_idx": 31,
+      "support_class": "geometry_only_or_graph_only",
+      "target_anchor_semantic_region_count": 0,
+      "target_heatmap_positive_pixel_count": 0,
+      "target_heatmap_source": "none",
+      "target_value_available": true,
+      "target_value_peak": 1.0,
+      "top_heatmap_branch": "B1",
+      "top_target_value_branch": "B1"
+    },
+    {
+      "active_semantic_category_count": 0,
+      "branch_evidence_counts": {
+        "anchor": 0,
+        "direct": 0,
+        "geometry_only": 2,
+        "room_prior": 0
+      },
+      "direct_target_pixel_count": 0,
+      "dry_branch": "B2",
+      "final_branch": "B1",
+      "final_evidence_level": "geometry_only",
+      "final_heatmap_rank": 1,
+      "final_target_value_rank": 1,
+      "frame_path": "analysis/s26_bev_decision_state_review_20260428/step_000043/semantic_bev_frame.json",
+      "issues": [
+        {
+          "code": "agent_display_repaired",
+          "detail": "raw agent coord differs from map-current by 25.0",
+          "severity": "warning"
+        },
+        {
+          "code": "no_active_semantic_channels",
+          "detail": "MLLM image cannot use dense BEV semantics in this frame.",
+          "severity": "blocker_for_semantic_reasoning"
+        },
+        {
+          "code": "direct_target_channel_empty",
+          "detail": "Target visibility must be false; any target choice is exploration/prior only.",
+          "severity": "target_not_visible"
+        },
+        {
+          "code": "no_target_heatmap",
+          "detail": "No spatial target/query heatmap supports a branch preference.",
+          "severity": "weak_support"
+        },
+        {
+          "code": "geometry_only_branch_hard_gated",
+          "detail": "final=B1 has geometry-only evidence but planner prior was applied.",
+          "severity": "gate_mismatch"
+        }
+      ],
+      "mllm_branch": "B1",
+      "mllm_evidence_level": "geometry_only",
+      "mllm_heatmap_rank": 1,
+      "mllm_target_value_rank": 1,
+      "schema_version": "smoothnav.semantic_bev_branch_decision_eval.v1",
+      "semantic_region_count": 0,
+      "step_idx": 43,
+      "support_class": "geometry_only_or_graph_only",
+      "target_anchor_semantic_region_count": 0,
+      "target_heatmap_positive_pixel_count": 0,
+      "target_heatmap_source": "none",
+      "target_value_available": true,
+      "target_value_peak": 1.0,
+      "top_heatmap_branch": "B1",
+      "top_target_value_branch": "B1"
+    },
+    {
+      "active_semantic_category_count": 1,
+      "branch_evidence_counts": {
+        "anchor": 0,
+        "direct": 0,
+        "geometry_only": 3,
+        "room_prior": 0
+      },
+      "direct_target_pixel_count": 0,
+      "dry_branch": "B1",
+      "final_branch": "B3",
+      "final_evidence_level": "geometry_only",
+      "final_heatmap_rank": 1,
+      "final_target_value_rank": 2,
+      "frame_path": "analysis/s26_bev_decision_state_review_20260428/step_000098/semantic_bev_frame.json",
+      "issues": [
+        {
+          "code": "agent_display_repaired",
+          "detail": "raw agent coord differs from map-current by 113.0",
+          "severity": "warning"
+        },
+        {
+          "code": "direct_target_channel_empty",
+          "detail": "Target visibility must be false; any target choice is exploration/prior only.",
+          "severity": "target_not_visible"
+        },
+        {
+          "code": "no_target_heatmap",
+          "detail": "No spatial target/query heatmap supports a branch preference.",
+          "severity": "weak_support"
+        },
+        {
+          "code": "geometry_only_branch_hard_gated",
+          "detail": "final=B3 has geometry-only evidence but planner prior was applied.",
+          "severity": "gate_mismatch"
+        }
+      ],
+      "mllm_branch": "B3",
+      "mllm_evidence_level": "geometry_only",
+      "mllm_heatmap_rank": 1,
+      "mllm_target_value_rank": 2,
+      "schema_version": "smoothnav.semantic_bev_branch_decision_eval.v1",
+      "semantic_region_count": 1,
+      "step_idx": 98,
+      "support_class": "semantic_context_only",
+      "target_anchor_semantic_region_count": 0,
+      "target_heatmap_positive_pixel_count": 0,
+      "target_heatmap_source": "none",
+      "target_value_available": true,
+      "target_value_peak": 1.0,
+      "top_heatmap_branch": "B3",
+      "top_target_value_branch": "B2"
+    },
+    {
+      "active_semantic_category_count": 4,
+      "branch_evidence_counts": {
+        "anchor": 2,
+        "direct": 0,
+        "geometry_only": 4,
+        "room_prior": 0
+      },
+      "direct_target_pixel_count": 0,
+      "dry_branch": "B4",
+      "final_branch": "B4",
+      "final_evidence_level": "anchor",
+      "final_heatmap_rank": 3,
+      "final_target_value_rank": 2,
+      "frame_path": "analysis/s26_bev_decision_state_review_20260428/step_000145/semantic_bev_frame.json",
+      "issues": [
+        {
+          "code": "agent_display_repaired",
+          "detail": "raw agent coord differs from map-current by 93.0",
+          "severity": "warning"
+        },
+        {
+          "code": "direct_target_channel_empty",
+          "detail": "Target visibility must be false; any target choice is exploration/prior only.",
+          "severity": "target_not_visible"
+        },
+        {
+          "code": "target_heatmap_prior_only",
+          "detail": "Branch preference can be used for exploration, not target grounding.",
+          "severity": "prior_only"
+        },
+        {
+          "code": "final_branch_not_top_heatmap_branch",
+          "detail": "final=B4 rank=3, top=B5, score_gap=0.180",
+          "severity": "branch_value_disagreement"
+        },
+        {
+          "code": "mllm_branch_not_top_heatmap_branch",
+          "detail": "mllm=B4 rank=3, top=B5, score_gap=0.180",
+          "severity": "mllm_value_disagreement"
+        },
+        {
+          "code": "final_branch_not_top_target_value_branch",
+          "detail": "final=B4 rank=2, top=B6, value_gap=0.520",
+          "severity": "branch_value_disagreement"
+        }
+      ],
+      "mllm_branch": "B4",
+      "mllm_evidence_level": "anchor",
+      "mllm_heatmap_rank": 3,
+      "mllm_target_value_rank": 2,
+      "schema_version": "smoothnav.semantic_bev_branch_decision_eval.v1",
+      "semantic_region_count": 10,
+      "step_idx": 145,
+      "support_class": "anchor_supported_exploration",
+      "target_anchor_semantic_region_count": 7,
+      "target_heatmap_positive_pixel_count": 289,
+      "target_heatmap_source": "semantic_prior_only",
+      "target_value_available": true,
+      "target_value_peak": 1.0,
+      "top_heatmap_branch": "B5",
+      "top_target_value_branch": "B6"
+    }
+  ],
+  "out_dir": "analysis/s26_bev_decision_state_review_20260428/branch_decision_eval",
+  "replay_dir": "analysis/s26_bev_decision_state_review_20260428",
+  "schema_version": "smoothnav.semantic_bev_branch_decision_eval.summary.v1"
+}

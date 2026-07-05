@@ -1,0 +1,205 @@
+{
+  "episodes_requested": [
+    286,
+    287,
+    291,
+    294,
+    296
+  ],
+  "profiles": {
+    "baseline-periodic": {
+      "SPL": 0.20709248611437994,
+      "SR": 0.4,
+      "avg_high_level_calls": 11.4,
+      "avg_low_level_calls": 0.0,
+      "episodes": [
+        286,
+        287,
+        291,
+        294,
+        296
+      ],
+      "executor_override_ratio": 0.13138346388533098,
+      "goal_update_delay_steps": 5.991304347826087,
+      "grounding_noop_reason_counts": {
+        "out_of_local_window": 53,
+        "same_goal_as_prev": 24
+      },
+      "missing_epoch_trace_steps": 0,
+      "num_runs": 5,
+      "pending_created_count": 0,
+      "pending_promoted_count": 0,
+      "run_dirs": [
+        "results/phase2_revalidation/s2_dev5_intact_scene/baseline-periodic/20260421/smoothnav_text_214836_622ba937",
+        "results/phase2_revalidation/s2_dev5_intact_scene/baseline-periodic/20260421/smoothnav_text_215009_edb9f963",
+        "results/phase2_revalidation/s2_dev5_intact_scene/baseline-periodic/20260421/smoothnav_text_215135_f25dc0c5",
+        "results/phase2_revalidation/s2_dev5_intact_scene/baseline-periodic/20260421/smoothnav_text_215551_8c5f19f8",
+        "results/phase2_revalidation/s2_dev5_intact_scene/baseline-periodic/20260421/smoothnav_text_221258_40ee99b0"
+      ],
+      "strategy_switch_count": 6.2,
+      "terminal_outcome_counts": {
+        "FAILURE_BUDGET_EXHAUSTED": 45,
+        "FAILURE_NO_PROGRESS_TIMEOUT": 2,
+        "SUCCESS": 2
+      }
+    },
+    "smoothnav-fixed-interval": {
+      "SPL": 0.21199578463099467,
+      "SR": 0.4,
+      "avg_high_level_calls": 13.2,
+      "avg_low_level_calls": 0.0,
+      "episodes": [
+        286,
+        287,
+        291,
+        294,
+        296
+      ],
+      "executor_override_ratio": 0.16436037216441463,
+      "goal_update_delay_steps": 2.3095238095238098,
+      "grounding_noop_reason_counts": {
+        "out_of_local_window": 18,
+        "same_frontier_as_prev": 5,
+        "same_goal_as_prev": 56
+      },
+      "missing_epoch_trace_steps": 0,
+      "num_runs": 5,
+      "pending_created_count": 0,
+      "pending_promoted_count": 0,
+      "run_dirs": [
+        "results/phase2_revalidation/s2_dev5_intact_scene/smoothnav-fixed-interval/20260421/smoothnav_text_223008_865db049",
+        "results/phase2_revalidation/s2_dev5_intact_scene/smoothnav-fixed-interval/20260421/smoothnav_text_223237_ce9a1807",
+        "results/phase2_revalidation/s2_dev5_intact_scene/smoothnav-fixed-interval/20260421/smoothnav_text_223508_7f74b780",
+        "results/phase2_revalidation/s2_dev5_intact_scene/smoothnav-fixed-interval/20260421/smoothnav_text_223828_cb1ae3df",
+        "results/phase2_revalidation/s2_dev5_intact_scene/smoothnav-fixed-interval/20260421/smoothnav_text_225103_ab65bd77"
+      ],
+      "strategy_switch_count": 7.4,
+      "terminal_outcome_counts": {
+        "FAILURE_BUDGET_EXHAUSTED": 75,
+        "FAILURE_NO_PROGRESS_TIMEOUT": 487,
+        "FAILURE_STUCK_PERSISTENT": 60,
+        "FAILURE_UNGROUNDED": 52,
+        "SUCCESS": 2
+      }
+    },
+    "smoothnav-full": {
+      "SPL": 0.26358389475837135,
+      "SR": 0.6,
+      "avg_high_level_calls": 9.6,
+      "avg_low_level_calls": 0.0,
+      "episodes": [
+        286,
+        287,
+        291,
+        294,
+        296
+      ],
+      "executor_override_ratio": 0.11464345075658276,
+      "goal_update_delay_steps": 3.313684210526316,
+      "grounding_noop_reason_counts": {
+        "same_frontier_as_prev": 10,
+        "same_goal_as_prev": 50
+      },
+      "missing_epoch_trace_steps": 0,
+      "num_runs": 5,
+      "pending_created_count": 2.6,
+      "pending_promoted_count": 1.2,
+      "run_dirs": [
+        "results/phase2_revalidation/s2_dev5_intact_scene/smoothnav-full/20260421/smoothnav_text_225037_815134e5",
+        "results/phase2_revalidation/s2_dev5_intact_scene/smoothnav-full/20260421/smoothnav_text_225319_bb8164ee",
+        "results/phase2_revalidation/s2_dev5_intact_scene/smoothnav-full/20260421/smoothnav_text_225534_aa7130a4",
+        "results/phase2_revalidation/s2_dev5_intact_scene/smoothnav-full/20260421/smoothnav_text_225823_c185afc4",
+        "results/phase2_revalidation/s2_dev5_intact_scene/smoothnav-full/20260421/smoothnav_text_225203_adfcf3da"
+      ],
+      "strategy_switch_count": 4.4,
+      "terminal_outcome_counts": {
+        "FAILURE_BUDGET_EXHAUSTED": 176,
+        "FAILURE_NO_PROGRESS_TIMEOUT": 1,
+        "SUCCESS": 3
+      }
+    },
+    "smoothnav-no-monitor": {
+      "SPL": 0.23379176825375053,
+      "SR": 0.4,
+      "avg_high_level_calls": 9.8,
+      "avg_low_level_calls": 0.0,
+      "episodes": [
+        286,
+        287,
+        291,
+        294,
+        296
+      ],
+      "executor_override_ratio": 0.14085549216673846,
+      "goal_update_delay_steps": 2.085714285714286,
+      "grounding_noop_reason_counts": {
+        "out_of_local_window": 2,
+        "same_frontier_as_prev": 6,
+        "same_goal_as_prev": 53
+      },
+      "missing_epoch_trace_steps": 0,
+      "num_runs": 5,
+      "pending_created_count": 2.8,
+      "pending_promoted_count": 0.8,
+      "run_dirs": [
+        "results/phase2_revalidation/s2_dev5_intact_scene/smoothnav-no-monitor/20260421/smoothnav_text_222216_a0a31c0d",
+        "results/phase2_revalidation/s2_dev5_intact_scene/smoothnav-no-monitor/20260421/smoothnav_text_222457_0bfc4cd5",
+        "results/phase2_revalidation/s2_dev5_intact_scene/smoothnav-no-monitor/20260421/smoothnav_text_222650_6ac1d9fb",
+        "results/phase2_revalidation/s2_dev5_intact_scene/smoothnav-no-monitor/20260421/smoothnav_text_222939_d44e05b6",
+        "results/phase2_revalidation/s2_dev5_intact_scene/smoothnav-no-monitor/20260421/smoothnav_text_223331_8ebb6d95"
+      ],
+      "strategy_switch_count": 5.6,
+      "terminal_outcome_counts": {
+        "FAILURE_BUDGET_EXHAUSTED": 161,
+        "FAILURE_NO_PROGRESS_TIMEOUT": 145,
+        "FAILURE_STUCK_PERSISTENT": 60,
+        "SUCCESS": 2
+      }
+    },
+    "smoothnav-no-prefetch": {
+      "SPL": 0.23379176825375053,
+      "SR": 0.4,
+      "avg_high_level_calls": 6.0,
+      "avg_low_level_calls": 0.0,
+      "episodes": [
+        286,
+        287,
+        291,
+        294,
+        296
+      ],
+      "executor_override_ratio": 0.1672236247495603,
+      "goal_update_delay_steps": 1.4254545454545455,
+      "grounding_noop_reason_counts": {
+        "same_frontier_as_prev": 7,
+        "same_goal_as_prev": 37
+      },
+      "missing_epoch_trace_steps": 0,
+      "num_runs": 5,
+      "pending_created_count": 0,
+      "pending_promoted_count": 0,
+      "run_dirs": [
+        "results/phase2_revalidation/s2_dev5_intact_scene/smoothnav-no-prefetch/20260421/smoothnav_text_225922_51097f17",
+        "results/phase2_revalidation/s2_dev5_intact_scene/smoothnav-no-prefetch/20260421/smoothnav_text_230231_c2b11dc7",
+        "results/phase2_revalidation/s2_dev5_intact_scene/smoothnav-no-prefetch/20260421/smoothnav_text_230423_053eff81",
+        "results/phase2_revalidation/s2_dev5_intact_scene/smoothnav-no-prefetch/20260421/smoothnav_text_230728_8355f967",
+        "results/phase2_revalidation/s2_dev5_intact_scene/smoothnav-no-prefetch/20260421/smoothnav_text_230833_3e08625e"
+      ],
+      "strategy_switch_count": 4.0,
+      "terminal_outcome_counts": {
+        "FAILURE_BUDGET_EXHAUSTED": 72,
+        "FAILURE_NO_PROGRESS_TIMEOUT": 423,
+        "FAILURE_STUCK_PERSISTENT": 60,
+        "SUCCESS": 2
+      }
+    }
+  },
+  "profiles_requested": [
+    "baseline-periodic",
+    "smoothnav-fixed-interval",
+    "smoothnav-no-monitor",
+    "smoothnav-full",
+    "smoothnav-no-prefetch"
+  ],
+  "results_root": "results/phase2_revalidation/s2_dev5_intact_scene"
+}

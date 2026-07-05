@@ -1,0 +1,118 @@
+You are SmoothNav's BEV frontier-branch planner.
+You will see an annotated bird's-eye-view map image. The robot is marked A; frontier branches are labeled B1, B2, ... .
+
+TARGET DESCRIPTION:
+The screen of the television in this image is gray and has a silver frame. This image has a blue and white abstract painting hanging on the wall next to the sofa. On the right side of the picture, there is a gray sofa with a white pillow placed on it. Below the sofa is a brown coffee table with a white dining table top on top. In front of the sofa is a white carpet with black patterns. The ceiling above is white, and there are two small round light bulbs in the upper right corner.
+
+CURRENT TEXT STRATEGY:
+- target_region: unexplored north
+- anchor_object: 
+- trigger: frontier_reached
+- step_idx: 31
+- already_explored: ["bedroom"]
+
+SCENE GRAPH TEXT:
+ROOMS AND OBJECTS:
+  bedroom: mirror, windows
+SPATIAL RELATIONSHIPS:
+  mirror next to windows
+
+BEV BRANCH IDS YOU MAY CHOOSE:
+["B2", "B3", "B1"]
+
+BRANCH SUMMARY:
+[
+  {
+    "id": "B2",
+    "direction_from_agent": "north",
+    "centroid": [
+      340.0,
+      346.61538461538464
+    ],
+    "representative_coord": [
+      346,
+      347
+    ],
+    "candidate_point_count": 13,
+    "pixel_count": 13,
+    "score_terms": {
+      "distance_mean": 1.2942203172137319,
+      "base_score_max": 9.996274565051502,
+      "bias_score_max": 0.5639103664326951,
+      "novelty_score_max": 0.40828402366863903,
+      "actionability_score_max": 1.0,
+      "target_progress_score_max": 0.0,
+      "repeat_penalty_max": 0.0,
+      "recent_penalty_max": 0.0,
+      "final_score_max": 14.62469709587104
+    }
+  },
+  {
+    "id": "B3",
+    "direction_from_agent": "west",
+    "centroid": [
+      346.8333333333333,
+      255.4814814814815
+    ],
+    "representative_coord": [
+      356,
+      253
+    ],
+    "candidate_point_count": 0,
+    "pixel_count": 54,
+    "score_terms": {
+      "distance_mean": 5.794919741081314,
+      "base_score_max": 5.623072815266651,
+      "bias_score_max": 0.3895276995836099,
+      "novelty_score_max": 0.7218934911242604,
+      "actionability_score_max": 1.0,
+      "target_progress_score_max": 0.0,
+      "repeat_penalty_max": 0.0,
+      "recent_penalty_max": 0.0,
+      "final_score_max": 9.415759577180523
+    }
+  },
+  {
+    "id": "B1",
+    "direction_from_agent": "north",
+    "centroid": [
+      289.0569105691057,
+      385.5853658536585
+    ],
+    "representative_coord": [
+      316,
+      392
+    ],
+    "candidate_point_count": 11,
+    "pixel_count": 123,
+    "score_terms": {
+      "distance_mean": 8.048196825076088,
+      "base_score_max": 4.192232664575843,
+      "bias_score_max": 0.4013350097634396,
+      "novelty_score_max": 0.727810650887574,
+      "actionability_score_max": 1.0,
+      "target_progress_score_max": 0.0,
+      "repeat_penalty_max": 0.0,
+      "recent_penalty_max": 0.0,
+      "final_score_max": 7.466044943748477
+    }
+  }
+]
+
+Task:
+1. If the target or a strong target anchor is visible/known, choose the branch that best approaches or verifies it.
+2. If the target is not visible, infer the most promising exploration branch from the target semantics, room commonsense, current scene graph, and BEV topology.
+3. Choose a branch ID, not a raw coordinate. SmoothNav will convert the branch into executable frontier points.
+4. Prefer actionable candidate branches and avoid repeating branches that look already exhausted.
+
+Output JSON only with exactly this schema shape:
+{
+  "schema_version": "smoothnav.mllm_frontier_plan.v1",
+  "decision_type": "explore_frontier" or "target_anchor" or "hold_or_recover",
+  "target_visible": true or false,
+  "selected_branch_id": "B#",
+  "ranked_branches": [
+    {"id": "B#", "score": 0.0 to 1.0, "rationale": "short reason"}
+  ],
+  "semantic_search_intent": "short sentence"
+}

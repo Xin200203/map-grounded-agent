@@ -1,0 +1,47 @@
+{
+  "counterfactual_outcome": {
+    "applied_target_regions": [
+      "unexplored target:tv"
+    ],
+    "current_target_region_after": "unexplored target:tv",
+    "forced_replan_due_to_direction_reuse": false,
+    "handled": true,
+    "pending_promoted": false,
+    "pending_promotion_reason": "",
+    "pending_target_region_after": null,
+    "planner_call_count": 0
+  },
+  "historical_after": {
+    "current_target_region": "unexplored east",
+    "step_idx": 610
+  },
+  "historical_before": {
+    "current_target_region": "unexplored target:tv",
+    "pending_target_region": "unexplored east",
+    "step_idx": 609
+  },
+  "historical_drop_event": {
+    "events": [
+      "frontier_near",
+      "frontier_reached"
+    ],
+    "from_region": "unexplored target:tv",
+    "goal_after": [
+      56,
+      76
+    ],
+    "pending_region_previous_step": "unexplored east",
+    "planner_reasons": [
+      "frontier_reached"
+    ],
+    "step_idx": 610,
+    "to_region": "unexplored east"
+  },
+  "source_capture": "results/phase2_revalidation/s12_temperature0_target_anchor_20260424/smoothnav-full/20260424/smoothnav_text_112731_317b2c0e/target_branch_capture.json",
+  "verdict": {
+    "avoided_historical_drop": true,
+    "bug_fixed_on_captured_context": true,
+    "cleared_stale_pending": true,
+    "kept_target_anchor": true
+  }
+}

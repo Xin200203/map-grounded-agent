@@ -1,0 +1,22 @@
+{
+  "consecutive_grounding_noops": 0,
+  "same_frontier_reuse_count": 1,
+  "target_anchor_attempt": {
+    "active": false,
+    "attempt_id": 0,
+    "best_distance": null,
+    "decommit_reason": "",
+    "full_map_coord": null,
+    "last_distance": null,
+    "last_improvement_step": null,
+    "last_projected_local_coord": null,
+    "last_seen_step": null,
+    "last_trigger": "",
+    "last_update_step": null,
+    "last_value_source": "",
+    "stall_updates": 0,
+    "target_label": "",
+    "target_region": "",
+    "update_count": 0
+  }
+}

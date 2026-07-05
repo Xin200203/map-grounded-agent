@@ -1,0 +1,1300 @@
+{
+  "attempts": [
+    {
+      "attempt_id": 1,
+      "best_distance": 296.108088373148,
+      "end_step": 609,
+      "final_distance": 296.108088373148,
+      "initial_distance": 331.21745123106064,
+      "net_improvement": 35.10936285791263,
+      "policy_sweep": [
+        {
+          "best_distance_before_decommit": 296.108088373148,
+          "decommit_step": null,
+          "decommit_trigger": null,
+          "evidence_reset": true,
+          "history": [
+            {
+              "best_distance": 331.21745123106064,
+              "best_step": 564,
+              "distance": 331.21745123106064,
+              "evidence_reset": false,
+              "improved": true,
+              "improvement": null,
+              "stale_count": 0,
+              "step_idx": 564,
+              "trigger": "target_candidate_detected"
+            },
+            {
+              "best_distance": 296.108088373148,
+              "best_step": 599,
+              "distance": 296.108088373148,
+              "evidence_reset": false,
+              "improved": true,
+              "improvement": 35.10936285791263,
+              "stale_count": 0,
+              "step_idx": 599,
+              "trigger": "target_anchor_local_map_refresh"
+            }
+          ],
+          "later_better_evidence": null,
+          "min_improvement": 1.0,
+          "patience_updates": 3,
+          "would_false_early_decommit": false
+        },
+        {
+          "best_distance_before_decommit": 296.108088373148,
+          "decommit_step": null,
+          "decommit_trigger": null,
+          "evidence_reset": true,
+          "history": [
+            {
+              "best_distance": 331.21745123106064,
+              "best_step": 564,
+              "distance": 331.21745123106064,
+              "evidence_reset": false,
+              "improved": true,
+              "improvement": null,
+              "stale_count": 0,
+              "step_idx": 564,
+              "trigger": "target_candidate_detected"
+            },
+            {
+              "best_distance": 296.108088373148,
+              "best_step": 599,
+              "distance": 296.108088373148,
+              "evidence_reset": false,
+              "improved": true,
+              "improvement": 35.10936285791263,
+              "stale_count": 0,
+              "step_idx": 599,
+              "trigger": "target_anchor_local_map_refresh"
+            }
+          ],
+          "later_better_evidence": null,
+          "min_improvement": 5.0,
+          "patience_updates": 3,
+          "would_false_early_decommit": false
+        },
+        {
+          "best_distance_before_decommit": 296.108088373148,
+          "decommit_step": null,
+          "decommit_trigger": null,
+          "evidence_reset": true,
+          "history": [
+            {
+              "best_distance": 331.21745123106064,
+              "best_step": 564,
+              "distance": 331.21745123106064,
+              "evidence_reset": false,
+              "improved": true,
+              "improvement": null,
+              "stale_count": 0,
+              "step_idx": 564,
+              "trigger": "target_candidate_detected"
+            },
+            {
+              "best_distance": 296.108088373148,
+              "best_step": 599,
+              "distance": 296.108088373148,
+              "evidence_reset": false,
+              "improved": true,
+              "improvement": 35.10936285791263,
+              "stale_count": 0,
+              "step_idx": 599,
+              "trigger": "target_anchor_local_map_refresh"
+            }
+          ],
+          "later_better_evidence": null,
+          "min_improvement": 1.0,
+          "patience_updates": 4,
+          "would_false_early_decommit": false
+        },
+        {
+          "best_distance_before_decommit": 296.108088373148,
+          "decommit_step": null,
+          "decommit_trigger": null,
+          "evidence_reset": true,
+          "history": [
+            {
+              "best_distance": 331.21745123106064,
+              "best_step": 564,
+              "distance": 331.21745123106064,
+              "evidence_reset": false,
+              "improved": true,
+              "improvement": null,
+              "stale_count": 0,
+              "step_idx": 564,
+              "trigger": "target_candidate_detected"
+            },
+            {
+              "best_distance": 296.108088373148,
+              "best_step": 599,
+              "distance": 296.108088373148,
+              "evidence_reset": false,
+              "improved": true,
+              "improvement": 35.10936285791263,
+              "stale_count": 0,
+              "step_idx": 599,
+              "trigger": "target_anchor_local_map_refresh"
+            }
+          ],
+          "later_better_evidence": null,
+          "min_improvement": 5.0,
+          "patience_updates": 4,
+          "would_false_early_decommit": false
+        },
+        {
+          "best_distance_before_decommit": 296.108088373148,
+          "decommit_step": null,
+          "decommit_trigger": null,
+          "evidence_reset": true,
+          "history": [
+            {
+              "best_distance": 331.21745123106064,
+              "best_step": 564,
+              "distance": 331.21745123106064,
+              "evidence_reset": false,
+              "improved": true,
+              "improvement": null,
+              "stale_count": 0,
+              "step_idx": 564,
+              "trigger": "target_candidate_detected"
+            },
+            {
+              "best_distance": 296.108088373148,
+              "best_step": 599,
+              "distance": 296.108088373148,
+              "evidence_reset": false,
+              "improved": true,
+              "improvement": 35.10936285791263,
+              "stale_count": 0,
+              "step_idx": 599,
+              "trigger": "target_anchor_local_map_refresh"
+            }
+          ],
+          "later_better_evidence": null,
+          "min_improvement": 1.0,
+          "patience_updates": 5,
+          "would_false_early_decommit": false
+        },
+        {
+          "best_distance_before_decommit": 296.108088373148,
+          "decommit_step": null,
+          "decommit_trigger": null,
+          "evidence_reset": true,
+          "history": [
+            {
+              "best_distance": 331.21745123106064,
+              "best_step": 564,
+              "distance": 331.21745123106064,
+              "evidence_reset": false,
+              "improved": true,
+              "improvement": null,
+              "stale_count": 0,
+              "step_idx": 564,
+              "trigger": "target_candidate_detected"
+            },
+            {
+              "best_distance": 296.108088373148,
+              "best_step": 599,
+              "distance": 296.108088373148,
+              "evidence_reset": false,
+              "improved": true,
+              "improvement": 35.10936285791263,
+              "stale_count": 0,
+              "step_idx": 599,
+              "trigger": "target_anchor_local_map_refresh"
+            }
+          ],
+          "later_better_evidence": null,
+          "min_improvement": 5.0,
+          "patience_updates": 5,
+          "would_false_early_decommit": false
+        }
+      ],
+      "start_step": 564,
+      "update_count": 2,
+      "updates": [
+        {
+          "bias_input": [
+            166,
+            296
+          ],
+          "frontier_to_anchor_distance": 331.21745123106064,
+          "projected_goal": [
+            195,
+            237
+          ],
+          "reason": "goal_updated",
+          "selected_frontier": [
+            497,
+            284
+          ],
+          "step_idx": 564,
+          "target_region": "unexplored target:tv",
+          "trigger": "target_candidate_detected"
+        },
+        {
+          "bias_input": [
+            166,
+            296
+          ],
+          "frontier_to_anchor_distance": 296.108088373148,
+          "projected_goal": [
+            97,
+            127
+          ],
+          "reason": "goal_updated",
+          "selected_frontier": [
+            462,
+            288
+          ],
+          "step_idx": 599,
+          "target_region": "unexplored target:tv",
+          "trigger": "target_anchor_local_map_refresh"
+        }
+      ]
+    },
+    {
+      "attempt_id": 2,
+      "best_distance": 265.1735280905694,
+      "end_step": 934,
+      "final_distance": 265.1735280905694,
+      "initial_distance": 361.0013850388943,
+      "net_improvement": 95.8278569483249,
+      "policy_sweep": [
+        {
+          "best_distance_before_decommit": 270.9464891819047,
+          "decommit_step": 799,
+          "decommit_trigger": "target_anchor_local_map_refresh",
+          "evidence_reset": true,
+          "history": [
+            {
+              "best_distance": 361.0013850388943,
+              "best_step": 632,
+              "distance": 361.0013850388943,
+              "evidence_reset": false,
+              "improved": true,
+              "improvement": null,
+              "stale_count": 0,
+              "step_idx": 632,
+              "trigger": "frontier_reached"
+            },
+            {
+              "best_distance": 361.0013850388943,
+              "best_step": 632,
+              "distance": 365.05889935735024,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": -4.057514318455958,
+              "stale_count": 1,
+              "step_idx": 639,
+              "trigger": "target_anchor_local_map_refresh"
+            },
+            {
+              "best_distance": 272.47018185482244,
+              "best_step": 674,
+              "distance": 272.47018185482244,
+              "evidence_reset": false,
+              "improved": true,
+              "improvement": 88.53120318407184,
+              "stale_count": 0,
+              "step_idx": 674,
+              "trigger": "frontier_reached"
+            },
+            {
+              "best_distance": 270.9464891819047,
+              "best_step": 679,
+              "distance": 270.9464891819047,
+              "evidence_reset": false,
+              "improved": true,
+              "improvement": 1.5236926729177185,
+              "stale_count": 0,
+              "step_idx": 679,
+              "trigger": "target_anchor_local_map_refresh"
+            },
+            {
+              "best_distance": 270.9464891819047,
+              "best_step": 679,
+              "distance": 275.8042784294689,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": -4.857789247564199,
+              "stale_count": 1,
+              "step_idx": 719,
+              "trigger": "target_anchor_local_map_refresh"
+            },
+            {
+              "best_distance": 270.9464891819047,
+              "best_step": 679,
+              "distance": 275.10906927980403,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": -4.162580097899308,
+              "stale_count": 2,
+              "step_idx": 759,
+              "trigger": "target_anchor_local_map_refresh"
+            },
+            {
+              "best_distance": 270.9464891819047,
+              "best_step": 679,
+              "distance": 273.80467490530543,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": -2.858185723400709,
+              "stale_count": 3,
+              "step_idx": 799,
+              "trigger": "target_anchor_local_map_refresh"
+            }
+          ],
+          "later_better_evidence": {
+            "distance": 265.88719412562915,
+            "step_idx": 824,
+            "trigger": "target_candidate_detected"
+          },
+          "min_improvement": 1.0,
+          "patience_updates": 3,
+          "would_false_early_decommit": true
+        },
+        {
+          "best_distance_before_decommit": 272.47018185482244,
+          "decommit_step": 759,
+          "decommit_trigger": "target_anchor_local_map_refresh",
+          "evidence_reset": true,
+          "history": [
+            {
+              "best_distance": 361.0013850388943,
+              "best_step": 632,
+              "distance": 361.0013850388943,
+              "evidence_reset": false,
+              "improved": true,
+              "improvement": null,
+              "stale_count": 0,
+              "step_idx": 632,
+              "trigger": "frontier_reached"
+            },
+            {
+              "best_distance": 361.0013850388943,
+              "best_step": 632,
+              "distance": 365.05889935735024,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": -4.057514318455958,
+              "stale_count": 1,
+              "step_idx": 639,
+              "trigger": "target_anchor_local_map_refresh"
+            },
+            {
+              "best_distance": 272.47018185482244,
+              "best_step": 674,
+              "distance": 272.47018185482244,
+              "evidence_reset": false,
+              "improved": true,
+              "improvement": 88.53120318407184,
+              "stale_count": 0,
+              "step_idx": 674,
+              "trigger": "frontier_reached"
+            },
+            {
+              "best_distance": 272.47018185482244,
+              "best_step": 674,
+              "distance": 270.9464891819047,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": 1.5236926729177185,
+              "stale_count": 1,
+              "step_idx": 679,
+              "trigger": "target_anchor_local_map_refresh"
+            },
+            {
+              "best_distance": 272.47018185482244,
+              "best_step": 674,
+              "distance": 275.8042784294689,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": -3.3340965746464803,
+              "stale_count": 2,
+              "step_idx": 719,
+              "trigger": "target_anchor_local_map_refresh"
+            },
+            {
+              "best_distance": 272.47018185482244,
+              "best_step": 674,
+              "distance": 275.10906927980403,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": -2.63888742498159,
+              "stale_count": 3,
+              "step_idx": 759,
+              "trigger": "target_anchor_local_map_refresh"
+            }
+          ],
+          "later_better_evidence": {
+            "distance": 265.88719412562915,
+            "step_idx": 824,
+            "trigger": "target_candidate_detected"
+          },
+          "min_improvement": 5.0,
+          "patience_updates": 3,
+          "would_false_early_decommit": true
+        },
+        {
+          "best_distance_before_decommit": 265.88719412562915,
+          "decommit_step": null,
+          "decommit_trigger": null,
+          "evidence_reset": true,
+          "history": [
+            {
+              "best_distance": 361.0013850388943,
+              "best_step": 632,
+              "distance": 361.0013850388943,
+              "evidence_reset": false,
+              "improved": true,
+              "improvement": null,
+              "stale_count": 0,
+              "step_idx": 632,
+              "trigger": "frontier_reached"
+            },
+            {
+              "best_distance": 361.0013850388943,
+              "best_step": 632,
+              "distance": 365.05889935735024,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": -4.057514318455958,
+              "stale_count": 1,
+              "step_idx": 639,
+              "trigger": "target_anchor_local_map_refresh"
+            },
+            {
+              "best_distance": 272.47018185482244,
+              "best_step": 674,
+              "distance": 272.47018185482244,
+              "evidence_reset": false,
+              "improved": true,
+              "improvement": 88.53120318407184,
+              "stale_count": 0,
+              "step_idx": 674,
+              "trigger": "frontier_reached"
+            },
+            {
+              "best_distance": 270.9464891819047,
+              "best_step": 679,
+              "distance": 270.9464891819047,
+              "evidence_reset": false,
+              "improved": true,
+              "improvement": 1.5236926729177185,
+              "stale_count": 0,
+              "step_idx": 679,
+              "trigger": "target_anchor_local_map_refresh"
+            },
+            {
+              "best_distance": 270.9464891819047,
+              "best_step": 679,
+              "distance": 275.8042784294689,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": -4.857789247564199,
+              "stale_count": 1,
+              "step_idx": 719,
+              "trigger": "target_anchor_local_map_refresh"
+            },
+            {
+              "best_distance": 270.9464891819047,
+              "best_step": 679,
+              "distance": 275.10906927980403,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": -4.162580097899308,
+              "stale_count": 2,
+              "step_idx": 759,
+              "trigger": "target_anchor_local_map_refresh"
+            },
+            {
+              "best_distance": 270.9464891819047,
+              "best_step": 679,
+              "distance": 273.80467490530543,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": -2.858185723400709,
+              "stale_count": 3,
+              "step_idx": 799,
+              "trigger": "target_anchor_local_map_refresh"
+            },
+            {
+              "best_distance": 265.88719412562915,
+              "best_step": 824,
+              "distance": 265.88719412562915,
+              "evidence_reset": false,
+              "improved": true,
+              "improvement": 5.059295056275573,
+              "stale_count": 0,
+              "step_idx": 824,
+              "trigger": "target_candidate_detected"
+            },
+            {
+              "best_distance": 265.88719412562915,
+              "best_step": 824,
+              "distance": 268.7042984397533,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": -2.817104314124151,
+              "stale_count": 1,
+              "step_idx": 839,
+              "trigger": "target_anchor_local_map_refresh"
+            },
+            {
+              "best_distance": 265.88719412562915,
+              "best_step": 824,
+              "distance": 268.00186566514793,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": -2.114671539518781,
+              "stale_count": 2,
+              "step_idx": 879,
+              "trigger": "target_anchor_local_map_refresh"
+            },
+            {
+              "best_distance": 265.88719412562915,
+              "best_step": 824,
+              "distance": 265.1735280905694,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": 0.7136660350597595,
+              "stale_count": 3,
+              "step_idx": 919,
+              "trigger": "target_anchor_local_map_refresh"
+            }
+          ],
+          "later_better_evidence": null,
+          "min_improvement": 1.0,
+          "patience_updates": 4,
+          "would_false_early_decommit": false
+        },
+        {
+          "best_distance_before_decommit": 272.47018185482244,
+          "decommit_step": 799,
+          "decommit_trigger": "target_anchor_local_map_refresh",
+          "evidence_reset": true,
+          "history": [
+            {
+              "best_distance": 361.0013850388943,
+              "best_step": 632,
+              "distance": 361.0013850388943,
+              "evidence_reset": false,
+              "improved": true,
+              "improvement": null,
+              "stale_count": 0,
+              "step_idx": 632,
+              "trigger": "frontier_reached"
+            },
+            {
+              "best_distance": 361.0013850388943,
+              "best_step": 632,
+              "distance": 365.05889935735024,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": -4.057514318455958,
+              "stale_count": 1,
+              "step_idx": 639,
+              "trigger": "target_anchor_local_map_refresh"
+            },
+            {
+              "best_distance": 272.47018185482244,
+              "best_step": 674,
+              "distance": 272.47018185482244,
+              "evidence_reset": false,
+              "improved": true,
+              "improvement": 88.53120318407184,
+              "stale_count": 0,
+              "step_idx": 674,
+              "trigger": "frontier_reached"
+            },
+            {
+              "best_distance": 272.47018185482244,
+              "best_step": 674,
+              "distance": 270.9464891819047,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": 1.5236926729177185,
+              "stale_count": 1,
+              "step_idx": 679,
+              "trigger": "target_anchor_local_map_refresh"
+            },
+            {
+              "best_distance": 272.47018185482244,
+              "best_step": 674,
+              "distance": 275.8042784294689,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": -3.3340965746464803,
+              "stale_count": 2,
+              "step_idx": 719,
+              "trigger": "target_anchor_local_map_refresh"
+            },
+            {
+              "best_distance": 272.47018185482244,
+              "best_step": 674,
+              "distance": 275.10906927980403,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": -2.63888742498159,
+              "stale_count": 3,
+              "step_idx": 759,
+              "trigger": "target_anchor_local_map_refresh"
+            },
+            {
+              "best_distance": 272.47018185482244,
+              "best_step": 674,
+              "distance": 273.80467490530543,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": -1.3344930504829904,
+              "stale_count": 4,
+              "step_idx": 799,
+              "trigger": "target_anchor_local_map_refresh"
+            }
+          ],
+          "later_better_evidence": {
+            "distance": 265.88719412562915,
+            "step_idx": 824,
+            "trigger": "target_candidate_detected"
+          },
+          "min_improvement": 5.0,
+          "patience_updates": 4,
+          "would_false_early_decommit": true
+        },
+        {
+          "best_distance_before_decommit": 265.88719412562915,
+          "decommit_step": null,
+          "decommit_trigger": null,
+          "evidence_reset": true,
+          "history": [
+            {
+              "best_distance": 361.0013850388943,
+              "best_step": 632,
+              "distance": 361.0013850388943,
+              "evidence_reset": false,
+              "improved": true,
+              "improvement": null,
+              "stale_count": 0,
+              "step_idx": 632,
+              "trigger": "frontier_reached"
+            },
+            {
+              "best_distance": 361.0013850388943,
+              "best_step": 632,
+              "distance": 365.05889935735024,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": -4.057514318455958,
+              "stale_count": 1,
+              "step_idx": 639,
+              "trigger": "target_anchor_local_map_refresh"
+            },
+            {
+              "best_distance": 272.47018185482244,
+              "best_step": 674,
+              "distance": 272.47018185482244,
+              "evidence_reset": false,
+              "improved": true,
+              "improvement": 88.53120318407184,
+              "stale_count": 0,
+              "step_idx": 674,
+              "trigger": "frontier_reached"
+            },
+            {
+              "best_distance": 270.9464891819047,
+              "best_step": 679,
+              "distance": 270.9464891819047,
+              "evidence_reset": false,
+              "improved": true,
+              "improvement": 1.5236926729177185,
+              "stale_count": 0,
+              "step_idx": 679,
+              "trigger": "target_anchor_local_map_refresh"
+            },
+            {
+              "best_distance": 270.9464891819047,
+              "best_step": 679,
+              "distance": 275.8042784294689,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": -4.857789247564199,
+              "stale_count": 1,
+              "step_idx": 719,
+              "trigger": "target_anchor_local_map_refresh"
+            },
+            {
+              "best_distance": 270.9464891819047,
+              "best_step": 679,
+              "distance": 275.10906927980403,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": -4.162580097899308,
+              "stale_count": 2,
+              "step_idx": 759,
+              "trigger": "target_anchor_local_map_refresh"
+            },
+            {
+              "best_distance": 270.9464891819047,
+              "best_step": 679,
+              "distance": 273.80467490530543,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": -2.858185723400709,
+              "stale_count": 3,
+              "step_idx": 799,
+              "trigger": "target_anchor_local_map_refresh"
+            },
+            {
+              "best_distance": 265.88719412562915,
+              "best_step": 824,
+              "distance": 265.88719412562915,
+              "evidence_reset": false,
+              "improved": true,
+              "improvement": 5.059295056275573,
+              "stale_count": 0,
+              "step_idx": 824,
+              "trigger": "target_candidate_detected"
+            },
+            {
+              "best_distance": 265.88719412562915,
+              "best_step": 824,
+              "distance": 268.7042984397533,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": -2.817104314124151,
+              "stale_count": 1,
+              "step_idx": 839,
+              "trigger": "target_anchor_local_map_refresh"
+            },
+            {
+              "best_distance": 265.88719412562915,
+              "best_step": 824,
+              "distance": 268.00186566514793,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": -2.114671539518781,
+              "stale_count": 2,
+              "step_idx": 879,
+              "trigger": "target_anchor_local_map_refresh"
+            },
+            {
+              "best_distance": 265.88719412562915,
+              "best_step": 824,
+              "distance": 265.1735280905694,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": 0.7136660350597595,
+              "stale_count": 3,
+              "step_idx": 919,
+              "trigger": "target_anchor_local_map_refresh"
+            }
+          ],
+          "later_better_evidence": null,
+          "min_improvement": 1.0,
+          "patience_updates": 5,
+          "would_false_early_decommit": false
+        },
+        {
+          "best_distance_before_decommit": 265.88719412562915,
+          "decommit_step": null,
+          "decommit_trigger": null,
+          "evidence_reset": true,
+          "history": [
+            {
+              "best_distance": 361.0013850388943,
+              "best_step": 632,
+              "distance": 361.0013850388943,
+              "evidence_reset": false,
+              "improved": true,
+              "improvement": null,
+              "stale_count": 0,
+              "step_idx": 632,
+              "trigger": "frontier_reached"
+            },
+            {
+              "best_distance": 361.0013850388943,
+              "best_step": 632,
+              "distance": 365.05889935735024,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": -4.057514318455958,
+              "stale_count": 1,
+              "step_idx": 639,
+              "trigger": "target_anchor_local_map_refresh"
+            },
+            {
+              "best_distance": 272.47018185482244,
+              "best_step": 674,
+              "distance": 272.47018185482244,
+              "evidence_reset": false,
+              "improved": true,
+              "improvement": 88.53120318407184,
+              "stale_count": 0,
+              "step_idx": 674,
+              "trigger": "frontier_reached"
+            },
+            {
+              "best_distance": 272.47018185482244,
+              "best_step": 674,
+              "distance": 270.9464891819047,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": 1.5236926729177185,
+              "stale_count": 1,
+              "step_idx": 679,
+              "trigger": "target_anchor_local_map_refresh"
+            },
+            {
+              "best_distance": 272.47018185482244,
+              "best_step": 674,
+              "distance": 275.8042784294689,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": -3.3340965746464803,
+              "stale_count": 2,
+              "step_idx": 719,
+              "trigger": "target_anchor_local_map_refresh"
+            },
+            {
+              "best_distance": 272.47018185482244,
+              "best_step": 674,
+              "distance": 275.10906927980403,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": -2.63888742498159,
+              "stale_count": 3,
+              "step_idx": 759,
+              "trigger": "target_anchor_local_map_refresh"
+            },
+            {
+              "best_distance": 272.47018185482244,
+              "best_step": 674,
+              "distance": 273.80467490530543,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": -1.3344930504829904,
+              "stale_count": 4,
+              "step_idx": 799,
+              "trigger": "target_anchor_local_map_refresh"
+            },
+            {
+              "best_distance": 265.88719412562915,
+              "best_step": 824,
+              "distance": 265.88719412562915,
+              "evidence_reset": false,
+              "improved": true,
+              "improvement": 6.582987729193292,
+              "stale_count": 0,
+              "step_idx": 824,
+              "trigger": "target_candidate_detected"
+            },
+            {
+              "best_distance": 265.88719412562915,
+              "best_step": 824,
+              "distance": 268.7042984397533,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": -2.817104314124151,
+              "stale_count": 1,
+              "step_idx": 839,
+              "trigger": "target_anchor_local_map_refresh"
+            },
+            {
+              "best_distance": 265.88719412562915,
+              "best_step": 824,
+              "distance": 268.00186566514793,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": -2.114671539518781,
+              "stale_count": 2,
+              "step_idx": 879,
+              "trigger": "target_anchor_local_map_refresh"
+            },
+            {
+              "best_distance": 265.88719412562915,
+              "best_step": 824,
+              "distance": 265.1735280905694,
+              "evidence_reset": false,
+              "improved": false,
+              "improvement": 0.7136660350597595,
+              "stale_count": 3,
+              "step_idx": 919,
+              "trigger": "target_anchor_local_map_refresh"
+            }
+          ],
+          "later_better_evidence": null,
+          "min_improvement": 5.0,
+          "patience_updates": 5,
+          "would_false_early_decommit": false
+        }
+      ],
+      "start_step": 632,
+      "update_count": 11,
+      "updates": [
+        {
+          "bias_input": [
+            166,
+            296
+          ],
+          "frontier_to_anchor_distance": 361.0013850388943,
+          "projected_goal": [
+            196,
+            2
+          ],
+          "reason": "goal_updated",
+          "selected_frontier": [
+            485,
+            127
+          ],
+          "step_idx": 632,
+          "target_region": "unexplored target:tv",
+          "trigger": "frontier_reached"
+        },
+        {
+          "bias_input": [
+            166,
+            296
+          ],
+          "frontier_to_anchor_distance": 365.05889935735024,
+          "projected_goal": [
+            197,
+            9
+          ],
+          "reason": "goal_updated",
+          "selected_frontier": [
+            488,
+            124
+          ],
+          "step_idx": 639,
+          "target_region": "unexplored target:tv",
+          "trigger": "target_anchor_local_map_refresh"
+        },
+        {
+          "bias_input": [
+            166,
+            296
+          ],
+          "frontier_to_anchor_distance": 272.47018185482244,
+          "projected_goal": [
+            11,
+            112
+          ],
+          "reason": "goal_updated",
+          "selected_frontier": [
+            374,
+            120
+          ],
+          "step_idx": 674,
+          "target_region": "unexplored target:tv",
+          "trigger": "frontier_reached"
+        },
+        {
+          "bias_input": [
+            166,
+            296
+          ],
+          "frontier_to_anchor_distance": 270.9464891819047,
+          "projected_goal": [
+            9,
+            112
+          ],
+          "reason": "goal_updated",
+          "selected_frontier": [
+            372,
+            120
+          ],
+          "step_idx": 679,
+          "target_region": "unexplored target:tv",
+          "trigger": "target_anchor_local_map_refresh"
+        },
+        {
+          "bias_input": [
+            166,
+            296
+          ],
+          "frontier_to_anchor_distance": 275.8042784294689,
+          "projected_goal": [
+            57,
+            98
+          ],
+          "reason": "goal_updated",
+          "selected_frontier": [
+            358,
+            98
+          ],
+          "step_idx": 719,
+          "target_region": "unexplored target:tv",
+          "trigger": "target_anchor_local_map_refresh"
+        },
+        {
+          "bias_input": [
+            166,
+            296
+          ],
+          "frontier_to_anchor_distance": 275.10906927980403,
+          "projected_goal": [
+            88,
+            4
+          ],
+          "reason": "goal_updated",
+          "selected_frontier": [
+            357,
+            98
+          ],
+          "step_idx": 759,
+          "target_region": "unexplored target:tv",
+          "trigger": "target_anchor_local_map_refresh"
+        },
+        {
+          "bias_input": [
+            166,
+            296
+          ],
+          "frontier_to_anchor_distance": 273.80467490530543,
+          "projected_goal": [
+            66,
+            109
+          ],
+          "reason": "goal_updated",
+          "selected_frontier": [
+            366,
+            109
+          ],
+          "step_idx": 799,
+          "target_region": "unexplored target:tv",
+          "trigger": "target_anchor_local_map_refresh"
+        },
+        {
+          "bias_input": [
+            179,
+            300
+          ],
+          "frontier_to_anchor_distance": 265.88719412562915,
+          "projected_goal": [
+            65,
+            110
+          ],
+          "reason": "goal_updated",
+          "selected_frontier": [
+            365,
+            110
+          ],
+          "step_idx": 824,
+          "target_region": "unexplored target:tv",
+          "trigger": "target_candidate_detected"
+        },
+        {
+          "bias_input": [
+            179,
+            300
+          ],
+          "frontier_to_anchor_distance": 268.7042984397533,
+          "projected_goal": [
+            107,
+            10
+          ],
+          "reason": "goal_updated",
+          "selected_frontier": [
+            368,
+            109
+          ],
+          "step_idx": 839,
+          "target_region": "unexplored target:tv",
+          "trigger": "target_anchor_local_map_refresh"
+        },
+        {
+          "bias_input": [
+            179,
+            300
+          ],
+          "frontier_to_anchor_distance": 268.00186566514793,
+          "projected_goal": [
+            63,
+            105
+          ],
+          "reason": "goal_updated",
+          "selected_frontier": [
+            367,
+            109
+          ],
+          "step_idx": 879,
+          "target_region": "unexplored target:tv",
+          "trigger": "target_anchor_local_map_refresh"
+        },
+        {
+          "bias_input": [
+            179,
+            300
+          ],
+          "frontier_to_anchor_distance": 265.1735280905694,
+          "projected_goal": [
+            102,
+            13
+          ],
+          "reason": "goal_updated",
+          "selected_frontier": [
+            365,
+            111
+          ],
+          "step_idx": 919,
+          "target_region": "unexplored target:tv",
+          "trigger": "target_anchor_local_map_refresh"
+        }
+      ]
+    }
+  ],
+  "branch_drop_events": [
+    {
+      "events": [
+        "frontier_near",
+        "frontier_reached"
+      ],
+      "from_region": "unexplored target:tv",
+      "goal_after": [
+        56,
+        76
+      ],
+      "pending_region_previous_step": "unexplored east",
+      "planner_reasons": [
+        "frontier_reached"
+      ],
+      "step_idx": 610,
+      "to_region": "unexplored east"
+    }
+  ],
+  "first_target_step": 564,
+  "refresh_steps": [
+    {
+      "changed": true,
+      "projected_goal": [
+        97,
+        127
+      ],
+      "reason": "goal_updated",
+      "selected_frontier": [
+        462,
+        288
+      ],
+      "step_idx": 599
+    },
+    {
+      "changed": true,
+      "projected_goal": [
+        197,
+        9
+      ],
+      "reason": "goal_updated",
+      "selected_frontier": [
+        488,
+        124
+      ],
+      "step_idx": 639
+    },
+    {
+      "changed": true,
+      "projected_goal": [
+        9,
+        112
+      ],
+      "reason": "goal_updated",
+      "selected_frontier": [
+        372,
+        120
+      ],
+      "step_idx": 679
+    },
+    {
+      "changed": true,
+      "projected_goal": [
+        57,
+        98
+      ],
+      "reason": "goal_updated",
+      "selected_frontier": [
+        358,
+        98
+      ],
+      "step_idx": 719
+    },
+    {
+      "changed": true,
+      "projected_goal": [
+        88,
+        4
+      ],
+      "reason": "goal_updated",
+      "selected_frontier": [
+        357,
+        98
+      ],
+      "step_idx": 759
+    },
+    {
+      "changed": true,
+      "projected_goal": [
+        66,
+        109
+      ],
+      "reason": "goal_updated",
+      "selected_frontier": [
+        366,
+        109
+      ],
+      "step_idx": 799
+    },
+    {
+      "changed": true,
+      "projected_goal": [
+        107,
+        10
+      ],
+      "reason": "goal_updated",
+      "selected_frontier": [
+        368,
+        109
+      ],
+      "step_idx": 839
+    },
+    {
+      "changed": true,
+      "projected_goal": [
+        63,
+        105
+      ],
+      "reason": "goal_updated",
+      "selected_frontier": [
+        367,
+        109
+      ],
+      "step_idx": 879
+    },
+    {
+      "changed": true,
+      "projected_goal": [
+        102,
+        13
+      ],
+      "reason": "goal_updated",
+      "selected_frontier": [
+        365,
+        111
+      ],
+      "step_idx": 919
+    }
+  ],
+  "source_capture": "results/phase2_revalidation/s12_temperature0_target_anchor_20260424/smoothnav-full/20260424/smoothnav_text_112731_317b2c0e/target_branch_capture.json",
+  "target_branch_segments": [
+    {
+      "end_step": 609,
+      "start_step": 564
+    },
+    {
+      "end_step": 934,
+      "start_step": 632
+    }
+  ]
+}

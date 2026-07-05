@@ -1,0 +1,1089 @@
+{
+  "agent": {
+    "coord_rc": [
+      406,
+      219
+    ],
+    "on_free_or_near_free": true,
+    "on_known_or_near_known": true,
+    "source": "full_map.channel_2_current_agent",
+    "within_map_bounds": true
+  },
+  "base_layers": {
+    "active_semantic_category_count": 3,
+    "current_agent_channel_pixels": 25,
+    "has_free": true,
+    "has_known": true,
+    "has_language_query_heatmap": true,
+    "has_obstacle": true,
+    "has_semantic_channels": true,
+    "past_agent_channel_pixels": 1628,
+    "semantic_channel_count": 16
+  },
+  "branch_decision_table": [
+    {
+      "candidate_count": 48,
+      "canonical_coord_rc": [
+        466,
+        230
+      ],
+      "canonical_direction": "south",
+      "dead_end_risk": 0.0,
+      "evidence_level": "anchor",
+      "executable_decision_rank": 3,
+      "executable_decision_score": 15.5424,
+      "executable_decision_source": "graph_frontier_final_score",
+      "frontier_actionability_score": 1.0,
+      "frontier_final_score": 15.5424,
+      "frontier_final_score_rank": 3,
+      "id": "B6",
+      "info_gain_score": 1.0,
+      "revisit_penalty": 0.0,
+      "semantic_support": [],
+      "target_value_rank": 1,
+      "target_value_score": 1.0,
+      "target_visible": false
+    },
+    {
+      "candidate_count": 78,
+      "canonical_coord_rc": [
+        418,
+        237
+      ],
+      "canonical_direction": "east",
+      "dead_end_risk": 0.0,
+      "evidence_level": "anchor",
+      "executable_decision_rank": 1,
+      "executable_decision_score": 18.0559,
+      "executable_decision_source": "graph_frontier_final_score",
+      "frontier_actionability_score": 1.0,
+      "frontier_final_score": 18.0559,
+      "frontier_final_score_rank": 1,
+      "id": "B4",
+      "info_gain_score": 1.0,
+      "revisit_penalty": 0.0,
+      "semantic_support": [
+        {
+          "distance": 72.2,
+          "id": "O003",
+          "source": "object_center_prior"
+        },
+        {
+          "distance": 122.61,
+          "id": "R001",
+          "source": "localized_room_or_function_area"
+        }
+      ],
+      "target_value_rank": 2,
+      "target_value_score": 0.5388,
+      "target_visible": false
+    },
+    {
+      "candidate_count": 54,
+      "canonical_coord_rc": [
+        385,
+        199
+      ],
+      "canonical_direction": "north",
+      "dead_end_risk": 0.0,
+      "evidence_level": "geometry_only",
+      "executable_decision_rank": 2,
+      "executable_decision_score": 16.329,
+      "executable_decision_source": "graph_frontier_final_score",
+      "frontier_actionability_score": 1.0,
+      "frontier_final_score": 16.329,
+      "frontier_final_score_rank": 2,
+      "id": "B3",
+      "info_gain_score": 1.0,
+      "revisit_penalty": 0.0,
+      "semantic_support": [
+        {
+          "distance": 80.41,
+          "id": "O003",
+          "source": "object_center_prior"
+        },
+        {
+          "distance": 141.38,
+          "id": "R001",
+          "source": "localized_room_or_function_area"
+        }
+      ],
+      "target_value_rank": 3,
+      "target_value_score": 0.3807,
+      "target_visible": false
+    },
+    {
+      "candidate_count": 36,
+      "canonical_coord_rc": [
+        459,
+        162
+      ],
+      "canonical_direction": "west",
+      "dead_end_risk": 0.0,
+      "evidence_level": "geometry_only",
+      "executable_decision_rank": 4,
+      "executable_decision_score": 12.7259,
+      "executable_decision_source": "graph_frontier_final_score",
+      "frontier_actionability_score": 1.0,
+      "frontier_final_score": 12.7259,
+      "frontier_final_score_rank": 4,
+      "id": "B5",
+      "info_gain_score": 1.0,
+      "revisit_penalty": 0.0,
+      "semantic_support": [],
+      "target_value_rank": 4,
+      "target_value_score": 0.3807,
+      "target_visible": false
+    },
+    {
+      "candidate_count": 0,
+      "canonical_coord_rc": [
+        343,
+        352
+      ],
+      "canonical_direction": "east",
+      "dead_end_risk": 0.35,
+      "evidence_level": "geometry_only",
+      "executable_decision_rank": 5,
+      "executable_decision_score": 4.2817,
+      "executable_decision_source": "graph_frontier_final_score",
+      "frontier_actionability_score": 0.0,
+      "frontier_final_score": 4.2817,
+      "frontier_final_score_rank": 5,
+      "id": "B2",
+      "info_gain_score": 0.4911,
+      "revisit_penalty": 0.0,
+      "semantic_support": [
+        {
+          "distance": 17.12,
+          "id": "O001",
+          "source": "object_center_prior"
+        },
+        {
+          "distance": 11.66,
+          "id": "O002",
+          "source": "object_center_prior"
+        },
+        {
+          "distance": 79.08,
+          "id": "O003",
+          "source": "object_center_prior"
+        },
+        {
+          "distance": 18.0,
+          "id": "R001",
+          "source": "localized_room_or_function_area"
+        }
+      ],
+      "target_value_rank": 5,
+      "target_value_score": 0.015,
+      "target_visible": false
+    },
+    {
+      "candidate_count": 0,
+      "canonical_coord_rc": [
+        313,
+        395
+      ],
+      "canonical_direction": "east",
+      "dead_end_risk": 1.0,
+      "evidence_level": "geometry_only",
+      "executable_decision_rank": 6,
+      "executable_decision_score": 2.7324,
+      "executable_decision_source": "graph_frontier_final_score",
+      "frontier_actionability_score": 0.0,
+      "frontier_final_score": 2.7324,
+      "frontier_final_score_rank": 6,
+      "id": "B1",
+      "info_gain_score": 0.7278,
+      "revisit_penalty": 1.0,
+      "semantic_support": [
+        {
+          "distance": 38.21,
+          "id": "O001",
+          "source": "object_center_prior"
+        },
+        {
+          "distance": 42.06,
+          "id": "O002",
+          "source": "object_center_prior"
+        },
+        {
+          "distance": 67.98,
+          "id": "R001",
+          "source": "localized_room_or_function_area"
+        }
+      ],
+      "target_value_rank": 6,
+      "target_value_score": 0.0,
+      "target_visible": false
+    }
+  ],
+  "branch_semantic_hints": [
+    {
+      "canonical_coord_rc": [
+        313,
+        395
+      ],
+      "canonical_direction": "east",
+      "decision_roles": [],
+      "evidence_level": "geometry_only",
+      "id": "B1",
+      "nearby_object_ids": [
+        "O001",
+        "O002"
+      ],
+      "nearby_room_ids": [
+        "R001"
+      ],
+      "nearby_semantic_region_ids": [],
+      "nearby_semantic_region_labels": [],
+      "semantic_target_affinity": 0.0818,
+      "target_heatmap_rank": 5,
+      "target_heatmap_score": 0.0,
+      "target_value_rank": 6,
+      "target_value_score": 0.0,
+      "visit_state": "non_actionable"
+    },
+    {
+      "canonical_coord_rc": [
+        343,
+        352
+      ],
+      "canonical_direction": "east",
+      "decision_roles": [],
+      "evidence_level": "geometry_only",
+      "id": "B2",
+      "nearby_object_ids": [
+        "O002",
+        "O001",
+        "O003"
+      ],
+      "nearby_room_ids": [
+        "R001"
+      ],
+      "nearby_semantic_region_ids": [
+        "S007"
+      ],
+      "nearby_semantic_region_labels": [
+        "refrigerator"
+      ],
+      "semantic_target_affinity": 0.0818,
+      "target_heatmap_rank": 6,
+      "target_heatmap_score": 0.0,
+      "target_value_rank": 5,
+      "target_value_score": 0.015,
+      "visit_state": "non_actionable"
+    },
+    {
+      "canonical_coord_rc": [
+        385,
+        199
+      ],
+      "canonical_direction": "north",
+      "decision_roles": [],
+      "evidence_level": "geometry_only",
+      "id": "B3",
+      "nearby_object_ids": [
+        "O003"
+      ],
+      "nearby_room_ids": [],
+      "nearby_semantic_region_ids": [
+        "S008",
+        "S009",
+        "S005",
+        "S006"
+      ],
+      "nearby_semantic_region_labels": [
+        "refrigerator",
+        "refrigerator",
+        "dining-table",
+        "dining-table"
+      ],
+      "semantic_target_affinity": 0.226,
+      "target_heatmap_rank": 3,
+      "target_heatmap_score": 0.0,
+      "target_value_rank": 3,
+      "target_value_score": 0.3807,
+      "visit_state": "candidate"
+    },
+    {
+      "canonical_coord_rc": [
+        418,
+        237
+      ],
+      "canonical_direction": "east",
+      "decision_roles": [
+        "dry",
+        "mllm",
+        "final"
+      ],
+      "evidence_level": "anchor",
+      "id": "B4",
+      "nearby_object_ids": [
+        "O003"
+      ],
+      "nearby_room_ids": [
+        "R001"
+      ],
+      "nearby_semantic_region_ids": [
+        "S005",
+        "S009",
+        "S006",
+        "S008"
+      ],
+      "nearby_semantic_region_labels": [
+        "dining-table",
+        "refrigerator",
+        "dining-table",
+        "refrigerator"
+      ],
+      "semantic_target_affinity": 0.35,
+      "target_heatmap_rank": 2,
+      "target_heatmap_score": 0.35,
+      "target_value_rank": 2,
+      "target_value_score": 0.5388,
+      "visit_state": "selected"
+    },
+    {
+      "canonical_coord_rc": [
+        459,
+        162
+      ],
+      "canonical_direction": "west",
+      "decision_roles": [],
+      "evidence_level": "geometry_only",
+      "id": "B5",
+      "nearby_object_ids": [],
+      "nearby_room_ids": [],
+      "nearby_semantic_region_ids": [
+        "S001",
+        "S006",
+        "S004",
+        "S005"
+      ],
+      "nearby_semantic_region_labels": [
+        "couch",
+        "dining-table",
+        "couch",
+        "dining-table"
+      ],
+      "semantic_target_affinity": 0.1909,
+      "target_heatmap_rank": 4,
+      "target_heatmap_score": 0.0,
+      "target_value_rank": 4,
+      "target_value_score": 0.3807,
+      "visit_state": "candidate"
+    },
+    {
+      "canonical_coord_rc": [
+        466,
+        230
+      ],
+      "canonical_direction": "south",
+      "decision_roles": [],
+      "evidence_level": "anchor",
+      "id": "B6",
+      "nearby_object_ids": [],
+      "nearby_room_ids": [],
+      "nearby_semantic_region_ids": [
+        "S004",
+        "S003",
+        "S002",
+        "S006"
+      ],
+      "nearby_semantic_region_labels": [
+        "couch",
+        "couch",
+        "couch",
+        "dining-table"
+      ],
+      "semantic_target_affinity": 0.6669,
+      "target_heatmap_rank": 1,
+      "target_heatmap_score": 0.6669,
+      "target_value_rank": 1,
+      "target_value_score": 1.0,
+      "visit_state": "candidate"
+    }
+  ],
+  "coordinate_contract": {
+    "agent_coord_rc": [
+      406,
+      219
+    ],
+    "branch_coord_key": "representative_coord",
+    "branch_direction_key": "canonical_direction",
+    "frame": "full_map_rc_unflipped",
+    "hidden_from_planner_prompt": [
+      "raw_coord_rc",
+      "map_current_channel_coord_rc",
+      "direction_from_agent"
+    ]
+  },
+  "coordinate_frame": {
+    "col_axis": "east_right_image_x",
+    "crop": {
+      "c0": 118,
+      "c1": 433,
+      "r0": 235,
+      "r1": 491
+    },
+    "map_shape": [
+      720,
+      720
+    ],
+    "name": "full_map_rc_unflipped",
+    "origin": "full_map[0,0]",
+    "row_axis": "south_down_image_y"
+  },
+  "decision_overlay": {
+    "allowed_branch_ids": [
+      "B4",
+      "B3",
+      "B6",
+      "B5",
+      "B2",
+      "B1"
+    ],
+    "dry_selected_branch_id": "B4",
+    "dry_selected_frontier": [
+      451,
+      284
+    ],
+    "final_selected_branch_id": "B4",
+    "final_selected_frontier": [
+      418,
+      237
+    ],
+    "mllm_reason": "",
+    "mllm_selected_branch_id": "B4",
+    "mllm_status": "valid",
+    "planner_prior_applied": true,
+    "prompt_hash": "9e9ec278873da91f4a36625ec49e83ac2cddb3a4",
+    "ranked_branch_ids": [
+      "B4",
+      "B3",
+      "B6",
+      "B5",
+      "B2",
+      "B1"
+    ]
+  },
+  "object_labels": [
+    {
+      "caption": "windows",
+      "center_rc": [
+        341,
+        369
+      ],
+      "id": "O001",
+      "num_detections": 4,
+      "target_relevance": 0.0
+    },
+    {
+      "caption": "mirror",
+      "center_rc": [
+        333,
+        358
+      ],
+      "id": "O002",
+      "num_detections": 3,
+      "target_relevance": 0.0
+    },
+    {
+      "caption": "cabinet",
+      "center_rc": [
+        356,
+        274
+      ],
+      "id": "O003",
+      "num_detections": 3,
+      "target_relevance": 0.0
+    }
+  ],
+  "quality_checks": {
+    "agent_on_free_or_near_free": true,
+    "agent_on_known_or_near_known": true,
+    "agent_within_map_bounds": true,
+    "branch_count": 6,
+    "branch_evidence_counts": {
+      "anchor": 2,
+      "direct": 0,
+      "geometry_only": 4,
+      "room_prior": 0
+    },
+    "branches_with_semantic_hints": 6,
+    "debug_coordinate_warnings_hidden_from_prompt": 2,
+    "localized_object_count": 3,
+    "localized_room_hypothesis_count": 1,
+    "object_count": 3,
+    "room_count": 9,
+    "semantic_region_count": 9,
+    "target_anchor_semantic_region_count": 6,
+    "unlocalized_room_prior_count": 8,
+    "warnings": [
+      "direct_target_semantic_channel_empty",
+      "target_heatmap_uses_prior_not_direct_target"
+    ]
+  },
+  "room_hypotheses": [
+    {
+      "caption": "bedroom",
+      "center_rc": [
+        343,
+        334
+      ],
+      "confidence": "medium",
+      "geometry_type": "member_object_hypothesis",
+      "id": "R001",
+      "object_ids": [
+        "O003",
+        "O002",
+        "O001"
+      ],
+      "spatialization_status": "localized_region"
+    },
+    {
+      "caption": "living room",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R002",
+      "object_ids": [],
+      "spatialization_status": "unlocalized_prior"
+    },
+    {
+      "caption": "bathroom",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R003",
+      "object_ids": [],
+      "spatialization_status": "unlocalized_prior"
+    },
+    {
+      "caption": "kitchen",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R004",
+      "object_ids": [],
+      "spatialization_status": "unlocalized_prior"
+    },
+    {
+      "caption": "dining room",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R005",
+      "object_ids": [],
+      "spatialization_status": "unlocalized_prior"
+    },
+    {
+      "caption": "office room",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R006",
+      "object_ids": [],
+      "spatialization_status": "unlocalized_prior"
+    }
+  ],
+  "room_state": {
+    "localized_room_regions": [
+      {
+        "bbox_rc": [
+          323,
+          264,
+          366,
+          379
+        ],
+        "caption": "bedroom",
+        "center_rc": [
+          343,
+          334
+        ],
+        "confidence": 0.55,
+        "id": "R001",
+        "object_ids": [
+          "O003",
+          "O002",
+          "O001"
+        ],
+        "room_prior_weight": 0.0,
+        "source": "localized_room_or_function_area"
+      }
+    ],
+    "unlocalized_room_priors": [
+      {
+        "caption": "living room",
+        "confidence": "unlocalized",
+        "geometry_type": "unlocalized_hypothesis",
+        "id": "R002",
+        "object_captions": [],
+        "source": "world_state.room_summary",
+        "spatialization_status": "unlocalized_prior"
+      },
+      {
+        "caption": "bathroom",
+        "confidence": "unlocalized",
+        "geometry_type": "unlocalized_hypothesis",
+        "id": "R003",
+        "object_captions": [],
+        "source": "world_state.room_summary",
+        "spatialization_status": "unlocalized_prior"
+      },
+      {
+        "caption": "kitchen",
+        "confidence": "unlocalized",
+        "geometry_type": "unlocalized_hypothesis",
+        "id": "R004",
+        "object_captions": [],
+        "source": "world_state.room_summary",
+        "spatialization_status": "unlocalized_prior"
+      },
+      {
+        "caption": "dining room",
+        "confidence": "unlocalized",
+        "geometry_type": "unlocalized_hypothesis",
+        "id": "R005",
+        "object_captions": [],
+        "source": "world_state.room_summary",
+        "spatialization_status": "unlocalized_prior"
+      },
+      {
+        "caption": "office room",
+        "confidence": "unlocalized",
+        "geometry_type": "unlocalized_hypothesis",
+        "id": "R006",
+        "object_captions": [],
+        "source": "world_state.room_summary",
+        "spatialization_status": "unlocalized_prior"
+      },
+      {
+        "caption": "gym",
+        "confidence": "unlocalized",
+        "geometry_type": "unlocalized_hypothesis",
+        "id": "R007",
+        "object_captions": [],
+        "source": "world_state.room_summary",
+        "spatialization_status": "unlocalized_prior"
+      }
+    ]
+  },
+  "schema_version": "smoothnav.semantic_bev_prompt_summary.v1",
+  "semantic_layers": {
+    "active_categories": [
+      {
+        "activation_max": 0.9930751919746399,
+        "activation_sum": 22.531354784965515,
+        "category_index": 9,
+        "channel_index": 13,
+        "is_direct_target_category": false,
+        "label": "refrigerator",
+        "pixel_count": 31
+      },
+      {
+        "activation_max": 0.9181960821151733,
+        "activation_sum": 9.380427598953247,
+        "category_index": 6,
+        "channel_index": 10,
+        "is_direct_target_category": false,
+        "label": "dining-table",
+        "pixel_count": 15
+      },
+      {
+        "activation_max": 0.6818257570266724,
+        "activation_sum": 2.264019548892975,
+        "category_index": 1,
+        "channel_index": 5,
+        "is_direct_target_category": false,
+        "label": "couch",
+        "pixel_count": 4
+      }
+    ],
+    "active_category_count": 3,
+    "direct_target_pixel_count": 0,
+    "target_category_labels": [
+      "tv"
+    ]
+  },
+  "semantic_regions": [
+    {
+      "bbox_rc": [
+        466,
+        182,
+        466,
+        182
+      ],
+      "center_rc": [
+        466,
+        182
+      ],
+      "id": "S001",
+      "is_direct_target_category": false,
+      "is_target_anchor_category": true,
+      "label": "couch",
+      "pixel_count": 1,
+      "target_prior_weight": 0.9
+    },
+    {
+      "bbox_rc": [
+        446,
+        237,
+        446,
+        237
+      ],
+      "center_rc": [
+        446,
+        237
+      ],
+      "id": "S002",
+      "is_direct_target_category": false,
+      "is_target_anchor_category": true,
+      "label": "couch",
+      "pixel_count": 1,
+      "target_prior_weight": 0.9
+    },
+    {
+      "bbox_rc": [
+        453,
+        238,
+        453,
+        238
+      ],
+      "center_rc": [
+        453,
+        238
+      ],
+      "id": "S003",
+      "is_direct_target_category": false,
+      "is_target_anchor_category": true,
+      "label": "couch",
+      "pixel_count": 1,
+      "target_prior_weight": 0.9
+    },
+    {
+      "bbox_rc": [
+        457,
+        235,
+        457,
+        235
+      ],
+      "center_rc": [
+        457,
+        235
+      ],
+      "id": "S004",
+      "is_direct_target_category": false,
+      "is_target_anchor_category": true,
+      "label": "couch",
+      "pixel_count": 1,
+      "target_prior_weight": 0.9
+    },
+    {
+      "bbox_rc": [
+        427,
+        229,
+        434,
+        235
+      ],
+      "center_rc": [
+        430,
+        232
+      ],
+      "id": "S005",
+      "is_direct_target_category": false,
+      "is_target_anchor_category": true,
+      "label": "dining-table",
+      "pixel_count": 14,
+      "target_prior_weight": 0.35
+    },
+    {
+      "bbox_rc": [
+        436,
+        227,
+        436,
+        227
+      ],
+      "center_rc": [
+        436,
+        227
+      ],
+      "id": "S006",
+      "is_direct_target_category": false,
+      "is_target_anchor_category": true,
+      "label": "dining-table",
+      "pixel_count": 1,
+      "target_prior_weight": 0.35
+    },
+    {
+      "bbox_rc": [
+        335,
+        242,
+        344,
+        250
+      ],
+      "center_rc": [
+        340,
+        246
+      ],
+      "id": "S007",
+      "is_direct_target_category": false,
+      "is_target_anchor_category": false,
+      "label": "refrigerator",
+      "pixel_count": 23,
+      "target_prior_weight": 0.0
+    },
+    {
+      "bbox_rc": [
+        396,
+        222,
+        398,
+        223
+      ],
+      "center_rc": [
+        397,
+        223
+      ],
+      "id": "S008",
+      "is_direct_target_category": false,
+      "is_target_anchor_category": false,
+      "label": "refrigerator",
+      "pixel_count": 5,
+      "target_prior_weight": 0.0
+    },
+    {
+      "bbox_rc": [
+        404,
+        222,
+        405,
+        223
+      ],
+      "center_rc": [
+        405,
+        223
+      ],
+      "id": "S009",
+      "is_direct_target_category": false,
+      "is_target_anchor_category": false,
+      "label": "refrigerator",
+      "pixel_count": 3,
+      "target_prior_weight": 0.0
+    }
+  ],
+  "target_query_heatmap": {
+    "branch_ranking": [
+      {
+        "id": "B6",
+        "semantic_target_affinity": 0.6669,
+        "target_heatmap_score": 0.6669
+      },
+      {
+        "id": "B4",
+        "semantic_target_affinity": 0.35,
+        "target_heatmap_score": 0.35
+      },
+      {
+        "id": "B3",
+        "semantic_target_affinity": 0.226,
+        "target_heatmap_score": 0.0
+      },
+      {
+        "id": "B5",
+        "semantic_target_affinity": 0.1909,
+        "target_heatmap_score": 0.0
+      },
+      {
+        "id": "B1",
+        "semantic_target_affinity": 0.0818,
+        "target_heatmap_score": 0.0
+      },
+      {
+        "id": "B2",
+        "semantic_target_affinity": 0.0818,
+        "target_heatmap_score": 0.0
+      }
+    ],
+    "direct_target_pixel_count": 0,
+    "positive_pixel_count": 19,
+    "prior_pixel_count": 19,
+    "source": "semantic_prior_only",
+    "target_category_labels": [
+      "tv"
+    ]
+  },
+  "target_value_state": {
+    "available": true,
+    "branch_ranking": [
+      {
+        "evidence_level": "anchor",
+        "frontier_actionability_score": 1.0,
+        "frontier_final_score": 15.5424,
+        "frontier_final_score_rank": 3,
+        "id": "B6",
+        "target_value_max": 1.0,
+        "target_value_mean": 0.623,
+        "target_value_score": 1.0,
+        "target_visible": false
+      },
+      {
+        "evidence_level": "anchor",
+        "frontier_actionability_score": 1.0,
+        "frontier_final_score": 18.0559,
+        "frontier_final_score_rank": 1,
+        "id": "B4",
+        "target_value_max": 0.5388,
+        "target_value_mean": 0.3843,
+        "target_value_score": 0.5388,
+        "target_visible": false
+      },
+      {
+        "evidence_level": "geometry_only",
+        "frontier_actionability_score": 1.0,
+        "frontier_final_score": 16.329,
+        "frontier_final_score_rank": 2,
+        "id": "B3",
+        "target_value_max": 0.3807,
+        "target_value_mean": 0.303,
+        "target_value_score": 0.3807,
+        "target_visible": false
+      },
+      {
+        "evidence_level": "geometry_only",
+        "frontier_actionability_score": 1.0,
+        "frontier_final_score": 12.7259,
+        "frontier_final_score_rank": 4,
+        "id": "B5",
+        "target_value_max": 0.3807,
+        "target_value_mean": 0.3013,
+        "target_value_score": 0.3807,
+        "target_visible": false
+      },
+      {
+        "evidence_level": "geometry_only",
+        "frontier_actionability_score": 0.0,
+        "frontier_final_score": 4.2817,
+        "frontier_final_score_rank": 5,
+        "id": "B2",
+        "target_value_max": 0.015,
+        "target_value_mean": 0.0147,
+        "target_value_score": 0.015,
+        "target_visible": false
+      },
+      {
+        "evidence_level": "geometry_only",
+        "frontier_actionability_score": 0.0,
+        "frontier_final_score": 2.7324,
+        "frontier_final_score_rank": 6,
+        "id": "B1",
+        "target_value_max": 0.0,
+        "target_value_mean": 0.0,
+        "target_value_score": 0.0,
+        "target_visible": false
+      }
+    ],
+    "component_peaks": {
+      "anchor": 1.0,
+      "direct": 0.0,
+      "geometry_only": 1.0,
+      "room_prior": 0.0
+    },
+    "confidence": 1.0,
+    "evidence_counts": {
+      "anchor": 2,
+      "direct": 0,
+      "geometry_only": 4,
+      "room_prior": 0
+    },
+    "executable_decision_ranking": [
+      {
+        "evidence_level": "anchor",
+        "executable_decision_rank": 1,
+        "executable_decision_score": 18.0559,
+        "executable_decision_source": "graph_frontier_final_score",
+        "frontier_final_score": 18.0559,
+        "id": "B4",
+        "target_value_score": 0.5388
+      },
+      {
+        "evidence_level": "geometry_only",
+        "executable_decision_rank": 2,
+        "executable_decision_score": 16.329,
+        "executable_decision_source": "graph_frontier_final_score",
+        "frontier_final_score": 16.329,
+        "id": "B3",
+        "target_value_score": 0.3807
+      },
+      {
+        "evidence_level": "anchor",
+        "executable_decision_rank": 3,
+        "executable_decision_score": 15.5424,
+        "executable_decision_source": "graph_frontier_final_score",
+        "frontier_final_score": 15.5424,
+        "id": "B6",
+        "target_value_score": 1.0
+      },
+      {
+        "evidence_level": "geometry_only",
+        "executable_decision_rank": 4,
+        "executable_decision_score": 12.7259,
+        "executable_decision_source": "graph_frontier_final_score",
+        "frontier_final_score": 12.7259,
+        "id": "B5",
+        "target_value_score": 0.3807
+      },
+      {
+        "evidence_level": "geometry_only",
+        "executable_decision_rank": 5,
+        "executable_decision_score": 4.2817,
+        "executable_decision_source": "graph_frontier_final_score",
+        "frontier_final_score": 4.2817,
+        "id": "B2",
+        "target_value_score": 0.015
+      },
+      {
+        "evidence_level": "geometry_only",
+        "executable_decision_rank": 6,
+        "executable_decision_score": 2.7324,
+        "executable_decision_source": "graph_frontier_final_score",
+        "frontier_final_score": 2.7324,
+        "id": "B1",
+        "target_value_score": 0.0
+      }
+    ],
+    "heat_source": null,
+    "peak": 1.0,
+    "positive_pixel_count": 8973,
+    "schema_version": "smoothnav.target_value_field.v1",
+    "selection_contract": {
+      "contract_note": "target_value ranks semantic search value; Graph.get_goal final branch may override it when executable frontier score or actionability is stronger",
+      "drift_is_explained": true,
+      "dry_branch_id": "B4",
+      "final_actionability_score": 1.0,
+      "final_branch_id": "B4",
+      "final_executable_decision_rank": 1,
+      "final_frontier_score": 18.0559,
+      "final_target_value_score": 0.5388,
+      "mllm_branch_id": "B4",
+      "override_reason": "graph_frontier_score_contract",
+      "schema_version": "smoothnav.target_value_selection_contract.v1",
+      "target_value_aligned": false,
+      "target_value_gap": 0.4612,
+      "top_executable_decision_branch_id": "B4",
+      "top_frontier_score": 18.0559,
+      "top_frontier_score_branch_id": "B4",
+      "top_target_value_actionability_score": 1.0,
+      "top_target_value_branch_id": "B6",
+      "top_target_value_score": 1.0
+    },
+    "source": "mixed",
+    "strongest_source": "anchor"
+  },
+  "trajectory_summary": {
+    "current_agent_pixel_count": 25,
+    "past_agent_pixel_count": 1628,
+    "sample_count": 78,
+    "source": "full_map.channel_3_past_agent"
+  }
+}

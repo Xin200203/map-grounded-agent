@@ -1,0 +1,49 @@
+{
+  "mode": "summary+remote_artifacts",
+  "primary_metrics": [
+    {
+      "name": "s6_full_SR",
+      "value": "0.3333"
+    },
+    {
+      "name": "s6_full_SPL",
+      "value": "0.2843"
+    },
+    {
+      "name": "s12_target_bias_score_zero_rate",
+      "value": "11/13"
+    }
+  ],
+  "diagnostic_metrics": [
+    {
+      "name": "s12_first_target_step",
+      "value": "564"
+    },
+    {
+      "name": "s12_target_event_count",
+      "value": "371"
+    },
+    {
+      "name": "s15_target_event_count",
+      "value": "0"
+    }
+  ],
+  "suggested_categories": [
+    {
+      "name": "module interface",
+      "score": 5
+    },
+    {
+      "name": "optimization",
+      "score": 2
+    },
+    {
+      "name": "data/split",
+      "score": 1
+    }
+  ],
+  "evidence": [
+    "Remote suite summaries, s8-s15 target trace diagnostics, s9/s12 frontier value stats, current code inspection."
+  ],
+  "evidence_limited": false
+}

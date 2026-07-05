@@ -1,0 +1,35 @@
+{
+  "agent_alignment_ok": false,
+  "branch_count": 6,
+  "branch_semantic_hint_coverage": 2,
+  "capsule_dir": "analysis/s22b_capsule_review_20260427/raw/run/task_frame_capsules/episode_000000_step_000145_unexplored_north",
+  "dry_branch": "B4",
+  "files": {
+    "debug_image": "analysis/s23_semantic_bev_review_20260427/step_000145/semantic_annotated_bev_debug.png",
+    "legacy_image": "analysis/s23_semantic_bev_review_20260427/step_000145/legacy_bev_annotated_branches.png",
+    "planner_image": "analysis/s23_semantic_bev_review_20260427/step_000145/semantic_annotated_bev_planner.png",
+    "semantic_bev_frame": "analysis/s23_semantic_bev_review_20260427/step_000145/semantic_bev_frame.json"
+  },
+  "final_branch": "B4",
+  "hashes": {
+    "debug_image": "27ae9305798dadc1202f460600f98f8a13c17d0e",
+    "legacy_image": "6b2500809fb11d61fec567a9be3f60cb6ed64c77",
+    "planner_image": "4f93ce67de7ba9d320ade930b86f084f604ecde2",
+    "semantic_bev_frame": "370196540f6cb614a36aaebb9bdd4db9f27a8253"
+  },
+  "mllm_branch": "B4",
+  "object_count_localized": 3,
+  "out_dir": "analysis/s23_semantic_bev_review_20260427/step_000145",
+  "planner_prior_applied": true,
+  "quality_warnings": [
+    "agent_not_on_known_or_near_known"
+  ],
+  "replay_outcome": {
+    "new_object_captions_next_capsule": [],
+    "new_object_count_next_capsule": 0,
+    "next_capsule_step": null
+  },
+  "room_hypothesis_count": 1,
+  "step_idx": 145,
+  "target_relevant_object_count": 0
+}

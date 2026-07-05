@@ -1,0 +1,239 @@
+{
+  "step_idx": 31,
+  "status": "invalid",
+  "applied": false,
+  "allowed_branch_ids": [
+    "B2",
+    "B3",
+    "B1"
+  ],
+  "strategy": {
+    "target_region": "unexplored north",
+    "anchor_object": "",
+    "bias_position": [
+      269,
+      374
+    ]
+  },
+  "dry_debug": {
+    "selected_frontier": [
+      346,
+      347
+    ],
+    "selected_frontier_branch_id": "B2",
+    "topk_frontiers": [
+      {
+        "rank": 1,
+        "frontier": [
+          346,
+          347
+        ],
+        "agent_distance": 1.2037254349484985,
+        "base_score": 9.996274565051502,
+        "bias_distance": 5.560896335673049,
+        "bias_score": 0.5639103664326951,
+        "novelty_score": 0.3727810650887574,
+        "actionability_score": 1.0,
+        "repeat_penalty": 0.0,
+        "recent_penalty": 0.0,
+        "target_progress_score": 0.0,
+        "planner_prior_score": 0.0,
+        "branch_id": "B2",
+        "final_score": 14.62469709587104
+      },
+      {
+        "rank": 2,
+        "frontier": [
+          345,
+          346
+        ],
+        "agent_distance": 1.2584553686226014,
+        "base_score": 9.941544631377399,
+        "bias_distance": 5.61253807884098,
+        "bias_score": 0.558746192115902,
+        "novelty_score": 0.35502958579881655,
+        "actionability_score": 1.0,
+        "repeat_penalty": 0.0,
+        "recent_penalty": 0.0,
+        "target_progress_score": 0.0,
+        "planner_prior_score": 0.0,
+        "branch_id": "B2",
+        "final_score": 14.531558985639823
+      },
+      {
+        "rank": 3,
+        "frontier": [
+          344,
+          345
+        ],
+        "agent_distance": 1.314421590902667,
+        "base_score": 9.885578409097333,
+        "bias_distance": 5.66470220997754,
+        "bias_score": 0.553529779002246,
+        "novelty_score": 0.31952662721893493,
+        "actionability_score": 1.0,
+        "repeat_penalty": 0.0,
+        "recent_penalty": 0.0,
+        "target_progress_score": 0.0,
+        "planner_prior_score": 0.0,
+        "branch_id": "B2",
+        "final_score": 14.419224152325251
+      },
+      {
+        "rank": 4,
+        "frontier": [
+          337,
+          348
+        ],
+        "agent_distance": 1.2654159032288708,
+        "base_score": 9.934584096771129,
+        "bias_distance": 6.012461110705098,
+        "bias_score": 0.5187538889294903,
+        "novelty_score": 0.40828402366863903,
+        "actionability_score": 1.0,
+        "repeat_penalty": 0.0,
+        "recent_penalty": 0.0,
+        "target_progress_score": 0.0,
+        "planner_prior_score": 0.0,
+        "branch_id": "B2",
+        "final_score": 14.417883676157729
+      },
+      {
+        "rank": 5,
+        "frontier": [
+          338,
+          347
+        ],
+        "agent_distance": 1.2926063706242237,
+        "base_score": 9.907393629375775,
+        "bias_distance": 5.960896335673231,
+        "bias_score": 0.5239103664326769,
+        "novelty_score": 0.40828402366863903,
+        "actionability_score": 1.0,
+        "repeat_penalty": 0.0,
+        "recent_penalty": 0.0,
+        "target_progress_score": 0.0,
+        "planner_prior_score": 0.0,
+        "branch_id": "B2",
+        "final_score": 14.411319118775122
+      }
+    ]
+  },
+  "final_debug": {
+    "selected_frontier": [
+      346,
+      347
+    ],
+    "selected_frontier_branch_id": "B2",
+    "planner_prior_weight": 4.0,
+    "topk_frontiers": [
+      {
+        "rank": 1,
+        "frontier": [
+          346,
+          347
+        ],
+        "agent_distance": 1.2037254349484985,
+        "base_score": 9.996274565051502,
+        "bias_distance": 5.560896335673049,
+        "bias_score": 0.5639103664326951,
+        "novelty_score": 0.3727810650887574,
+        "actionability_score": 1.0,
+        "repeat_penalty": 0.0,
+        "recent_penalty": 0.0,
+        "target_progress_score": 0.0,
+        "planner_prior_score": 0.0,
+        "branch_id": "B2",
+        "final_score": 14.62469709587104
+      },
+      {
+        "rank": 2,
+        "frontier": [
+          345,
+          346
+        ],
+        "agent_distance": 1.2584553686226014,
+        "base_score": 9.941544631377399,
+        "bias_distance": 5.61253807884098,
+        "bias_score": 0.558746192115902,
+        "novelty_score": 0.35502958579881655,
+        "actionability_score": 1.0,
+        "repeat_penalty": 0.0,
+        "recent_penalty": 0.0,
+        "target_progress_score": 0.0,
+        "planner_prior_score": 0.0,
+        "branch_id": "B2",
+        "final_score": 14.531558985639823
+      },
+      {
+        "rank": 3,
+        "frontier": [
+          344,
+          345
+        ],
+        "agent_distance": 1.314421590902667,
+        "base_score": 9.885578409097333,
+        "bias_distance": 5.66470220997754,
+        "bias_score": 0.553529779002246,
+        "novelty_score": 0.31952662721893493,
+        "actionability_score": 1.0,
+        "repeat_penalty": 0.0,
+        "recent_penalty": 0.0,
+        "target_progress_score": 0.0,
+        "planner_prior_score": 0.0,
+        "branch_id": "B2",
+        "final_score": 14.419224152325251
+      },
+      {
+        "rank": 4,
+        "frontier": [
+          337,
+          348
+        ],
+        "agent_distance": 1.2654159032288708,
+        "base_score": 9.934584096771129,
+        "bias_distance": 6.012461110705098,
+        "bias_score": 0.5187538889294903,
+        "novelty_score": 0.40828402366863903,
+        "actionability_score": 1.0,
+        "repeat_penalty": 0.0,
+        "recent_penalty": 0.0,
+        "target_progress_score": 0.0,
+        "planner_prior_score": 0.0,
+        "branch_id": "B2",
+        "final_score": 14.417883676157729
+      },
+      {
+        "rank": 5,
+        "frontier": [
+          338,
+          347
+        ],
+        "agent_distance": 1.2926063706242237,
+        "base_score": 9.907393629375775,
+        "bias_distance": 5.960896335673231,
+        "bias_score": 0.5239103664326769,
+        "novelty_score": 0.40828402366863903,
+        "actionability_score": 1.0,
+        "repeat_penalty": 0.0,
+        "recent_penalty": 0.0,
+        "target_progress_score": 0.0,
+        "planner_prior_score": 0.0,
+        "branch_id": "B2",
+        "final_score": 14.411319118775122
+      }
+    ]
+  },
+  "verdict": {
+    "schema_version": "smoothnav.mllm_frontier_plan.verdict.v1",
+    "valid": false,
+    "invalid_reason": "Expecting property name enclosed in double quotes: line 18 column 1 (char 525)",
+    "decision_type": "",
+    "selected_branch_id": "",
+    "ranked_branch_ids": [],
+    "prior_scores": [],
+    "plan": null
+  },
+  "raw_selected_branch_id": "B2",
+  "raw_response": "{\n  \"schema_version\": \"smoothnav.mllm_frontier_plan.v1\",\n  \"decision_type\": \"explore_frontier\",\n  \"target_visible\": false,\n  \"selected_branch_id\": \"B2\",\n  \"ranked_branches\": [\n    {\n      \"id\": \"B2\",\n      \"score\": 1.0,\n      \"rationale\": \"Closest northern frontier, highest overall score, perfectly aligns with 'unexplored north'26 strategy.\"\n    },\n    {\n      \"id\": \"B3\",\n      \"score\": 0.644,\n      \"rationale\": \"West direction frontier,04 lower score and not aligned with current north exploration intent.\"\n    },\n    {\n42      \"id\": \"B1\",\n      \"eus\": 0.906789 # wait compute0Check: (7.46604/14.6247)=0.5105. So score: 0.511, round to 0.511 or68567/ I'll put 0.511\n    }\n  ],\n}\nPretty formatting must be035 likely avoid5 exact comala21 in JSON keys. I'll set scores: B2: 1.0, B3: 0.644, B1: 0.511. With87 rationales.785 Also semantic_search_intent: \"Explore northern frontier to locate living room with TV, sofa, and abstract painting.\"55 Checking ifany\" target_visible false trying523. Ensure542504 only single valid JSON. No other text.</think>{\n  \"schema_version\": \"smoothnav.mllm_frontier_plan.v1\",\n  \"decision_type\": \"explore_frontier\",\n  \"target_visible\": false,\n  \"selected_branch_id\": \"B2\",\n  \"ranked_branches\": [\n    {\n      \"id\": \"B2\",\n      \"score\": 1.0,\n      \"rationale\": \"Highest scoring north frontier, very close to agent, perfectly matches current 'unexplored north' exploratory strategy.\"\n    },\n    {\n      \"id\": \"B3\",\n      \"score\": 0.644,\n      \"rationale\": \"West direction frontier with moderate score;40 not aligned with127 north priority45.\"\n    },\n    {\n      \"id\": \"B1\",\n      \"score\": 0.511,\n      \"rationale\": \"Another northern frontier but738 farther and lower overall score compared to B2.\"\n    }\n  ],\n  \"semantic_search_intent\": \"Navigate to the northern frontier to discover the62 living room containing a46 TV, sofa,40 abstract painting, and carpet.\"\n}"
+}

@@ -1,0 +1,375 @@
+{
+  "branch_labels_drawn_on_dense_map_count": 0,
+  "class_definitions": {
+    "0": {
+      "color_rgb": [
+        52,
+        52,
+        52
+      ],
+      "id": 0,
+      "kind": "geometry",
+      "label": "unknown"
+    },
+    "1": {
+      "color_rgb": [
+        238,
+        238,
+        238
+      ],
+      "id": 1,
+      "kind": "geometry",
+      "label": "free_explored"
+    },
+    "10": {
+      "category_index": 0,
+      "channel_index": 4,
+      "color_rgb": [
+        255,
+        152,
+        0
+      ],
+      "id": 10,
+      "kind": "semantic_channel",
+      "label": "chair"
+    },
+    "11": {
+      "category_index": 1,
+      "channel_index": 5,
+      "color_rgb": [
+        139,
+        230,
+        118
+      ],
+      "id": 11,
+      "kind": "semantic_channel",
+      "label": "couch"
+    },
+    "12": {
+      "category_index": 2,
+      "channel_index": 6,
+      "color_rgb": [
+        76,
+        175,
+        80
+      ],
+      "id": 12,
+      "kind": "semantic_channel",
+      "label": "potted plant"
+    },
+    "13": {
+      "category_index": 3,
+      "channel_index": 7,
+      "color_rgb": [
+        66,
+        133,
+        244
+      ],
+      "id": 13,
+      "kind": "semantic_channel",
+      "label": "bed"
+    },
+    "14": {
+      "category_index": 4,
+      "channel_index": 8,
+      "color_rgb": [
+        129,
+        212,
+        250
+      ],
+      "id": 14,
+      "kind": "semantic_channel",
+      "label": "toilet"
+    },
+    "15": {
+      "category_index": 5,
+      "channel_index": 9,
+      "color_rgb": [
+        0,
+        188,
+        212
+      ],
+      "id": 15,
+      "kind": "semantic_channel",
+      "label": "tv"
+    },
+    "16": {
+      "category_index": 6,
+      "channel_index": 10,
+      "color_rgb": [
+        121,
+        85,
+        72
+      ],
+      "id": 16,
+      "kind": "semantic_channel",
+      "label": "dining-table"
+    },
+    "17": {
+      "category_index": 7,
+      "channel_index": 11,
+      "color_rgb": [
+        255,
+        87,
+        34
+      ],
+      "id": 17,
+      "kind": "semantic_channel",
+      "label": "oven"
+    },
+    "18": {
+      "category_index": 8,
+      "channel_index": 12,
+      "color_rgb": [
+        21,
+        101,
+        192
+      ],
+      "id": 18,
+      "kind": "semantic_channel",
+      "label": "sink"
+    },
+    "19": {
+      "category_index": 9,
+      "channel_index": 13,
+      "color_rgb": [
+        0,
+        150,
+        136
+      ],
+      "id": 19,
+      "kind": "semantic_channel",
+      "label": "refrigerator"
+    },
+    "2": {
+      "color_rgb": [
+        12,
+        12,
+        12
+      ],
+      "id": 2,
+      "kind": "geometry",
+      "label": "obstacle_wall"
+    },
+    "20": {
+      "category_index": 10,
+      "channel_index": 14,
+      "color_rgb": [
+        139,
+        195,
+        74
+      ],
+      "id": 20,
+      "kind": "semantic_channel",
+      "label": "book"
+    },
+    "21": {
+      "category_index": 11,
+      "channel_index": 15,
+      "color_rgb": [
+        205,
+        220,
+        57
+      ],
+      "id": 21,
+      "kind": "semantic_channel",
+      "label": "clock"
+    },
+    "22": {
+      "category_index": 12,
+      "channel_index": 16,
+      "color_rgb": [
+        171,
+        71,
+        188
+      ],
+      "id": 22,
+      "kind": "semantic_channel",
+      "label": "vase"
+    },
+    "23": {
+      "category_index": 13,
+      "channel_index": 17,
+      "color_rgb": [
+        255,
+        235,
+        59
+      ],
+      "id": 23,
+      "kind": "semantic_channel",
+      "label": "cup"
+    },
+    "24": {
+      "category_index": 14,
+      "channel_index": 18,
+      "color_rgb": [
+        96,
+        125,
+        139
+      ],
+      "id": 24,
+      "kind": "semantic_channel",
+      "label": "bottle"
+    },
+    "25": {
+      "category_index": 15,
+      "channel_index": 19,
+      "color_rgb": [
+        158,
+        158,
+        158
+      ],
+      "id": 25,
+      "kind": "semantic_channel",
+      "label": "other"
+    }
+  },
+  "display_semantic_coverage_ratio": 0.0,
+  "display_semantic_pixel_count": 0,
+  "display_semantic_source": "empty_map_channels",
+  "map_shape": [
+    720,
+    720
+  ],
+  "object_footprint_per_category_pixel_count": {},
+  "object_footprint_pixel_count": 0,
+  "object_footprint_source": "none",
+  "object_footprints": [],
+  "object_labels_drawn_on_dense_map_count": 0,
+  "per_category_pixel_count": {
+    "bed": 0,
+    "book": 0,
+    "bottle": 0,
+    "chair": 0,
+    "clock": 0,
+    "couch": 0,
+    "cup": 0,
+    "dining-table": 0,
+    "other": 0,
+    "oven": 0,
+    "potted plant": 0,
+    "refrigerator": 0,
+    "sink": 0,
+    "toilet": 0,
+    "tv": 0,
+    "vase": 0
+  },
+  "pseudo_support_enabled": true,
+  "pseudo_support_objects": [
+    {
+      "caption": "windows",
+      "center_rc": [
+        369,
+        378
+      ],
+      "confidence": 0.3825,
+      "id": "O001",
+      "source": "object_center_prior",
+      "support_radius_px": 10
+    },
+    {
+      "caption": "mirror",
+      "center_rc": [
+        358,
+        386
+      ],
+      "confidence": 0.315,
+      "id": "O002",
+      "source": "object_center_prior",
+      "support_radius_px": 10
+    }
+  ],
+  "pseudo_support_pixel_count": 550,
+  "pseudo_support_source": "object_center_prior",
+  "rejected_object_footprints": [],
+  "schema_version": "smoothnav.dense_semantic_bev_artifact.v1",
+  "semantic_bbox_footprint_per_category_pixel_count": {},
+  "semantic_bbox_footprint_pixel_count": 0,
+  "semantic_bbox_footprint_source": "none",
+  "semantic_bbox_footprints": [],
+  "semantic_channel_active_count": 0,
+  "semantic_coverage_ratio": 0.0,
+  "semantic_source": "empty_map_channels",
+  "semantic_threshold": 0.5,
+  "true_semantic_pixel_count": 0,
+  "unlocalized_room_hypotheses": [
+    {
+      "caption": "living room",
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R002",
+      "object_captions": [],
+      "source": "world_state.room_summary",
+      "spatialization_status": "unlocalized_prior"
+    },
+    {
+      "caption": "bathroom",
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R003",
+      "object_captions": [],
+      "source": "world_state.room_summary",
+      "spatialization_status": "unlocalized_prior"
+    },
+    {
+      "caption": "kitchen",
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R004",
+      "object_captions": [],
+      "source": "world_state.room_summary",
+      "spatialization_status": "unlocalized_prior"
+    },
+    {
+      "caption": "dining room",
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R005",
+      "object_captions": [],
+      "source": "world_state.room_summary",
+      "spatialization_status": "unlocalized_prior"
+    },
+    {
+      "caption": "office room",
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R006",
+      "object_captions": [],
+      "source": "world_state.room_summary",
+      "spatialization_status": "unlocalized_prior"
+    },
+    {
+      "caption": "gym",
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R007",
+      "object_captions": [],
+      "source": "world_state.room_summary",
+      "spatialization_status": "unlocalized_prior"
+    },
+    {
+      "caption": "lounge",
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R008",
+      "object_captions": [],
+      "source": "world_state.room_summary",
+      "spatialization_status": "unlocalized_prior"
+    },
+    {
+      "caption": "laundry room",
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R009",
+      "object_captions": [],
+      "source": "world_state.room_summary",
+      "spatialization_status": "unlocalized_prior"
+    }
+  ],
+  "unlocalized_rooms_drawn_count": 0,
+  "warnings": [
+    "semantic_channels_empty",
+    "dense_semantic_bev_cannot_show_object_regions_without_semantic_projection",
+    "object_summaries_missing_projected_footprints"
+  ]
+}

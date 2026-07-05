@@ -1,0 +1,3672 @@
+{
+  "agent": {
+    "agent_channel_distance": 93.0,
+    "coord_rc": [
+      406,
+      219
+    ],
+    "display_coord_source": "full_map.channel_2_current_agent",
+    "display_repaired_from_map_current_channel": true,
+    "heading_deg": null,
+    "map_current_channel_coord_rc": [
+      406,
+      219
+    ],
+    "on_free_or_near_free": true,
+    "on_known_or_near_known": true,
+    "raw_coord_rc": [
+      313,
+      219
+    ],
+    "raw_on_known_or_near_known": false,
+    "source": "full_map.channel_2_current_agent",
+    "within_map_bounds": true
+  },
+  "base_layers": {
+    "active_semantic_category_count": 4,
+    "current_agent_channel_pixels": 25,
+    "has_free": true,
+    "has_known": true,
+    "has_language_query_heatmap": true,
+    "has_obstacle": true,
+    "has_semantic_channels": true,
+    "past_agent_channel_pixels": 1628,
+    "semantic_channel_count": 16
+  },
+  "branch_decision_table": [
+    {
+      "actionability_score": 1.0,
+      "anchor_score": 0.9,
+      "candidate_count": 36,
+      "canonical_coord_rc": [
+        459,
+        162
+      ],
+      "canonical_direction": "west",
+      "dead_end_risk": 0.0,
+      "direct_score": 0.0,
+      "evidence_level": "anchor",
+      "id": "B5",
+      "info_gain_score": 1.0,
+      "revisit_penalty": 0.0,
+      "room_prior_score": 0.0,
+      "schema_version": "smoothnav.branch_decision_table.v1",
+      "semantic_support": {
+        "anchor_ids": [
+          "S001",
+          "S002",
+          "S003",
+          "S004",
+          "S005",
+          "S006",
+          "S007"
+        ],
+        "direct_ids": [],
+        "room_ids": []
+      },
+      "source_breakdown": {
+        "heat_source": "semantic_prior_only",
+        "score_terms": {
+          "actionability": 1.0,
+          "novelty": 0.7396449704142012,
+          "planner_prior": 0.705,
+          "recent": 0.0,
+          "repeat": 0.0,
+          "target_progress": 0.0
+        },
+        "target_heatmap_score": 0.9
+      },
+      "target_value_rank": 1,
+      "target_value_score": 0.963,
+      "target_visible": false
+    },
+    {
+      "actionability_score": 1.0,
+      "anchor_score": 0.8124,
+      "candidate_count": 48,
+      "canonical_coord_rc": [
+        466,
+        230
+      ],
+      "canonical_direction": "south",
+      "dead_end_risk": 0.0,
+      "direct_score": 0.0,
+      "evidence_level": "anchor",
+      "id": "B6",
+      "info_gain_score": 1.0,
+      "revisit_penalty": 0.0,
+      "room_prior_score": 0.0,
+      "schema_version": "smoothnav.branch_decision_table.v1",
+      "semantic_support": {
+        "anchor_ids": [
+          "S001",
+          "S002",
+          "S003",
+          "S004",
+          "S005",
+          "S006",
+          "S007"
+        ],
+        "direct_ids": [],
+        "room_ids": []
+      },
+      "source_breakdown": {
+        "heat_source": "semantic_prior_only",
+        "score_terms": {
+          "actionability": 1.0,
+          "novelty": 0.46153846153846156,
+          "planner_prior": 0.861,
+          "recent": 0.0,
+          "repeat": 0.0,
+          "target_progress": 0.0
+        },
+        "target_heatmap_score": 0.72
+      },
+      "target_value_rank": 2,
+      "target_value_score": 0.8462,
+      "target_visible": false
+    },
+    {
+      "actionability_score": 1.0,
+      "anchor_score": 0.72,
+      "candidate_count": 78,
+      "canonical_coord_rc": [
+        418,
+        237
+      ],
+      "canonical_direction": "east",
+      "dead_end_risk": 0.0,
+      "direct_score": 0.0,
+      "evidence_level": "anchor",
+      "id": "B4",
+      "info_gain_score": 1.0,
+      "revisit_penalty": 0.0,
+      "room_prior_score": 0.0,
+      "schema_version": "smoothnav.branch_decision_table.v1",
+      "semantic_support": {
+        "anchor_ids": [
+          "S001",
+          "S002",
+          "S003",
+          "S004",
+          "S005",
+          "S006",
+          "S007"
+        ],
+        "direct_ids": [],
+        "room_ids": []
+      },
+      "source_breakdown": {
+        "heat_source": "semantic_prior_only",
+        "score_terms": {
+          "actionability": 1.0,
+          "novelty": 0.6982248520710059,
+          "planner_prior": 1.0,
+          "recent": 0.0,
+          "repeat": 0.0,
+          "target_progress": 0.0
+        },
+        "target_heatmap_score": 0.72
+      },
+      "target_value_rank": 3,
+      "target_value_score": 0.7704,
+      "target_visible": false
+    },
+    {
+      "actionability_score": 1.0,
+      "anchor_score": 0.3868,
+      "candidate_count": 54,
+      "canonical_coord_rc": [
+        385,
+        199
+      ],
+      "canonical_direction": "north",
+      "dead_end_risk": 0.0,
+      "direct_score": 0.0,
+      "evidence_level": "anchor",
+      "id": "B3",
+      "info_gain_score": 1.0,
+      "revisit_penalty": 0.0,
+      "room_prior_score": 0.0,
+      "schema_version": "smoothnav.branch_decision_table.v1",
+      "semantic_support": {
+        "anchor_ids": [
+          "S001",
+          "S002",
+          "S003",
+          "S004",
+          "S005",
+          "S006",
+          "S007"
+        ],
+        "direct_ids": [],
+        "room_ids": []
+      },
+      "source_breakdown": {
+        "heat_source": "semantic_prior_only",
+        "score_terms": {
+          "actionability": 1.0,
+          "novelty": 0.5266272189349113,
+          "planner_prior": 0.904,
+          "recent": 0.0,
+          "repeat": 0.0,
+          "target_progress": 0.0
+        },
+        "target_heatmap_score": 0.0
+      },
+      "target_value_rank": 4,
+      "target_value_score": 0.405,
+      "target_visible": false
+    },
+    {
+      "actionability_score": 0.0,
+      "anchor_score": 0.0,
+      "candidate_count": 0,
+      "canonical_coord_rc": [
+        343,
+        352
+      ],
+      "canonical_direction": "east",
+      "dead_end_risk": 0.35,
+      "direct_score": 0.0,
+      "evidence_level": "geometry_only",
+      "id": "B2",
+      "info_gain_score": 0.4911,
+      "revisit_penalty": 0.0,
+      "room_prior_score": 0.0,
+      "schema_version": "smoothnav.branch_decision_table.v1",
+      "semantic_support": {
+        "anchor_ids": [],
+        "direct_ids": [],
+        "room_ids": []
+      },
+      "source_breakdown": {
+        "heat_source": "semantic_prior_only",
+        "score_terms": {
+          "actionability": 0.0,
+          "novelty": 0.4911242603550296,
+          "planner_prior": 0.237,
+          "recent": 0.0,
+          "repeat": 0.0,
+          "target_progress": 0.0
+        },
+        "target_heatmap_score": 0.0
+      },
+      "target_value_rank": 5,
+      "target_value_score": 0.1216,
+      "target_visible": false
+    },
+    {
+      "actionability_score": 0.0,
+      "anchor_score": 0.0,
+      "candidate_count": 0,
+      "canonical_coord_rc": [
+        313,
+        395
+      ],
+      "canonical_direction": "east",
+      "dead_end_risk": 1.0,
+      "direct_score": 0.0,
+      "evidence_level": "geometry_only",
+      "id": "B1",
+      "info_gain_score": 0.7278,
+      "revisit_penalty": 1.0,
+      "room_prior_score": 0.0,
+      "schema_version": "smoothnav.branch_decision_table.v1",
+      "semantic_support": {
+        "anchor_ids": [],
+        "direct_ids": [],
+        "room_ids": []
+      },
+      "source_breakdown": {
+        "heat_source": "semantic_prior_only",
+        "score_terms": {
+          "actionability": 0.0,
+          "novelty": 0.727810650887574,
+          "planner_prior": 0.151,
+          "recent": 1.0,
+          "repeat": 0.0,
+          "target_progress": 0.0
+        },
+        "target_heatmap_score": 0.0
+      },
+      "target_value_rank": 6,
+      "target_value_score": 0.0,
+      "target_visible": false
+    }
+  ],
+  "branches": [
+    {
+      "candidate_local_indices": [],
+      "candidate_point_count": 0,
+      "candidate_points": [
+        {
+          "actionable": false,
+          "agent_distance": 13.510773886967257,
+          "coord": [
+            313,
+            395
+          ],
+          "final_score": 2.7324443525751585,
+          "local_idx": 111
+        },
+        {
+          "actionable": false,
+          "agent_distance": 13.454252024465253,
+          "coord": [
+            316,
+            392
+          ],
+          "final_score": 2.6958816879907137,
+          "local_idx": 115
+        },
+        {
+          "actionable": false,
+          "agent_distance": 13.44279560527641,
+          "coord": [
+            317,
+            391
+          ],
+          "final_score": 2.6649613408289063,
+          "local_idx": 119
+        },
+        {
+          "actionable": false,
+          "agent_distance": 13.51263664957466,
+          "coord": [
+            314,
+            393
+          ],
+          "final_score": 2.6547762825888057,
+          "local_idx": 112
+        },
+        {
+          "actionable": false,
+          "agent_distance": 13.532784052468312,
+          "coord": [
+            313,
+            394
+          ],
+          "final_score": 2.6526344167478726,
+          "local_idx": 110
+        },
+        {
+          "actionable": false,
+          "agent_distance": 13.611606237965258,
+          "coord": [
+            310,
+            397
+          ],
+          "final_score": 2.644773961861599,
+          "local_idx": 107
+        },
+        {
+          "actionable": false,
+          "agent_distance": 13.556151247320141,
+          "coord": [
+            312,
+            395
+          ],
+          "final_score": 2.6432874680144542,
+          "local_idx": 109
+        },
+        {
+          "actionable": false,
+          "agent_distance": 13.582498894212057,
+          "coord": [
+            311,
+            396
+          ],
+          "final_score": 2.638665494709676,
+          "local_idx": 108
+        }
+      ],
+      "canonical_agent_coord_rc": [
+        406,
+        219
+      ],
+      "canonical_coordinate_frame": "full_map_rc_unflipped",
+      "canonical_direction_from_agent": "east",
+      "canonical_representative_coord_rc": [
+        313,
+        395
+      ],
+      "centroid": [
+        289.0569105691057,
+        385.5853658536585
+      ],
+      "component_label": 1,
+      "decision_roles": [],
+      "decision_table_row": {
+        "actionability_score": 0.0,
+        "anchor_score": 0.0,
+        "candidate_count": 0,
+        "canonical_coord_rc": [
+          313,
+          395
+        ],
+        "canonical_direction": "east",
+        "dead_end_risk": 1.0,
+        "direct_score": 0.0,
+        "evidence_level": "geometry_only",
+        "id": "B1",
+        "info_gain_score": 0.7278,
+        "revisit_penalty": 1.0,
+        "room_prior_score": 0.0,
+        "schema_version": "smoothnav.branch_decision_table.v1",
+        "semantic_support": {
+          "anchor_ids": [],
+          "direct_ids": [],
+          "room_ids": []
+        },
+        "source_breakdown": {
+          "heat_source": "semantic_prior_only",
+          "score_terms": {
+            "actionability": 0.0,
+            "novelty": 0.727810650887574,
+            "planner_prior": 0.151,
+            "recent": 1.0,
+            "repeat": 0.0,
+            "target_progress": 0.0
+          },
+          "target_heatmap_score": 0.0
+        },
+        "target_value_rank": 6,
+        "target_value_score": 0.0,
+        "target_visible": false
+      },
+      "direction_from_agent": "east",
+      "evidence_level": "geometry_only",
+      "id": "B1",
+      "local_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122
+      ],
+      "map_direction_from_agent": "east",
+      "nearby_object_ids": [
+        "O002",
+        "O003",
+        "O001"
+      ],
+      "nearby_room_ids": [
+        "R001"
+      ],
+      "nearby_semantic_region_ids": [],
+      "nearby_semantic_region_labels": [],
+      "nearest_object_distance": 45.89117562233506,
+      "nearest_room_distance": 28.319604517012593,
+      "nearest_semantic_region_distance": 151.25144627407698,
+      "pixel_count": 123,
+      "representative_coord": [
+        313,
+        395
+      ],
+      "representative_local_idx": 111,
+      "score_terms_aggregate": {
+        "actionability_score_max": 0.0,
+        "base_score_max": 0.0,
+        "bias_score_max": 0.4013350097634396,
+        "distance_mean": 13.745326512974641,
+        "distance_min": 12.991813438298498,
+        "final_score_max": 2.7324443525751585,
+        "novelty_score_max": 0.727810650887574,
+        "planner_prior_score_max": 0.151,
+        "recent_penalty_max": 1.0,
+        "repeat_penalty_max": 0.0,
+        "target_progress_score_max": 0.0
+      },
+      "semantic_target_affinity": 0.0875,
+      "target_heatmap_rank": 5,
+      "target_heatmap_score": 0.0,
+      "target_value_rank": 6,
+      "target_value_score": 0.0,
+      "target_visible": false,
+      "visit_state": "non_actionable"
+    },
+    {
+      "candidate_local_indices": [],
+      "candidate_point_count": 0,
+      "candidate_points": [
+        {
+          "actionable": false,
+          "agent_distance": 8.3100885732176,
+          "coord": [
+            343,
+            352
+          ],
+          "final_score": 4.281698409030921,
+          "local_idx": 147
+        },
+        {
+          "actionable": false,
+          "agent_distance": 8.303221005379337,
+          "coord": [
+            344,
+            352
+          ],
+          "final_score": 4.276731657342557,
+          "local_idx": 149
+        },
+        {
+          "actionable": false,
+          "agent_distance": 8.317417685603584,
+          "coord": [
+            342,
+            352
+          ],
+          "final_score": 4.2566178173549964,
+          "local_idx": 144
+        },
+        {
+          "actionable": false,
+          "agent_distance": 8.2968166773945,
+          "coord": [
+            345,
+            352
+          ],
+          "final_score": 4.247633026747513,
+          "local_idx": 152
+        },
+        {
+          "actionable": false,
+          "agent_distance": 8.32520654080855,
+          "coord": [
+            341,
+            352
+          ],
+          "final_score": 4.219243163333463,
+          "local_idx": 141
+        },
+        {
+          "actionable": false,
+          "agent_distance": 8.290877176017784,
+          "coord": [
+            346,
+            352
+          ],
+          "final_score": 4.218069569544347,
+          "local_idx": 154
+        },
+        {
+          "actionable": false,
+          "agent_distance": 8.285403977115967,
+          "coord": [
+            347,
+            352
+          ],
+          "final_score": 4.188039809866281,
+          "local_idx": 156
+        },
+        {
+          "actionable": false,
+          "agent_distance": 8.333453232812632,
+          "coord": [
+            340,
+            352
+          ],
+          "final_score": 4.175493512749498,
+          "local_idx": 138
+        }
+      ],
+      "canonical_agent_coord_rc": [
+        406,
+        219
+      ],
+      "canonical_coordinate_frame": "full_map_rc_unflipped",
+      "canonical_direction_from_agent": "east",
+      "canonical_representative_coord_rc": [
+        343,
+        352
+      ],
+      "centroid": [
+        343.85714285714283,
+        360.25
+      ],
+      "component_label": 2,
+      "decision_roles": [],
+      "decision_table_row": {
+        "actionability_score": 0.0,
+        "anchor_score": 0.0,
+        "candidate_count": 0,
+        "canonical_coord_rc": [
+          343,
+          352
+        ],
+        "canonical_direction": "east",
+        "dead_end_risk": 0.35,
+        "direct_score": 0.0,
+        "evidence_level": "geometry_only",
+        "id": "B2",
+        "info_gain_score": 0.4911,
+        "revisit_penalty": 0.0,
+        "room_prior_score": 0.0,
+        "schema_version": "smoothnav.branch_decision_table.v1",
+        "semantic_support": {
+          "anchor_ids": [],
+          "direct_ids": [],
+          "room_ids": []
+        },
+        "source_breakdown": {
+          "heat_source": "semantic_prior_only",
+          "score_terms": {
+            "actionability": 0.0,
+            "novelty": 0.4911242603550296,
+            "planner_prior": 0.237,
+            "recent": 0.0,
+            "repeat": 0.0,
+            "target_progress": 0.0
+          },
+          "target_heatmap_score": 0.0
+        },
+        "target_value_rank": 5,
+        "target_value_score": 0.1216,
+        "target_visible": false
+      },
+      "direction_from_agent": "east",
+      "evidence_level": "geometry_only",
+      "id": "B2",
+      "local_indices": [
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140,
+        141,
+        142,
+        143,
+        144,
+        145,
+        146,
+        147,
+        148,
+        149,
+        150,
+        151,
+        152,
+        153,
+        154,
+        155,
+        156,
+        157,
+        158,
+        159,
+        160,
+        161,
+        162,
+        163,
+        164,
+        165,
+        166,
+        167,
+        168,
+        169,
+        170,
+        171,
+        172,
+        173,
+        174,
+        175,
+        176,
+        177,
+        178
+      ],
+      "map_direction_from_agent": "east",
+      "nearby_object_ids": [
+        "O001",
+        "O002",
+        "O003"
+      ],
+      "nearby_room_ids": [
+        "R001"
+      ],
+      "nearby_semantic_region_ids": [
+        "S008"
+      ],
+      "nearby_semantic_region_labels": [
+        "refrigerator"
+      ],
+      "nearest_object_distance": 36.76955262170047,
+      "nearest_room_distance": 25.632011235952593,
+      "nearest_semantic_region_distance": 106.07544484940895,
+      "pixel_count": 56,
+      "representative_coord": [
+        343,
+        352
+      ],
+      "representative_local_idx": 147,
+      "score_terms_aggregate": {
+        "actionability_score_max": 0.0,
+        "base_score_max": 2.9196015574624594,
+        "bias_score_max": 0.0,
+        "distance_mean": 8.720212939583673,
+        "distance_min": 8.28039844253754,
+        "final_score_max": 4.281698409030921,
+        "novelty_score_max": 0.4911242603550296,
+        "planner_prior_score_max": 0.237,
+        "recent_penalty_max": 0.0,
+        "repeat_penalty_max": 0.0,
+        "target_progress_score_max": 0.0
+      },
+      "semantic_target_affinity": 0.0875,
+      "target_heatmap_rank": 6,
+      "target_heatmap_score": 0.0,
+      "target_value_rank": 5,
+      "target_value_score": 0.1216,
+      "target_visible": false,
+      "visit_state": "non_actionable"
+    },
+    {
+      "candidate_local_indices": [
+        179,
+        180,
+        181,
+        182,
+        183,
+        184,
+        185,
+        186,
+        187,
+        188,
+        189,
+        190,
+        191,
+        192,
+        193,
+        194,
+        195,
+        196,
+        197,
+        198,
+        199,
+        200,
+        201,
+        202,
+        203,
+        204,
+        205,
+        206,
+        207,
+        208,
+        209,
+        210,
+        211,
+        212,
+        213,
+        214,
+        215,
+        216,
+        217,
+        218,
+        219,
+        220,
+        221,
+        222,
+        223,
+        224,
+        225,
+        226,
+        227,
+        228,
+        229,
+        230,
+        231,
+        232
+      ],
+      "candidate_point_count": 54,
+      "candidate_points": [
+        {
+          "actionable": true,
+          "agent_distance": 1.4646951924281812,
+          "coord": [
+            385,
+            199
+          ],
+          "final_score": 16.32897831287072,
+          "local_idx": 186
+        },
+        {
+          "actionable": true,
+          "agent_distance": 1.4966993930831247,
+          "coord": [
+            385,
+            198
+          ],
+          "final_score": 16.32649988773339,
+          "local_idx": 185
+        },
+        {
+          "actionable": true,
+          "agent_distance": 1.4366022597067958,
+          "coord": [
+            385,
+            200
+          ],
+          "final_score": 16.326203888330895,
+          "local_idx": 187
+        },
+        {
+          "actionable": true,
+          "agent_distance": 1.413680926952625,
+          "coord": [
+            385,
+            201
+          ],
+          "final_score": 16.322306936679936,
+          "local_idx": 188
+        },
+        {
+          "actionable": true,
+          "agent_distance": 1.531355585538804,
+          "coord": [
+            385,
+            197
+          ],
+          "final_score": 16.314605184822188,
+          "local_idx": 184
+        },
+        {
+          "actionable": true,
+          "agent_distance": 1.5677243347218799,
+          "coord": [
+            385,
+            196
+          ],
+          "final_score": 16.294568571398273,
+          "local_idx": 183
+        },
+        {
+          "actionable": true,
+          "agent_distance": 1.6051985851235326,
+          "coord": [
+            385,
+            195
+          ],
+          "final_score": 16.255343322001302,
+          "local_idx": 182
+        },
+        {
+          "actionable": true,
+          "agent_distance": 1.6434315295298259,
+          "coord": [
+            385,
+            194
+          ],
+          "final_score": 16.209184851730523,
+          "local_idx": 181
+        }
+      ],
+      "canonical_agent_coord_rc": [
+        406,
+        219
+      ],
+      "canonical_coordinate_frame": "full_map_rc_unflipped",
+      "canonical_direction_from_agent": "north",
+      "canonical_representative_coord_rc": [
+        385,
+        199
+      ],
+      "centroid": [
+        387.72222222222223,
+        174.5
+      ],
+      "component_label": 3,
+      "decision_roles": [],
+      "decision_table_row": {
+        "actionability_score": 1.0,
+        "anchor_score": 0.3868,
+        "candidate_count": 54,
+        "canonical_coord_rc": [
+          385,
+          199
+        ],
+        "canonical_direction": "north",
+        "dead_end_risk": 0.0,
+        "direct_score": 0.0,
+        "evidence_level": "anchor",
+        "id": "B3",
+        "info_gain_score": 1.0,
+        "revisit_penalty": 0.0,
+        "room_prior_score": 0.0,
+        "schema_version": "smoothnav.branch_decision_table.v1",
+        "semantic_support": {
+          "anchor_ids": [
+            "S001",
+            "S002",
+            "S003",
+            "S004",
+            "S005",
+            "S006",
+            "S007"
+          ],
+          "direct_ids": [],
+          "room_ids": []
+        },
+        "source_breakdown": {
+          "heat_source": "semantic_prior_only",
+          "score_terms": {
+            "actionability": 1.0,
+            "novelty": 0.5266272189349113,
+            "planner_prior": 0.904,
+            "recent": 0.0,
+            "repeat": 0.0,
+            "target_progress": 0.0
+          },
+          "target_heatmap_score": 0.0
+        },
+        "target_value_rank": 4,
+        "target_value_score": 0.405,
+        "target_visible": false
+      },
+      "direction_from_agent": "south",
+      "evidence_level": "anchor",
+      "id": "B3",
+      "local_indices": [
+        179,
+        180,
+        181,
+        182,
+        183,
+        184,
+        185,
+        186,
+        187,
+        188,
+        189,
+        190,
+        191,
+        192,
+        193,
+        194,
+        195,
+        196,
+        197,
+        198,
+        199,
+        200,
+        201,
+        202,
+        203,
+        204,
+        205,
+        206,
+        207,
+        208,
+        209,
+        210,
+        211,
+        212,
+        213,
+        214,
+        215,
+        216,
+        217,
+        218,
+        219,
+        220,
+        221,
+        222,
+        223,
+        224,
+        225,
+        226,
+        227,
+        228,
+        229,
+        230,
+        231,
+        232
+      ],
+      "map_direction_from_agent": "north",
+      "nearby_object_ids": [],
+      "nearby_room_ids": [],
+      "nearby_semantic_region_ids": [
+        "S009",
+        "S010",
+        "S006",
+        "S008"
+      ],
+      "nearby_semantic_region_labels": [
+        "refrigerator",
+        "refrigerator",
+        "dining-table",
+        "refrigerator"
+      ],
+      "nearest_object_distance": 179.71366113904642,
+      "nearest_room_distance": 184.20097719610501,
+      "nearest_semantic_region_distance": 26.419689627245813,
+      "pixel_count": 54,
+      "representative_coord": [
+        385,
+        199
+      ],
+      "representative_local_idx": 186,
+      "score_terms_aggregate": {
+        "actionability_score_max": 1.0,
+        "base_score_max": 9.786319073047375,
+        "bias_score_max": 0.15899104874837777,
+        "distance_mean": 2.4512771171365353,
+        "distance_min": 1.413680926952625,
+        "final_score_max": 16.32897831287072,
+        "novelty_score_max": 0.5266272189349113,
+        "planner_prior_score_max": 0.904,
+        "recent_penalty_max": 0.0,
+        "repeat_penalty_max": 0.0,
+        "target_progress_score_max": 0.0
+      },
+      "semantic_target_affinity": 0.226,
+      "target_heatmap_rank": 4,
+      "target_heatmap_score": 0.0,
+      "target_value_rank": 4,
+      "target_value_score": 0.405,
+      "target_visible": false,
+      "visit_state": "candidate"
+    },
+    {
+      "candidate_local_indices": [
+        233,
+        234,
+        235,
+        236,
+        237,
+        238,
+        239,
+        240,
+        241,
+        242,
+        243,
+        244,
+        245,
+        246,
+        247,
+        248,
+        249,
+        250,
+        251,
+        252,
+        253,
+        254,
+        255,
+        256,
+        257,
+        258,
+        259,
+        260,
+        261,
+        262,
+        263,
+        264,
+        265,
+        266,
+        267,
+        268,
+        269,
+        270,
+        271,
+        272,
+        273,
+        274,
+        275,
+        276,
+        277,
+        278,
+        279,
+        280,
+        281,
+        282,
+        283,
+        284,
+        288,
+        290,
+        291,
+        292,
+        294,
+        296,
+        298,
+        300,
+        303,
+        309,
+        317,
+        325,
+        328,
+        329,
+        332,
+        333,
+        337,
+        338,
+        339,
+        340,
+        341,
+        390,
+        391,
+        392,
+        393,
+        394
+      ],
+      "candidate_point_count": 78,
+      "candidate_points": [
+        {
+          "actionable": true,
+          "agent_distance": 1.2328899640402624,
+          "coord": [
+            418,
+            237
+          ],
+          "final_score": 18.05589489157585,
+          "local_idx": 233
+        },
+        {
+          "actionable": true,
+          "agent_distance": 1.4387692277478814,
+          "coord": [
+            419,
+            241
+          ],
+          "final_score": 18.05081620814483,
+          "local_idx": 237
+        },
+        {
+          "actionable": true,
+          "agent_distance": 1.3908970566537837,
+          "coord": [
+            419,
+            240
+          ],
+          "final_score": 18.0200487925404,
+          "local_idx": 236
+        },
+        {
+          "actionable": true,
+          "agent_distance": 1.3432449087945413,
+          "coord": [
+            419,
+            239
+          ],
+          "final_score": 18.000887504240946,
+          "local_idx": 235
+        },
+        {
+          "actionable": true,
+          "agent_distance": 1.501295750981425,
+          "coord": [
+            420,
+            242
+          ],
+          "final_score": 17.988645924435858,
+          "local_idx": 238
+        },
+        {
+          "actionable": true,
+          "agent_distance": 1.295849007167341,
+          "coord": [
+            419,
+            238
+          ],
+          "final_score": 17.981463314955242,
+          "local_idx": 234
+        },
+        {
+          "actionable": true,
+          "agent_distance": 1.56473626273413,
+          "coord": [
+            421,
+            243
+          ],
+          "final_score": 17.925480459186538,
+          "local_idx": 239
+        },
+        {
+          "actionable": true,
+          "agent_distance": 1.6289084313220257,
+          "coord": [
+            422,
+            244
+          ],
+          "final_score": 17.855583491855707,
+          "local_idx": 240
+        }
+      ],
+      "canonical_agent_coord_rc": [
+        406,
+        219
+      ],
+      "canonical_coordinate_frame": "full_map_rc_unflipped",
+      "canonical_direction_from_agent": "east",
+      "canonical_representative_coord_rc": [
+        418,
+        237
+      ],
+      "centroid": [
+        442.0897435897436,
+        268.1025641025641
+      ],
+      "component_label": 4,
+      "decision_roles": [
+        "dry",
+        "mllm",
+        "final"
+      ],
+      "decision_table_row": {
+        "actionability_score": 1.0,
+        "anchor_score": 0.72,
+        "candidate_count": 78,
+        "canonical_coord_rc": [
+          418,
+          237
+        ],
+        "canonical_direction": "east",
+        "dead_end_risk": 0.0,
+        "direct_score": 0.0,
+        "evidence_level": "anchor",
+        "id": "B4",
+        "info_gain_score": 1.0,
+        "revisit_penalty": 0.0,
+        "room_prior_score": 0.0,
+        "schema_version": "smoothnav.branch_decision_table.v1",
+        "semantic_support": {
+          "anchor_ids": [
+            "S001",
+            "S002",
+            "S003",
+            "S004",
+            "S005",
+            "S006",
+            "S007"
+          ],
+          "direct_ids": [],
+          "room_ids": []
+        },
+        "source_breakdown": {
+          "heat_source": "semantic_prior_only",
+          "score_terms": {
+            "actionability": 1.0,
+            "novelty": 0.6982248520710059,
+            "planner_prior": 1.0,
+            "recent": 0.0,
+            "repeat": 0.0,
+            "target_progress": 0.0
+          },
+          "target_heatmap_score": 0.72
+        },
+        "target_value_rank": 3,
+        "target_value_score": 0.7704,
+        "target_visible": false
+      },
+      "direction_from_agent": "south",
+      "evidence_level": "anchor",
+      "id": "B4",
+      "local_indices": [
+        233,
+        234,
+        235,
+        236,
+        237,
+        238,
+        239,
+        240,
+        241,
+        242,
+        243,
+        244,
+        245,
+        246,
+        247,
+        248,
+        249,
+        250,
+        251,
+        252,
+        253,
+        254,
+        255,
+        256,
+        257,
+        258,
+        259,
+        260,
+        261,
+        262,
+        263,
+        264,
+        265,
+        266,
+        267,
+        268,
+        269,
+        270,
+        271,
+        272,
+        273,
+        274,
+        275,
+        276,
+        277,
+        278,
+        279,
+        280,
+        281,
+        282,
+        283,
+        284,
+        288,
+        290,
+        291,
+        292,
+        294,
+        296,
+        298,
+        300,
+        303,
+        309,
+        317,
+        325,
+        328,
+        329,
+        332,
+        333,
+        337,
+        338,
+        339,
+        340,
+        341,
+        390,
+        391,
+        392,
+        393,
+        394
+      ],
+      "map_direction_from_agent": "east",
+      "nearby_object_ids": [],
+      "nearby_room_ids": [],
+      "nearby_semantic_region_ids": [
+        "S006",
+        "S010",
+        "S007",
+        "S009"
+      ],
+      "nearby_semantic_region_labels": [
+        "dining-table",
+        "refrigerator",
+        "dining-table",
+        "refrigerator"
+      ],
+      "nearest_object_distance": 149.27156460625713,
+      "nearest_room_distance": 162.40997506310995,
+      "nearest_semantic_region_distance": 15.811388300841896,
+      "pixel_count": 78,
+      "representative_coord": [
+        418,
+        237
+      ],
+      "representative_local_idx": 233,
+      "score_terms_aggregate": {
+        "actionability_score_max": 1.0,
+        "base_score_max": 9.967110035959738,
+        "bias_score_max": 0.6802586346521807,
+        "distance_mean": 3.1844614639039306,
+        "distance_min": 1.2328899640402624,
+        "final_score_max": 18.05589489157585,
+        "novelty_score_max": 0.6982248520710059,
+        "planner_prior_score_max": 1.0,
+        "recent_penalty_max": 0.0,
+        "repeat_penalty_max": 0.0,
+        "target_progress_score_max": 0.0
+      },
+      "semantic_target_affinity": 0.7324,
+      "target_heatmap_rank": 3,
+      "target_heatmap_score": 0.72,
+      "target_value_rank": 3,
+      "target_value_score": 0.7704,
+      "target_visible": false,
+      "visit_state": "selected"
+    },
+    {
+      "candidate_local_indices": [
+        285,
+        286,
+        287,
+        289,
+        293,
+        295,
+        297,
+        299,
+        301,
+        302,
+        304,
+        305,
+        306,
+        307,
+        308,
+        310,
+        311,
+        312,
+        313,
+        314,
+        315,
+        316,
+        318,
+        319,
+        320,
+        321,
+        322,
+        323,
+        324,
+        326,
+        327,
+        330,
+        331,
+        334,
+        335,
+        336
+      ],
+      "candidate_point_count": 36,
+      "candidate_points": [
+        {
+          "actionable": true,
+          "agent_distance": 4.055948395825948,
+          "coord": [
+            459,
+            162
+          ],
+          "final_score": 12.725887011920122,
+          "local_idx": 324
+        },
+        {
+          "actionable": true,
+          "agent_distance": 4.007114787880395,
+          "coord": [
+            458,
+            162
+          ],
+          "final_score": 12.705344321029342,
+          "local_idx": 316
+        },
+        {
+          "actionable": true,
+          "agent_distance": 4.068022520008318,
+          "coord": [
+            459,
+            161
+          ],
+          "final_score": 12.694132357169176,
+          "local_idx": 323
+        },
+        {
+          "actionable": true,
+          "agent_distance": 3.9584719276291502,
+          "coord": [
+            457,
+            162
+          ],
+          "final_score": 12.689411956425133,
+          "local_idx": 308
+        },
+        {
+          "actionable": true,
+          "agent_distance": 3.9100729352766046,
+          "coord": [
+            456,
+            162
+          ],
+          "final_score": 12.654338909913943,
+          "local_idx": 302
+        },
+        {
+          "actionable": true,
+          "agent_distance": 4.083153999625816,
+          "coord": [
+            459,
+            160
+          ],
+          "final_score": 12.65336843088998,
+          "local_idx": 322
+        },
+        {
+          "actionable": true,
+          "agent_distance": 3.878533996725845,
+          "coord": [
+            455,
+            161
+          ],
+          "final_score": 12.600715077144448,
+          "local_idx": 299
+        },
+        {
+          "actionable": true,
+          "agent_distance": 3.6090150271558428,
+          "coord": [
+            450,
+            163
+          ],
+          "final_score": 12.592055803929435,
+          "local_idx": 287
+        }
+      ],
+      "canonical_agent_coord_rc": [
+        406,
+        219
+      ],
+      "canonical_coordinate_frame": "full_map_rc_unflipped",
+      "canonical_direction_from_agent": "west",
+      "canonical_representative_coord_rc": [
+        459,
+        162
+      ],
+      "centroid": [
+        457.19444444444446,
+        157.52777777777777
+      ],
+      "component_label": 5,
+      "decision_roles": [],
+      "decision_table_row": {
+        "actionability_score": 1.0,
+        "anchor_score": 0.9,
+        "candidate_count": 36,
+        "canonical_coord_rc": [
+          459,
+          162
+        ],
+        "canonical_direction": "west",
+        "dead_end_risk": 0.0,
+        "direct_score": 0.0,
+        "evidence_level": "anchor",
+        "id": "B5",
+        "info_gain_score": 1.0,
+        "revisit_penalty": 0.0,
+        "room_prior_score": 0.0,
+        "schema_version": "smoothnav.branch_decision_table.v1",
+        "semantic_support": {
+          "anchor_ids": [
+            "S001",
+            "S002",
+            "S003",
+            "S004",
+            "S005",
+            "S006",
+            "S007"
+          ],
+          "direct_ids": [],
+          "room_ids": []
+        },
+        "source_breakdown": {
+          "heat_source": "semantic_prior_only",
+          "score_terms": {
+            "actionability": 1.0,
+            "novelty": 0.7396449704142012,
+            "planner_prior": 0.705,
+            "recent": 0.0,
+            "repeat": 0.0,
+            "target_progress": 0.0
+          },
+          "target_heatmap_score": 0.9
+        },
+        "target_value_rank": 1,
+        "target_value_score": 0.963,
+        "target_visible": false
+      },
+      "direction_from_agent": "south",
+      "evidence_level": "anchor",
+      "id": "B5",
+      "local_indices": [
+        285,
+        286,
+        287,
+        289,
+        293,
+        295,
+        297,
+        299,
+        301,
+        302,
+        304,
+        305,
+        306,
+        307,
+        308,
+        310,
+        311,
+        312,
+        313,
+        314,
+        315,
+        316,
+        318,
+        319,
+        320,
+        321,
+        322,
+        323,
+        324,
+        326,
+        327,
+        330,
+        331,
+        334,
+        335,
+        336
+      ],
+      "map_direction_from_agent": "west",
+      "nearby_object_ids": [],
+      "nearby_room_ids": [],
+      "nearby_semantic_region_ids": [
+        "S003",
+        "S005",
+        "S006",
+        "S001"
+      ],
+      "nearby_semantic_region_labels": [
+        "couch",
+        "chair",
+        "dining-table",
+        "couch"
+      ],
+      "nearest_object_distance": 234.0,
+      "nearest_room_distance": 247.83260479605988,
+      "nearest_semantic_region_distance": 20.8806130178211,
+      "pixel_count": 36,
+      "representative_coord": [
+        459,
+        162
+      ],
+      "representative_local_idx": 324,
+      "score_terms_aggregate": {
+        "actionability_score_max": 1.0,
+        "base_score_max": 7.590984972844157,
+        "bias_score_max": 0.03809198803119229,
+        "distance_mean": 4.06899750553299,
+        "distance_min": 3.6090150271558428,
+        "final_score_max": 12.725887011920122,
+        "novelty_score_max": 0.7396449704142012,
+        "planner_prior_score_max": 0.705,
+        "recent_penalty_max": 0.0,
+        "repeat_penalty_max": 0.0,
+        "target_progress_score_max": 0.0
+      },
+      "semantic_target_affinity": 0.9,
+      "target_heatmap_rank": 1,
+      "target_heatmap_score": 0.9,
+      "target_value_rank": 1,
+      "target_value_score": 0.963,
+      "target_visible": false,
+      "visit_state": "candidate"
+    },
+    {
+      "candidate_local_indices": [
+        342,
+        343,
+        344,
+        345,
+        346,
+        347,
+        348,
+        349,
+        350,
+        351,
+        352,
+        353,
+        354,
+        355,
+        356,
+        357,
+        358,
+        359,
+        360,
+        361,
+        362,
+        363,
+        364,
+        365,
+        366,
+        367,
+        368,
+        369,
+        370,
+        371,
+        372,
+        373,
+        374,
+        375,
+        376,
+        377,
+        378,
+        379,
+        380,
+        381,
+        382,
+        383,
+        384,
+        385,
+        386,
+        387,
+        388,
+        389
+      ],
+      "candidate_point_count": 48,
+      "candidate_points": [
+        {
+          "actionable": true,
+          "agent_distance": 3.0963297962250125,
+          "coord": [
+            466,
+            230
+          ],
+          "final_score": 15.542382496126164,
+          "local_idx": 382
+        },
+        {
+          "actionable": true,
+          "agent_distance": 3.0783539102553203,
+          "coord": [
+            466,
+            229
+          ],
+          "final_score": 15.541340570875695,
+          "local_idx": 381
+        },
+        {
+          "actionable": true,
+          "agent_distance": 3.1195652716959135,
+          "coord": [
+            466,
+            231
+          ],
+          "final_score": 15.53804943224288,
+          "local_idx": 383
+        },
+        {
+          "actionable": true,
+          "agent_distance": 3.0633793415346924,
+          "coord": [
+            466,
+            228
+          ],
+          "final_score": 15.537200338439247,
+          "local_idx": 380
+        },
+        {
+          "actionable": true,
+          "agent_distance": 3.0501218456541936,
+          "coord": [
+            466,
+            227
+          ],
+          "final_score": 15.531260444147021,
+          "local_idx": 379
+        },
+        {
+          "actionable": true,
+          "agent_distance": 3.038481852099494,
+          "coord": [
+            466,
+            226
+          ],
+          "final_score": 15.523631955250769,
+          "local_idx": 378
+        },
+        {
+          "actionable": true,
+          "agent_distance": 3.148851516949354,
+          "coord": [
+            466,
+            232
+          ],
+          "final_score": 15.521608939615769,
+          "local_idx": 384
+        },
+        {
+          "actionable": true,
+          "agent_distance": 3.0284672251470397,
+          "coord": [
+            466,
+            225
+          ],
+          "final_score": 15.514316344909181,
+          "local_idx": 377
+        }
+      ],
+      "canonical_agent_coord_rc": [
+        406,
+        219
+      ],
+      "canonical_coordinate_frame": "full_map_rc_unflipped",
+      "canonical_direction_from_agent": "south",
+      "canonical_representative_coord_rc": [
+        466,
+        230
+      ],
+      "centroid": [
+        466.0,
+        213.5
+      ],
+      "component_label": 6,
+      "decision_roles": [],
+      "decision_table_row": {
+        "actionability_score": 1.0,
+        "anchor_score": 0.8124,
+        "candidate_count": 48,
+        "canonical_coord_rc": [
+          466,
+          230
+        ],
+        "canonical_direction": "south",
+        "dead_end_risk": 0.0,
+        "direct_score": 0.0,
+        "evidence_level": "anchor",
+        "id": "B6",
+        "info_gain_score": 1.0,
+        "revisit_penalty": 0.0,
+        "room_prior_score": 0.0,
+        "schema_version": "smoothnav.branch_decision_table.v1",
+        "semantic_support": {
+          "anchor_ids": [
+            "S001",
+            "S002",
+            "S003",
+            "S004",
+            "S005",
+            "S006",
+            "S007"
+          ],
+          "direct_ids": [],
+          "room_ids": []
+        },
+        "source_breakdown": {
+          "heat_source": "semantic_prior_only",
+          "score_terms": {
+            "actionability": 1.0,
+            "novelty": 0.46153846153846156,
+            "planner_prior": 0.861,
+            "recent": 0.0,
+            "repeat": 0.0,
+            "target_progress": 0.0
+          },
+          "target_heatmap_score": 0.72
+        },
+        "target_value_rank": 2,
+        "target_value_score": 0.8462,
+        "target_visible": false
+      },
+      "direction_from_agent": "south",
+      "evidence_level": "anchor",
+      "id": "B6",
+      "local_indices": [
+        342,
+        343,
+        344,
+        345,
+        346,
+        347,
+        348,
+        349,
+        350,
+        351,
+        352,
+        353,
+        354,
+        355,
+        356,
+        357,
+        358,
+        359,
+        360,
+        361,
+        362,
+        363,
+        364,
+        365,
+        366,
+        367,
+        368,
+        369,
+        370,
+        371,
+        372,
+        373,
+        374,
+        375,
+        376,
+        377,
+        378,
+        379,
+        380,
+        381,
+        382,
+        383,
+        384,
+        385,
+        386,
+        387,
+        388,
+        389
+      ],
+      "map_direction_from_agent": "south",
+      "nearby_object_ids": [],
+      "nearby_room_ids": [],
+      "nearby_semantic_region_ids": [
+        "S005",
+        "S004",
+        "S001",
+        "S002"
+      ],
+      "nearby_semantic_region_labels": [
+        "chair",
+        "couch",
+        "couch",
+        "couch"
+      ],
+      "nearest_object_distance": 176.9547964876906,
+      "nearest_room_distance": 196.82479518597245,
+      "nearest_semantic_region_distance": 11.661903789690601,
+      "pixel_count": 48,
+      "representative_coord": [
+        466,
+        230
+      ],
+      "representative_local_idx": 382,
+      "score_terms_aggregate": {
+        "actionability_score_max": 1.0,
+        "base_score_max": 8.200000000000012,
+        "bias_score_max": 0.41520419391461705,
+        "distance_mean": 3.11861419627569,
+        "distance_min": 2.999999999999988,
+        "final_score_max": 15.542382496126164,
+        "novelty_score_max": 0.46153846153846156,
+        "planner_prior_score_max": 0.861,
+        "recent_penalty_max": 0.0,
+        "repeat_penalty_max": 0.0,
+        "target_progress_score_max": 0.0
+      },
+      "semantic_target_affinity": 0.8218,
+      "target_heatmap_rank": 2,
+      "target_heatmap_score": 0.72,
+      "target_value_rank": 2,
+      "target_value_score": 0.8462,
+      "target_visible": false,
+      "visit_state": "candidate"
+    }
+  ],
+  "coordinate_frame": {
+    "col_axis": "east_right_image_x",
+    "crop": {
+      "c0": 118,
+      "c1": 433,
+      "r0": 235,
+      "r1": 491
+    },
+    "map_shape": [
+      720,
+      720
+    ],
+    "name": "full_map_rc_unflipped",
+    "origin": "full_map[0,0]",
+    "row_axis": "south_down_image_y"
+  },
+  "decision_overlay": {
+    "allowed_branch_ids": [
+      "B4",
+      "B3",
+      "B6",
+      "B5",
+      "B2",
+      "B1"
+    ],
+    "dry_selected_branch_id": "B4",
+    "dry_selected_frontier": [
+      451,
+      284
+    ],
+    "final_selected_branch_id": "B4",
+    "final_selected_frontier": [
+      418,
+      237
+    ],
+    "mllm_reason": "",
+    "mllm_selected_branch_id": "B4",
+    "mllm_status": "valid",
+    "planner_prior_applied": true,
+    "prompt_hash": "9e9ec278873da91f4a36625ec49e83ac2cddb3a4",
+    "ranked_branch_ids": [
+      "B4",
+      "B3",
+      "B6",
+      "B5",
+      "B2",
+      "B1"
+    ]
+  },
+  "decision_state": {
+    "branch_decision_table": [
+      {
+        "actionability_score": 1.0,
+        "anchor_score": 0.9,
+        "candidate_count": 36,
+        "canonical_coord_rc": [
+          459,
+          162
+        ],
+        "canonical_direction": "west",
+        "dead_end_risk": 0.0,
+        "direct_score": 0.0,
+        "evidence_level": "anchor",
+        "id": "B5",
+        "info_gain_score": 1.0,
+        "revisit_penalty": 0.0,
+        "room_prior_score": 0.0,
+        "schema_version": "smoothnav.branch_decision_table.v1",
+        "semantic_support": {
+          "anchor_ids": [
+            "S001",
+            "S002",
+            "S003",
+            "S004",
+            "S005",
+            "S006",
+            "S007"
+          ],
+          "direct_ids": [],
+          "room_ids": []
+        },
+        "source_breakdown": {
+          "heat_source": "semantic_prior_only",
+          "score_terms": {
+            "actionability": 1.0,
+            "novelty": 0.7396449704142012,
+            "planner_prior": 0.705,
+            "recent": 0.0,
+            "repeat": 0.0,
+            "target_progress": 0.0
+          },
+          "target_heatmap_score": 0.9
+        },
+        "target_value_rank": 1,
+        "target_value_score": 0.963,
+        "target_visible": false
+      },
+      {
+        "actionability_score": 1.0,
+        "anchor_score": 0.8124,
+        "candidate_count": 48,
+        "canonical_coord_rc": [
+          466,
+          230
+        ],
+        "canonical_direction": "south",
+        "dead_end_risk": 0.0,
+        "direct_score": 0.0,
+        "evidence_level": "anchor",
+        "id": "B6",
+        "info_gain_score": 1.0,
+        "revisit_penalty": 0.0,
+        "room_prior_score": 0.0,
+        "schema_version": "smoothnav.branch_decision_table.v1",
+        "semantic_support": {
+          "anchor_ids": [
+            "S001",
+            "S002",
+            "S003",
+            "S004",
+            "S005",
+            "S006",
+            "S007"
+          ],
+          "direct_ids": [],
+          "room_ids": []
+        },
+        "source_breakdown": {
+          "heat_source": "semantic_prior_only",
+          "score_terms": {
+            "actionability": 1.0,
+            "novelty": 0.46153846153846156,
+            "planner_prior": 0.861,
+            "recent": 0.0,
+            "repeat": 0.0,
+            "target_progress": 0.0
+          },
+          "target_heatmap_score": 0.72
+        },
+        "target_value_rank": 2,
+        "target_value_score": 0.8462,
+        "target_visible": false
+      },
+      {
+        "actionability_score": 1.0,
+        "anchor_score": 0.72,
+        "candidate_count": 78,
+        "canonical_coord_rc": [
+          418,
+          237
+        ],
+        "canonical_direction": "east",
+        "dead_end_risk": 0.0,
+        "direct_score": 0.0,
+        "evidence_level": "anchor",
+        "id": "B4",
+        "info_gain_score": 1.0,
+        "revisit_penalty": 0.0,
+        "room_prior_score": 0.0,
+        "schema_version": "smoothnav.branch_decision_table.v1",
+        "semantic_support": {
+          "anchor_ids": [
+            "S001",
+            "S002",
+            "S003",
+            "S004",
+            "S005",
+            "S006",
+            "S007"
+          ],
+          "direct_ids": [],
+          "room_ids": []
+        },
+        "source_breakdown": {
+          "heat_source": "semantic_prior_only",
+          "score_terms": {
+            "actionability": 1.0,
+            "novelty": 0.6982248520710059,
+            "planner_prior": 1.0,
+            "recent": 0.0,
+            "repeat": 0.0,
+            "target_progress": 0.0
+          },
+          "target_heatmap_score": 0.72
+        },
+        "target_value_rank": 3,
+        "target_value_score": 0.7704,
+        "target_visible": false
+      },
+      {
+        "actionability_score": 1.0,
+        "anchor_score": 0.3868,
+        "candidate_count": 54,
+        "canonical_coord_rc": [
+          385,
+          199
+        ],
+        "canonical_direction": "north",
+        "dead_end_risk": 0.0,
+        "direct_score": 0.0,
+        "evidence_level": "anchor",
+        "id": "B3",
+        "info_gain_score": 1.0,
+        "revisit_penalty": 0.0,
+        "room_prior_score": 0.0,
+        "schema_version": "smoothnav.branch_decision_table.v1",
+        "semantic_support": {
+          "anchor_ids": [
+            "S001",
+            "S002",
+            "S003",
+            "S004",
+            "S005",
+            "S006",
+            "S007"
+          ],
+          "direct_ids": [],
+          "room_ids": []
+        },
+        "source_breakdown": {
+          "heat_source": "semantic_prior_only",
+          "score_terms": {
+            "actionability": 1.0,
+            "novelty": 0.5266272189349113,
+            "planner_prior": 0.904,
+            "recent": 0.0,
+            "repeat": 0.0,
+            "target_progress": 0.0
+          },
+          "target_heatmap_score": 0.0
+        },
+        "target_value_rank": 4,
+        "target_value_score": 0.405,
+        "target_visible": false
+      },
+      {
+        "actionability_score": 0.0,
+        "anchor_score": 0.0,
+        "candidate_count": 0,
+        "canonical_coord_rc": [
+          343,
+          352
+        ],
+        "canonical_direction": "east",
+        "dead_end_risk": 0.35,
+        "direct_score": 0.0,
+        "evidence_level": "geometry_only",
+        "id": "B2",
+        "info_gain_score": 0.4911,
+        "revisit_penalty": 0.0,
+        "room_prior_score": 0.0,
+        "schema_version": "smoothnav.branch_decision_table.v1",
+        "semantic_support": {
+          "anchor_ids": [],
+          "direct_ids": [],
+          "room_ids": []
+        },
+        "source_breakdown": {
+          "heat_source": "semantic_prior_only",
+          "score_terms": {
+            "actionability": 0.0,
+            "novelty": 0.4911242603550296,
+            "planner_prior": 0.237,
+            "recent": 0.0,
+            "repeat": 0.0,
+            "target_progress": 0.0
+          },
+          "target_heatmap_score": 0.0
+        },
+        "target_value_rank": 5,
+        "target_value_score": 0.1216,
+        "target_visible": false
+      },
+      {
+        "actionability_score": 0.0,
+        "anchor_score": 0.0,
+        "candidate_count": 0,
+        "canonical_coord_rc": [
+          313,
+          395
+        ],
+        "canonical_direction": "east",
+        "dead_end_risk": 1.0,
+        "direct_score": 0.0,
+        "evidence_level": "geometry_only",
+        "id": "B1",
+        "info_gain_score": 0.7278,
+        "revisit_penalty": 1.0,
+        "room_prior_score": 0.0,
+        "schema_version": "smoothnav.branch_decision_table.v1",
+        "semantic_support": {
+          "anchor_ids": [],
+          "direct_ids": [],
+          "room_ids": []
+        },
+        "source_breakdown": {
+          "heat_source": "semantic_prior_only",
+          "score_terms": {
+            "actionability": 0.0,
+            "novelty": 0.727810650887574,
+            "planner_prior": 0.151,
+            "recent": 1.0,
+            "repeat": 0.0,
+            "target_progress": 0.0
+          },
+          "target_heatmap_score": 0.0
+        },
+        "target_value_rank": 6,
+        "target_value_score": 0.0,
+        "target_visible": false
+      }
+    ],
+    "coordinate_contract": {
+      "agent_coord_rc": [
+        406,
+        219
+      ],
+      "branch_coord_key": "canonical_representative_coord_rc",
+      "branch_direction_key": "canonical_direction_from_agent",
+      "frame": "full_map_rc_unflipped",
+      "hidden_from_planner_prompt": [
+        "raw_coord_rc",
+        "map_current_channel_coord_rc",
+        "direction_from_agent"
+      ]
+    },
+    "geometry_state": {
+      "agent_coord_rc": [
+        406,
+        219
+      ],
+      "branch_count": 6,
+      "free_available": true,
+      "known_available": true,
+      "map_shape": [
+        720,
+        720
+      ],
+      "obstacle_available": true,
+      "trajectory_sample_count": 78
+    },
+    "quality_flags": [
+      "agent_display_coord_repaired_from_map_current_channel",
+      "raw_agent_coord_disagrees_with_map_current_channel:93.0",
+      "direct_target_semantic_channel_empty",
+      "target_heatmap_uses_prior_not_direct_target"
+    ],
+    "room_state": {
+      "localized_room_regions": [
+        {
+          "bbox_rc": [
+            264,
+            353,
+            379,
+            396
+          ],
+          "caption": "bedroom",
+          "center_rc": [
+            334,
+            376
+          ],
+          "confidence": "medium",
+          "id": "R001",
+          "object_ids": [
+            "O003",
+            "O002",
+            "O001"
+          ],
+          "source": "world_state.room_summary"
+        }
+      ],
+      "schema_version": "smoothnav.room_spatialization_state.v1",
+      "unlocalized_room_priors": [
+        {
+          "caption": "living room",
+          "confidence": "unlocalized",
+          "id": "R002",
+          "object_captions": [],
+          "source": "world_state.room_summary"
+        },
+        {
+          "caption": "bathroom",
+          "confidence": "unlocalized",
+          "id": "R003",
+          "object_captions": [],
+          "source": "world_state.room_summary"
+        },
+        {
+          "caption": "kitchen",
+          "confidence": "unlocalized",
+          "id": "R004",
+          "object_captions": [],
+          "source": "world_state.room_summary"
+        },
+        {
+          "caption": "dining room",
+          "confidence": "unlocalized",
+          "id": "R005",
+          "object_captions": [],
+          "source": "world_state.room_summary"
+        },
+        {
+          "caption": "office room",
+          "confidence": "unlocalized",
+          "id": "R006",
+          "object_captions": [],
+          "source": "world_state.room_summary"
+        },
+        {
+          "caption": "gym",
+          "confidence": "unlocalized",
+          "id": "R007",
+          "object_captions": [],
+          "source": "world_state.room_summary"
+        },
+        {
+          "caption": "lounge",
+          "confidence": "unlocalized",
+          "id": "R008",
+          "object_captions": [],
+          "source": "world_state.room_summary"
+        },
+        {
+          "caption": "laundry room",
+          "confidence": "unlocalized",
+          "id": "R009",
+          "object_captions": [],
+          "source": "world_state.room_summary"
+        }
+      ]
+    },
+    "schema_version": "smoothnav.planner_decision_state.v2",
+    "semantic_state": {
+      "active_category_count": 4,
+      "direct_target_pixel_count": 0,
+      "localized_object_count": 3,
+      "semantic_region_count": 10,
+      "target_anchor_semantic_region_count": 7
+    },
+    "target_value_state": {
+      "available": true,
+      "branch_ranking": [
+        {
+          "evidence_level": "anchor",
+          "id": "B5",
+          "target_value_score": 0.963,
+          "target_visible": false
+        },
+        {
+          "evidence_level": "anchor",
+          "id": "B6",
+          "target_value_score": 0.8462,
+          "target_visible": false
+        },
+        {
+          "evidence_level": "anchor",
+          "id": "B4",
+          "target_value_score": 0.7704,
+          "target_visible": false
+        },
+        {
+          "evidence_level": "anchor",
+          "id": "B3",
+          "target_value_score": 0.405,
+          "target_visible": false
+        },
+        {
+          "evidence_level": "geometry_only",
+          "id": "B2",
+          "target_value_score": 0.1216,
+          "target_visible": false
+        },
+        {
+          "evidence_level": "geometry_only",
+          "id": "B1",
+          "target_value_score": 0.0,
+          "target_visible": false
+        }
+      ],
+      "evidence_counts": {
+        "anchor": 4,
+        "direct": 0,
+        "geometry_only": 2,
+        "room_prior": 0
+      },
+      "heat_source": "semantic_prior_only",
+      "mean_positive": 0.1795288771390915,
+      "peak": 0.9629999995231628,
+      "positive_pixel_count": 6172,
+      "schema_version": "smoothnav.target_conditioned_value.v0",
+      "source": "target_conditioned_value_v0"
+    }
+  },
+  "episode_id": 0,
+  "objects": [
+    {
+      "caption": "windows",
+      "center_rc": [
+        369,
+        378
+      ],
+      "confidence": 0.85,
+      "display_priority": 4.0,
+      "id": "O001",
+      "localized": true,
+      "node_index": 0,
+      "num_detections": 4,
+      "source": "world_state.object_summary",
+      "target_match_reason": "no_match",
+      "target_primary_categories": [
+        "television"
+      ],
+      "target_relevance": 0.0,
+      "within_map_bounds": true
+    },
+    {
+      "caption": "mirror",
+      "center_rc": [
+        358,
+        386
+      ],
+      "confidence": 0.7,
+      "display_priority": 3.0,
+      "id": "O002",
+      "localized": true,
+      "node_index": 1,
+      "num_detections": 3,
+      "source": "world_state.object_summary",
+      "target_match_reason": "no_match",
+      "target_primary_categories": [
+        "television"
+      ],
+      "target_relevance": 0.0,
+      "within_map_bounds": true
+    },
+    {
+      "caption": "cabinet",
+      "center_rc": [
+        274,
+        363
+      ],
+      "confidence": 0.7,
+      "display_priority": 3.0,
+      "id": "O003",
+      "localized": true,
+      "node_index": 2,
+      "num_detections": 3,
+      "source": "world_state.object_summary",
+      "target_match_reason": "no_match",
+      "target_primary_categories": [
+        "television"
+      ],
+      "target_relevance": 0.0,
+      "within_map_bounds": true
+    }
+  ],
+  "planner_context": {
+    "anchor_object": "",
+    "goal_description": "",
+    "target_region": ""
+  },
+  "provenance": {
+    "frame_hash": "9ec41f5fa5642b06023368d70efe46e4c45ff8b8",
+    "frontier_branches_hash": "4fd98bda660e83282dcaa3b6f79466394cfa4d41",
+    "renderer_version": "smoothnav.semantic_bev_renderer.v1",
+    "scoring_input_hash": "14918633bf17399d1eafe23b9dd951cdc568fdd4",
+    "source": "analysis/s22b_capsule_review_20260427/raw/run/task_frame_capsules/episode_000000_step_000145_unexplored_north",
+    "world_state_hash": "e125fbf1a8b0094b75ccc37fcc2f989fbc8a436d"
+  },
+  "quality_checks": {
+    "agent_on_free_or_near_free": true,
+    "agent_on_known_or_near_known": true,
+    "agent_within_map_bounds": true,
+    "branch_count": 6,
+    "branch_evidence_counts": {
+      "anchor": 4,
+      "direct": 0,
+      "geometry_only": 2,
+      "room_prior": 0
+    },
+    "branches_with_semantic_hints": 6,
+    "localized_object_count": 3,
+    "localized_room_hypothesis_count": 1,
+    "object_count": 3,
+    "room_count": 9,
+    "semantic_region_count": 10,
+    "target_anchor_semantic_region_count": 7,
+    "unlocalized_room_prior_count": 8,
+    "warnings": [
+      "agent_display_coord_repaired_from_map_current_channel",
+      "raw_agent_coord_disagrees_with_map_current_channel:93.0",
+      "direct_target_semantic_channel_empty",
+      "target_heatmap_uses_prior_not_direct_target"
+    ]
+  },
+  "replay_outcome": {
+    "new_object_captions_next_capsule": [],
+    "new_object_count_next_capsule": 0,
+    "next_capsule_step": null
+  },
+  "room_state": {
+    "localized_room_regions": [
+      {
+        "bbox_rc": [
+          264,
+          353,
+          379,
+          396
+        ],
+        "caption": "bedroom",
+        "center_rc": [
+          334,
+          376
+        ],
+        "confidence": "medium",
+        "id": "R001",
+        "object_ids": [
+          "O003",
+          "O002",
+          "O001"
+        ],
+        "source": "world_state.room_summary"
+      }
+    ],
+    "schema_version": "smoothnav.room_spatialization_state.v1",
+    "unlocalized_room_priors": [
+      {
+        "caption": "living room",
+        "confidence": "unlocalized",
+        "id": "R002",
+        "object_captions": [],
+        "source": "world_state.room_summary"
+      },
+      {
+        "caption": "bathroom",
+        "confidence": "unlocalized",
+        "id": "R003",
+        "object_captions": [],
+        "source": "world_state.room_summary"
+      },
+      {
+        "caption": "kitchen",
+        "confidence": "unlocalized",
+        "id": "R004",
+        "object_captions": [],
+        "source": "world_state.room_summary"
+      },
+      {
+        "caption": "dining room",
+        "confidence": "unlocalized",
+        "id": "R005",
+        "object_captions": [],
+        "source": "world_state.room_summary"
+      },
+      {
+        "caption": "office room",
+        "confidence": "unlocalized",
+        "id": "R006",
+        "object_captions": [],
+        "source": "world_state.room_summary"
+      },
+      {
+        "caption": "gym",
+        "confidence": "unlocalized",
+        "id": "R007",
+        "object_captions": [],
+        "source": "world_state.room_summary"
+      },
+      {
+        "caption": "lounge",
+        "confidence": "unlocalized",
+        "id": "R008",
+        "object_captions": [],
+        "source": "world_state.room_summary"
+      },
+      {
+        "caption": "laundry room",
+        "confidence": "unlocalized",
+        "id": "R009",
+        "object_captions": [],
+        "source": "world_state.room_summary"
+      }
+    ]
+  },
+  "rooms": [
+    {
+      "bbox_rc": [
+        264,
+        353,
+        379,
+        396
+      ],
+      "caption": "bedroom",
+      "center_rc": [
+        334,
+        376
+      ],
+      "confidence": "medium",
+      "geometry_type": "member_object_hypothesis",
+      "id": "R001",
+      "localized": true,
+      "object_captions": [
+        "cabinet",
+        "mirror",
+        "windows"
+      ],
+      "object_count": 3,
+      "object_ids": [
+        "O003",
+        "O002",
+        "O001"
+      ],
+      "planner_evidence_role": "spatial_room_prior",
+      "source": "world_state.room_summary",
+      "spatialization_status": "localized_region"
+    },
+    {
+      "bbox_rc": null,
+      "caption": "living room",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R002",
+      "localized": false,
+      "object_captions": [],
+      "object_count": 0,
+      "object_ids": [],
+      "planner_evidence_role": "text_room_prior_only",
+      "source": "world_state.room_summary",
+      "spatialization_status": "unlocalized_prior"
+    },
+    {
+      "bbox_rc": null,
+      "caption": "bathroom",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R003",
+      "localized": false,
+      "object_captions": [],
+      "object_count": 0,
+      "object_ids": [],
+      "planner_evidence_role": "text_room_prior_only",
+      "source": "world_state.room_summary",
+      "spatialization_status": "unlocalized_prior"
+    },
+    {
+      "bbox_rc": null,
+      "caption": "kitchen",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R004",
+      "localized": false,
+      "object_captions": [],
+      "object_count": 0,
+      "object_ids": [],
+      "planner_evidence_role": "text_room_prior_only",
+      "source": "world_state.room_summary",
+      "spatialization_status": "unlocalized_prior"
+    },
+    {
+      "bbox_rc": null,
+      "caption": "dining room",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R005",
+      "localized": false,
+      "object_captions": [],
+      "object_count": 0,
+      "object_ids": [],
+      "planner_evidence_role": "text_room_prior_only",
+      "source": "world_state.room_summary",
+      "spatialization_status": "unlocalized_prior"
+    },
+    {
+      "bbox_rc": null,
+      "caption": "office room",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R006",
+      "localized": false,
+      "object_captions": [],
+      "object_count": 0,
+      "object_ids": [],
+      "planner_evidence_role": "text_room_prior_only",
+      "source": "world_state.room_summary",
+      "spatialization_status": "unlocalized_prior"
+    },
+    {
+      "bbox_rc": null,
+      "caption": "gym",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R007",
+      "localized": false,
+      "object_captions": [],
+      "object_count": 0,
+      "object_ids": [],
+      "planner_evidence_role": "text_room_prior_only",
+      "source": "world_state.room_summary",
+      "spatialization_status": "unlocalized_prior"
+    },
+    {
+      "bbox_rc": null,
+      "caption": "lounge",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R008",
+      "localized": false,
+      "object_captions": [],
+      "object_count": 0,
+      "object_ids": [],
+      "planner_evidence_role": "text_room_prior_only",
+      "source": "world_state.room_summary",
+      "spatialization_status": "unlocalized_prior"
+    },
+    {
+      "bbox_rc": null,
+      "caption": "laundry room",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R009",
+      "localized": false,
+      "object_captions": [],
+      "object_count": 0,
+      "object_ids": [],
+      "planner_evidence_role": "text_room_prior_only",
+      "source": "world_state.room_summary",
+      "spatialization_status": "unlocalized_prior"
+    }
+  ],
+  "schema_version": "smoothnav.semantic_bev_frame.v1",
+  "semantic_layers": {
+    "active_categories": [
+      {
+        "activation_max": 0.9930751919746399,
+        "activation_sum": 33.271387243279605,
+        "category_index": 9,
+        "channel_index": 13,
+        "is_direct_target_category": false,
+        "label": "refrigerator",
+        "pixel_count": 109
+      },
+      {
+        "activation_max": 0.9181960821151733,
+        "activation_sum": 22.640137475049414,
+        "category_index": 6,
+        "channel_index": 10,
+        "is_direct_target_category": false,
+        "label": "dining-table",
+        "pixel_count": 147
+      },
+      {
+        "activation_max": 0.6818257570266724,
+        "activation_sum": 17.65454613736074,
+        "category_index": 1,
+        "channel_index": 5,
+        "is_direct_target_category": false,
+        "label": "couch",
+        "pixel_count": 157
+      },
+      {
+        "activation_max": 0.48620182275772095,
+        "activation_sum": 4.06710718155955,
+        "category_index": 0,
+        "channel_index": 4,
+        "is_direct_target_category": false,
+        "label": "chair",
+        "pixel_count": 44
+      }
+    ],
+    "active_category_count": 4,
+    "category_names": [
+      "chair",
+      "couch",
+      "potted plant",
+      "bed",
+      "toilet",
+      "tv",
+      "dining-table",
+      "oven",
+      "sink",
+      "refrigerator",
+      "book",
+      "clock",
+      "vase",
+      "cup",
+      "bottle",
+      "other"
+    ],
+    "channel_offset": 4,
+    "direct_target_activation_sum": 0.0,
+    "direct_target_pixel_count": 0,
+    "has_semantic_channels": true,
+    "semantic_channel_count": 16,
+    "target_category_indices": [
+      5
+    ],
+    "target_category_labels": [
+      "tv"
+    ],
+    "total_semantic_pixels": 457
+  },
+  "semantic_regions": [
+    {
+      "activation_max": 0.5315473675727844,
+      "activation_sum": 7.806691172299907,
+      "bbox_rc": [
+        452,
+        232,
+        461,
+        242
+      ],
+      "category_index": 1,
+      "center_rc": [
+        456,
+        237
+      ],
+      "channel_index": 5,
+      "id": "S001",
+      "is_direct_target_category": false,
+      "is_target_anchor_category": true,
+      "label": "couch",
+      "pixel_count": 55,
+      "source": "full_map.semantic_channel",
+      "target_prior_weight": 0.9
+    },
+    {
+      "activation_max": 0.5454436540603638,
+      "activation_sum": 7.308128311226028,
+      "bbox_rc": [
+        436,
+        234,
+        450,
+        243
+      ],
+      "category_index": 1,
+      "center_rc": [
+        444,
+        239
+      ],
+      "channel_index": 5,
+      "id": "S002",
+      "is_direct_target_category": false,
+      "is_target_anchor_category": true,
+      "label": "couch",
+      "pixel_count": 78,
+      "source": "full_map.semantic_channel",
+      "target_prior_weight": 0.9
+    },
+    {
+      "activation_max": 0.6818257570266724,
+      "activation_sum": 2.3357959882123396,
+      "bbox_rc": [
+        464,
+        180,
+        466,
+        185
+      ],
+      "category_index": 1,
+      "center_rc": [
+        465,
+        182
+      ],
+      "channel_index": 5,
+      "id": "S003",
+      "is_direct_target_category": false,
+      "is_target_anchor_category": true,
+      "label": "couch",
+      "pixel_count": 15,
+      "source": "full_map.semantic_channel",
+      "target_prior_weight": 0.9
+    },
+    {
+      "activation_max": 0.05919478088617325,
+      "activation_sum": 0.2039306656224653,
+      "bbox_rc": [
+        463,
+        241,
+        465,
+        243
+      ],
+      "category_index": 1,
+      "center_rc": [
+        464,
+        242
+      ],
+      "channel_index": 5,
+      "id": "S004",
+      "is_direct_target_category": false,
+      "is_target_anchor_category": true,
+      "label": "couch",
+      "pixel_count": 9,
+      "source": "full_map.semantic_channel",
+      "target_prior_weight": 0.9
+    },
+    {
+      "activation_max": 0.48620182275772095,
+      "activation_sum": 4.06710718155955,
+      "bbox_rc": [
+        452,
+        232,
+        461,
+        240
+      ],
+      "category_index": 0,
+      "center_rc": [
+        456,
+        236
+      ],
+      "channel_index": 4,
+      "id": "S005",
+      "is_direct_target_category": false,
+      "is_target_anchor_category": true,
+      "label": "chair",
+      "pixel_count": 44,
+      "source": "full_map.semantic_channel",
+      "target_prior_weight": 0.5
+    },
+    {
+      "activation_max": 0.9181960821151733,
+      "activation_sum": 21.218571940618858,
+      "bbox_rc": [
+        426,
+        225,
+        441,
+        240
+      ],
+      "category_index": 6,
+      "center_rc": [
+        433,
+        232
+      ],
+      "channel_index": 10,
+      "id": "S006",
+      "is_direct_target_category": false,
+      "is_target_anchor_category": true,
+      "label": "dining-table",
+      "pixel_count": 116,
+      "source": "full_map.semantic_channel",
+      "target_prior_weight": 0.35
+    },
+    {
+      "activation_max": 0.20246058702468872,
+      "activation_sum": 1.421565534430556,
+      "bbox_rc": [
+        436,
+        236,
+        443,
+        242
+      ],
+      "category_index": 6,
+      "center_rc": [
+        440,
+        239
+      ],
+      "channel_index": 10,
+      "id": "S007",
+      "is_direct_target_category": false,
+      "is_target_anchor_category": true,
+      "label": "dining-table",
+      "pixel_count": 31,
+      "source": "full_map.semantic_channel",
+      "target_prior_weight": 0.35
+    },
+    {
+      "activation_max": 0.9930751919746399,
+      "activation_sum": 22.95104875821562,
+      "bbox_rc": [
+        334,
+        241,
+        346,
+        251
+      ],
+      "category_index": 9,
+      "center_rc": [
+        339,
+        246
+      ],
+      "channel_index": 13,
+      "id": "S008",
+      "is_direct_target_category": false,
+      "is_target_anchor_category": false,
+      "label": "refrigerator",
+      "pixel_count": 67,
+      "source": "full_map.semantic_channel",
+      "target_prior_weight": 0.0
+    },
+    {
+      "activation_max": 0.8227527141571045,
+      "activation_sum": 6.218483473407105,
+      "bbox_rc": [
+        395,
+        220,
+        400,
+        225
+      ],
+      "category_index": 9,
+      "center_rc": [
+        398,
+        222
+      ],
+      "channel_index": 13,
+      "id": "S009",
+      "is_direct_target_category": false,
+      "is_target_anchor_category": false,
+      "label": "refrigerator",
+      "pixel_count": 24,
+      "source": "full_map.semantic_channel",
+      "target_prior_weight": 0.0
+    },
+    {
+      "activation_max": 0.5843902826309204,
+      "activation_sum": 4.10185501165688,
+      "bbox_rc": [
+        403,
+        220,
+        407,
+        224
+      ],
+      "category_index": 9,
+      "center_rc": [
+        405,
+        222
+      ],
+      "channel_index": 13,
+      "id": "S010",
+      "is_direct_target_category": false,
+      "is_target_anchor_category": false,
+      "label": "refrigerator",
+      "pixel_count": 18,
+      "source": "full_map.semantic_channel",
+      "target_prior_weight": 0.0
+    }
+  ],
+  "step_idx": 145,
+  "target_query_heatmap": {
+    "branch_ranking": [
+      {
+        "id": "B5",
+        "semantic_target_affinity": 0.9,
+        "target_heatmap_score": 0.9
+      },
+      {
+        "id": "B6",
+        "semantic_target_affinity": 0.8218,
+        "target_heatmap_score": 0.72
+      },
+      {
+        "id": "B4",
+        "semantic_target_affinity": 0.7324,
+        "target_heatmap_score": 0.72
+      },
+      {
+        "id": "B3",
+        "semantic_target_affinity": 0.226,
+        "target_heatmap_score": 0.0
+      },
+      {
+        "id": "B1",
+        "semantic_target_affinity": 0.0875,
+        "target_heatmap_score": 0.0
+      },
+      {
+        "id": "B2",
+        "semantic_target_affinity": 0.0875,
+        "target_heatmap_score": 0.0
+      }
+    ],
+    "contributions": [
+      {
+        "activation_sum": 4.067107677459717,
+        "category_index": 0,
+        "channel_index": 4,
+        "label": "chair",
+        "pixel_count": 44,
+        "source": "semantic_cooccurrence_prior_channel",
+        "weight": 0.5
+      },
+      {
+        "activation_sum": 17.654544830322266,
+        "category_index": 1,
+        "channel_index": 5,
+        "label": "couch",
+        "pixel_count": 157,
+        "source": "semantic_cooccurrence_prior_channel",
+        "weight": 0.9
+      },
+      {
+        "activation_sum": 22.64013671875,
+        "category_index": 6,
+        "channel_index": 10,
+        "label": "dining-table",
+        "pixel_count": 147,
+        "source": "semantic_cooccurrence_prior_channel",
+        "weight": 0.35
+      }
+    ],
+    "direct_target_pixel_count": 0,
+    "graph_direct_object_count": 0,
+    "graph_prior_object_count": 0,
+    "peak": 0.8999999761581421,
+    "positive_pixel_count": 289,
+    "prior_pixel_count": 348,
+    "source": "semantic_prior_only",
+    "target_category_indices": [
+      5
+    ],
+    "target_category_labels": [
+      "tv"
+    ]
+  },
+  "target_value_state": {
+    "available": true,
+    "branch_ranking": [
+      {
+        "evidence_level": "anchor",
+        "id": "B5",
+        "target_value_score": 0.963,
+        "target_visible": false
+      },
+      {
+        "evidence_level": "anchor",
+        "id": "B6",
+        "target_value_score": 0.8462,
+        "target_visible": false
+      },
+      {
+        "evidence_level": "anchor",
+        "id": "B4",
+        "target_value_score": 0.7704,
+        "target_visible": false
+      },
+      {
+        "evidence_level": "anchor",
+        "id": "B3",
+        "target_value_score": 0.405,
+        "target_visible": false
+      },
+      {
+        "evidence_level": "geometry_only",
+        "id": "B2",
+        "target_value_score": 0.1216,
+        "target_visible": false
+      },
+      {
+        "evidence_level": "geometry_only",
+        "id": "B1",
+        "target_value_score": 0.0,
+        "target_visible": false
+      }
+    ],
+    "evidence_counts": {
+      "anchor": 4,
+      "direct": 0,
+      "geometry_only": 2,
+      "room_prior": 0
+    },
+    "heat_source": "semantic_prior_only",
+    "mean_positive": 0.1795288771390915,
+    "peak": 0.9629999995231628,
+    "positive_pixel_count": 6172,
+    "schema_version": "smoothnav.target_conditioned_value.v0",
+    "source": "target_conditioned_value_v0"
+  },
+  "trajectory": [
+    [
+      301,
+      285
+    ],
+    [
+      305,
+      286
+    ],
+    [
+      308,
+      286
+    ],
+    [
+      311,
+      280
+    ],
+    [
+      313,
+      283
+    ],
+    [
+      315,
+      282
+    ],
+    [
+      317,
+      283
+    ],
+    [
+      319,
+      284
+    ],
+    [
+      321,
+      283
+    ],
+    [
+      323,
+      282
+    ],
+    [
+      325,
+      283
+    ],
+    [
+      327,
+      280
+    ],
+    [
+      329,
+      271
+    ],
+    [
+      330,
+      281
+    ],
+    [
+      331,
+      281
+    ],
+    [
+      332,
+      282
+    ],
+    [
+      333,
+      272
+    ],
+    [
+      333,
+      362
+    ],
+    [
+      334,
+      349
+    ],
+    [
+      335,
+      338
+    ],
+    [
+      336,
+      266
+    ],
+    [
+      336,
+      346
+    ],
+    [
+      337,
+      278
+    ],
+    [
+      337,
+      361
+    ],
+    [
+      338,
+      336
+    ],
+    [
+      338,
+      368
+    ],
+    [
+      339,
+      350
+    ],
+    [
+      340,
+      279
+    ],
+    [
+      340,
+      366
+    ],
+    [
+      341,
+      332
+    ],
+    [
+      341,
+      372
+    ],
+    [
+      342,
+      352
+    ],
+    [
+      343,
+      277
+    ],
+    [
+      343,
+      368
+    ],
+    [
+      344,
+      330
+    ],
+    [
+      345,
+      275
+    ],
+    [
+      345,
+      358
+    ],
+    [
+      346,
+      275
+    ],
+    [
+      346,
+      361
+    ],
+    [
+      347,
+      278
+    ],
+    [
+      347,
+      363
+    ],
+    [
+      348,
+      277
+    ],
+    [
+      348,
+      362
+    ],
+    [
+      349,
+      276
+    ],
+    [
+      349,
+      361
+    ],
+    [
+      350,
+      277
+    ],
+    [
+      351,
+      257
+    ],
+    [
+      351,
+      365
+    ],
+    [
+      352,
+      310
+    ],
+    [
+      353,
+      275
+    ],
+    [
+      354,
+      248
+    ],
+    [
+      354,
+      314
+    ],
+    [
+      355,
+      277
+    ],
+    [
+      355,
+      298
+    ],
+    [
+      356,
+      250
+    ],
+    [
+      356,
+      290
+    ],
+    [
+      356,
+      311
+    ],
+    [
+      357,
+      280
+    ],
+    [
+      357,
+      301
+    ],
+    [
+      358,
+      277
+    ],
+    [
+      358,
+      298
+    ],
+    [
+      359,
+      274
+    ],
+    [
+      359,
+      295
+    ],
+    [
+      360,
+      250
+    ],
+    [
+      362,
+      358
+    ],
+    [
+      366,
+      242
+    ],
+    [
+      370,
+      238
+    ],
+    [
+      373,
+      241
+    ],
+    [
+      377,
+      235
+    ],
+    [
+      379,
+      236
+    ],
+    [
+      381,
+      234
+    ],
+    [
+      384,
+      224
+    ],
+    [
+      386,
+      227
+    ],
+    [
+      390,
+      222
+    ],
+    [
+      394,
+      218
+    ],
+    [
+      398,
+      216
+    ],
+    [
+      402,
+      218
+    ],
+    [
+      406,
+      221
+    ]
+  ],
+  "trajectory_summary": {
+    "current_agent_pixel_count": 25,
+    "past_agent_pixel_count": 1628,
+    "sample_count": 78,
+    "source": "full_map.channel_3_past_agent"
+  }
+}

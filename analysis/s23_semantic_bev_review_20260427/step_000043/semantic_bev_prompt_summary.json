@@ -1,0 +1,166 @@
+{
+  "branch_semantic_hints": [
+    {
+      "decision_roles": [
+        "mllm",
+        "final"
+      ],
+      "direction_from_agent": "north",
+      "id": "B1",
+      "nearby_object_ids": [
+        "O002",
+        "O001"
+      ],
+      "nearby_room_ids": [
+        "R001"
+      ],
+      "semantic_target_affinity": 0.25,
+      "visit_state": "selected"
+    },
+    {
+      "decision_roles": [
+        "dry"
+      ],
+      "direction_from_agent": "west",
+      "id": "B2",
+      "nearby_object_ids": [],
+      "nearby_room_ids": [
+        "R001"
+      ],
+      "semantic_target_affinity": 0.1,
+      "visit_state": "selected"
+    }
+  ],
+  "coordinate_frame": {
+    "col_axis": "east_right_image_x",
+    "crop": {
+      "c0": 227,
+      "c1": 433,
+      "r0": 236,
+      "r1": 454
+    },
+    "map_shape": [
+      720,
+      720
+    ],
+    "name": "full_map_rc_unflipped",
+    "origin": "full_map[0,0]",
+    "row_axis": "south_down_image_y"
+  },
+  "decision_overlay": {
+    "allowed_branch_ids": [
+      "B2",
+      "B1"
+    ],
+    "dry_selected_branch_id": "B2",
+    "dry_selected_frontier": [
+      357,
+      260
+    ],
+    "final_selected_branch_id": "B1",
+    "final_selected_frontier": [
+      287,
+      368
+    ],
+    "mllm_reason": "",
+    "mllm_selected_branch_id": "B1",
+    "mllm_status": "valid",
+    "planner_prior_applied": true,
+    "prompt_hash": "d28df4abaaae2241a2cc6ff905a966dad4c51896",
+    "ranked_branch_ids": [
+      "B1",
+      "B2"
+    ]
+  },
+  "object_labels": [
+    {
+      "caption": "windows",
+      "center_rc": [
+        369,
+        378
+      ],
+      "id": "O001",
+      "num_detections": 4,
+      "target_relevance": 0.0
+    },
+    {
+      "caption": "mirror",
+      "center_rc": [
+        358,
+        386
+      ],
+      "id": "O002",
+      "num_detections": 3,
+      "target_relevance": 0.0
+    }
+  ],
+  "quality_checks": {
+    "agent_on_free_or_near_free": true,
+    "agent_on_known_or_near_known": true,
+    "agent_within_map_bounds": true,
+    "branch_count": 2,
+    "branches_with_semantic_hints": 2,
+    "localized_object_count": 2,
+    "localized_room_hypothesis_count": 1,
+    "object_count": 2,
+    "room_count": 9,
+    "warnings": []
+  },
+  "room_hypotheses": [
+    {
+      "caption": "bedroom",
+      "center_rc": [
+        364,
+        382
+      ],
+      "confidence": "medium",
+      "geometry_type": "member_object_hypothesis",
+      "id": "R001",
+      "object_ids": [
+        "O002",
+        "O001"
+      ]
+    },
+    {
+      "caption": "living room",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R002",
+      "object_ids": []
+    },
+    {
+      "caption": "bathroom",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R003",
+      "object_ids": []
+    },
+    {
+      "caption": "kitchen",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R004",
+      "object_ids": []
+    },
+    {
+      "caption": "dining room",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R005",
+      "object_ids": []
+    },
+    {
+      "caption": "office room",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R006",
+      "object_ids": []
+    }
+  ],
+  "schema_version": "smoothnav.semantic_bev_prompt_summary.v1"
+}

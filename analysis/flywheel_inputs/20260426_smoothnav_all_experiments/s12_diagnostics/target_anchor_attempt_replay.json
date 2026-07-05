@@ -1,0 +1,428 @@
+{
+  "attempts": [
+    {
+      "attempt_id": 1,
+      "final_summary": {
+        "active": true,
+        "attempt_id": 1,
+        "best_distance": 296.108088373148,
+        "last_distance": 296.108088373148,
+        "last_improvement_step": 599,
+        "last_trigger": "target_anchor_local_map_refresh",
+        "last_update_step": 599,
+        "stall_updates": 0,
+        "target_region": "unexplored target:tv",
+        "update_count": 2
+      },
+      "stall_replan_steps": [],
+      "transition_count": 2,
+      "transitions": [
+        {
+          "distance": 331.21745123106064,
+          "post_summary": {
+            "active": true,
+            "attempt_id": 1,
+            "best_distance": 331.21745123106064,
+            "last_distance": 331.21745123106064,
+            "last_improvement_step": 564,
+            "last_trigger": "target_candidate_detected",
+            "last_update_step": 564,
+            "stall_updates": 0,
+            "target_region": "unexplored target:tv",
+            "update_count": 1
+          },
+          "pre_summary": {
+            "active": false,
+            "attempt_id": 0,
+            "best_distance": null,
+            "last_distance": null,
+            "last_improvement_step": null,
+            "last_trigger": "",
+            "last_update_step": null,
+            "stall_updates": 0,
+            "target_region": "",
+            "update_count": 0
+          },
+          "step_idx": 564,
+          "trigger": "target_candidate_detected"
+        },
+        {
+          "distance": 296.108088373148,
+          "post_summary": {
+            "active": true,
+            "attempt_id": 1,
+            "best_distance": 296.108088373148,
+            "last_distance": 296.108088373148,
+            "last_improvement_step": 599,
+            "last_trigger": "target_anchor_local_map_refresh",
+            "last_update_step": 599,
+            "stall_updates": 0,
+            "target_region": "unexplored target:tv",
+            "update_count": 2
+          },
+          "pre_summary": {
+            "active": true,
+            "attempt_id": 1,
+            "best_distance": 331.21745123106064,
+            "last_distance": 331.21745123106064,
+            "last_improvement_step": 564,
+            "last_trigger": "target_candidate_detected",
+            "last_update_step": 564,
+            "stall_updates": 0,
+            "target_region": "unexplored target:tv",
+            "update_count": 1
+          },
+          "step_idx": 599,
+          "trigger": "target_anchor_local_map_refresh"
+        }
+      ],
+      "window": [
+        564,
+        609
+      ]
+    },
+    {
+      "attempt_id": 2,
+      "final_summary": {
+        "active": true,
+        "attempt_id": 1,
+        "best_distance": 265.88719412562915,
+        "last_distance": 265.1735280905694,
+        "last_improvement_step": 824,
+        "last_trigger": "target_anchor_local_map_refresh",
+        "last_update_step": 919,
+        "stall_updates": 3,
+        "target_region": "unexplored target:tv",
+        "update_count": 11
+      },
+      "stall_replan_steps": [],
+      "transition_count": 11,
+      "transitions": [
+        {
+          "distance": 361.0013850388943,
+          "post_summary": {
+            "active": true,
+            "attempt_id": 1,
+            "best_distance": 361.0013850388943,
+            "last_distance": 361.0013850388943,
+            "last_improvement_step": 632,
+            "last_trigger": "frontier_reached",
+            "last_update_step": 632,
+            "stall_updates": 0,
+            "target_region": "unexplored target:tv",
+            "update_count": 1
+          },
+          "pre_summary": {
+            "active": false,
+            "attempt_id": 0,
+            "best_distance": null,
+            "last_distance": null,
+            "last_improvement_step": null,
+            "last_trigger": "",
+            "last_update_step": null,
+            "stall_updates": 0,
+            "target_region": "",
+            "update_count": 0
+          },
+          "step_idx": 632,
+          "trigger": "frontier_reached"
+        },
+        {
+          "distance": 365.05889935735024,
+          "post_summary": {
+            "active": true,
+            "attempt_id": 1,
+            "best_distance": 361.0013850388943,
+            "last_distance": 365.05889935735024,
+            "last_improvement_step": 632,
+            "last_trigger": "target_anchor_local_map_refresh",
+            "last_update_step": 639,
+            "stall_updates": 1,
+            "target_region": "unexplored target:tv",
+            "update_count": 2
+          },
+          "pre_summary": {
+            "active": true,
+            "attempt_id": 1,
+            "best_distance": 361.0013850388943,
+            "last_distance": 361.0013850388943,
+            "last_improvement_step": 632,
+            "last_trigger": "frontier_reached",
+            "last_update_step": 632,
+            "stall_updates": 0,
+            "target_region": "unexplored target:tv",
+            "update_count": 1
+          },
+          "step_idx": 639,
+          "trigger": "target_anchor_local_map_refresh"
+        },
+        {
+          "distance": 272.47018185482244,
+          "post_summary": {
+            "active": true,
+            "attempt_id": 1,
+            "best_distance": 272.47018185482244,
+            "last_distance": 272.47018185482244,
+            "last_improvement_step": 674,
+            "last_trigger": "frontier_reached",
+            "last_update_step": 674,
+            "stall_updates": 0,
+            "target_region": "unexplored target:tv",
+            "update_count": 3
+          },
+          "pre_summary": {
+            "active": true,
+            "attempt_id": 1,
+            "best_distance": 361.0013850388943,
+            "last_distance": 365.05889935735024,
+            "last_improvement_step": 632,
+            "last_trigger": "target_anchor_local_map_refresh",
+            "last_update_step": 639,
+            "stall_updates": 1,
+            "target_region": "unexplored target:tv",
+            "update_count": 2
+          },
+          "step_idx": 674,
+          "trigger": "frontier_reached"
+        },
+        {
+          "distance": 270.9464891819047,
+          "post_summary": {
+            "active": true,
+            "attempt_id": 1,
+            "best_distance": 270.9464891819047,
+            "last_distance": 270.9464891819047,
+            "last_improvement_step": 679,
+            "last_trigger": "target_anchor_local_map_refresh",
+            "last_update_step": 679,
+            "stall_updates": 0,
+            "target_region": "unexplored target:tv",
+            "update_count": 4
+          },
+          "pre_summary": {
+            "active": true,
+            "attempt_id": 1,
+            "best_distance": 272.47018185482244,
+            "last_distance": 272.47018185482244,
+            "last_improvement_step": 674,
+            "last_trigger": "frontier_reached",
+            "last_update_step": 674,
+            "stall_updates": 0,
+            "target_region": "unexplored target:tv",
+            "update_count": 3
+          },
+          "step_idx": 679,
+          "trigger": "target_anchor_local_map_refresh"
+        },
+        {
+          "distance": 275.8042784294689,
+          "post_summary": {
+            "active": true,
+            "attempt_id": 1,
+            "best_distance": 270.9464891819047,
+            "last_distance": 275.8042784294689,
+            "last_improvement_step": 679,
+            "last_trigger": "target_anchor_local_map_refresh",
+            "last_update_step": 719,
+            "stall_updates": 1,
+            "target_region": "unexplored target:tv",
+            "update_count": 5
+          },
+          "pre_summary": {
+            "active": true,
+            "attempt_id": 1,
+            "best_distance": 270.9464891819047,
+            "last_distance": 270.9464891819047,
+            "last_improvement_step": 679,
+            "last_trigger": "target_anchor_local_map_refresh",
+            "last_update_step": 679,
+            "stall_updates": 0,
+            "target_region": "unexplored target:tv",
+            "update_count": 4
+          },
+          "step_idx": 719,
+          "trigger": "target_anchor_local_map_refresh"
+        },
+        {
+          "distance": 275.10906927980403,
+          "post_summary": {
+            "active": true,
+            "attempt_id": 1,
+            "best_distance": 270.9464891819047,
+            "last_distance": 275.10906927980403,
+            "last_improvement_step": 679,
+            "last_trigger": "target_anchor_local_map_refresh",
+            "last_update_step": 759,
+            "stall_updates": 2,
+            "target_region": "unexplored target:tv",
+            "update_count": 6
+          },
+          "pre_summary": {
+            "active": true,
+            "attempt_id": 1,
+            "best_distance": 270.9464891819047,
+            "last_distance": 275.8042784294689,
+            "last_improvement_step": 679,
+            "last_trigger": "target_anchor_local_map_refresh",
+            "last_update_step": 719,
+            "stall_updates": 1,
+            "target_region": "unexplored target:tv",
+            "update_count": 5
+          },
+          "step_idx": 759,
+          "trigger": "target_anchor_local_map_refresh"
+        },
+        {
+          "distance": 273.80467490530543,
+          "post_summary": {
+            "active": true,
+            "attempt_id": 1,
+            "best_distance": 270.9464891819047,
+            "last_distance": 273.80467490530543,
+            "last_improvement_step": 679,
+            "last_trigger": "target_anchor_local_map_refresh",
+            "last_update_step": 799,
+            "stall_updates": 3,
+            "target_region": "unexplored target:tv",
+            "update_count": 7
+          },
+          "pre_summary": {
+            "active": true,
+            "attempt_id": 1,
+            "best_distance": 270.9464891819047,
+            "last_distance": 275.10906927980403,
+            "last_improvement_step": 679,
+            "last_trigger": "target_anchor_local_map_refresh",
+            "last_update_step": 759,
+            "stall_updates": 2,
+            "target_region": "unexplored target:tv",
+            "update_count": 6
+          },
+          "step_idx": 799,
+          "trigger": "target_anchor_local_map_refresh"
+        },
+        {
+          "distance": 265.88719412562915,
+          "post_summary": {
+            "active": true,
+            "attempt_id": 1,
+            "best_distance": 265.88719412562915,
+            "last_distance": 265.88719412562915,
+            "last_improvement_step": 824,
+            "last_trigger": "target_candidate_detected",
+            "last_update_step": 824,
+            "stall_updates": 0,
+            "target_region": "unexplored target:tv",
+            "update_count": 8
+          },
+          "pre_summary": {
+            "active": true,
+            "attempt_id": 1,
+            "best_distance": 270.9464891819047,
+            "last_distance": 273.80467490530543,
+            "last_improvement_step": 679,
+            "last_trigger": "target_anchor_local_map_refresh",
+            "last_update_step": 799,
+            "stall_updates": 3,
+            "target_region": "unexplored target:tv",
+            "update_count": 7
+          },
+          "step_idx": 824,
+          "trigger": "target_candidate_detected"
+        },
+        {
+          "distance": 268.7042984397533,
+          "post_summary": {
+            "active": true,
+            "attempt_id": 1,
+            "best_distance": 265.88719412562915,
+            "last_distance": 268.7042984397533,
+            "last_improvement_step": 824,
+            "last_trigger": "target_anchor_local_map_refresh",
+            "last_update_step": 839,
+            "stall_updates": 1,
+            "target_region": "unexplored target:tv",
+            "update_count": 9
+          },
+          "pre_summary": {
+            "active": true,
+            "attempt_id": 1,
+            "best_distance": 265.88719412562915,
+            "last_distance": 265.88719412562915,
+            "last_improvement_step": 824,
+            "last_trigger": "target_candidate_detected",
+            "last_update_step": 824,
+            "stall_updates": 0,
+            "target_region": "unexplored target:tv",
+            "update_count": 8
+          },
+          "step_idx": 839,
+          "trigger": "target_anchor_local_map_refresh"
+        },
+        {
+          "distance": 268.00186566514793,
+          "post_summary": {
+            "active": true,
+            "attempt_id": 1,
+            "best_distance": 265.88719412562915,
+            "last_distance": 268.00186566514793,
+            "last_improvement_step": 824,
+            "last_trigger": "target_anchor_local_map_refresh",
+            "last_update_step": 879,
+            "stall_updates": 2,
+            "target_region": "unexplored target:tv",
+            "update_count": 10
+          },
+          "pre_summary": {
+            "active": true,
+            "attempt_id": 1,
+            "best_distance": 265.88719412562915,
+            "last_distance": 268.7042984397533,
+            "last_improvement_step": 824,
+            "last_trigger": "target_anchor_local_map_refresh",
+            "last_update_step": 839,
+            "stall_updates": 1,
+            "target_region": "unexplored target:tv",
+            "update_count": 9
+          },
+          "step_idx": 879,
+          "trigger": "target_anchor_local_map_refresh"
+        },
+        {
+          "distance": 265.1735280905694,
+          "post_summary": {
+            "active": true,
+            "attempt_id": 1,
+            "best_distance": 265.88719412562915,
+            "last_distance": 265.1735280905694,
+            "last_improvement_step": 824,
+            "last_trigger": "target_anchor_local_map_refresh",
+            "last_update_step": 919,
+            "stall_updates": 3,
+            "target_region": "unexplored target:tv",
+            "update_count": 11
+          },
+          "pre_summary": {
+            "active": true,
+            "attempt_id": 1,
+            "best_distance": 265.88719412562915,
+            "last_distance": 268.00186566514793,
+            "last_improvement_step": 824,
+            "last_trigger": "target_anchor_local_map_refresh",
+            "last_update_step": 879,
+            "stall_updates": 2,
+            "target_region": "unexplored target:tv",
+            "update_count": 10
+          },
+          "step_idx": 919,
+          "trigger": "target_anchor_local_map_refresh"
+        }
+      ],
+      "window": [
+        632,
+        934
+      ]
+    }
+  ],
+  "source_capture": "results/phase2_revalidation/s12_temperature0_target_anchor_20260424/smoothnav-full/20260424/smoothnav_text_112731_317b2c0e/target_branch_capture.json"
+}

@@ -1,0 +1,30 @@
+[
+  {
+    "episode": 0,
+    "habitat_episode_no": 228,
+    "success": 0.0,
+    "spl": 0.0,
+    "terminal_outcome": "FAILURE_NO_PROGRESS_TIMEOUT",
+    "terminal_decision": {
+      "outcome": "FAILURE_NO_PROGRESS_TIMEOUT",
+      "termination_confidence": 0.5,
+      "reason": "environment_done_without_success",
+      "stop_veto_source": null,
+      "final_verify_timeout": 0,
+      "evidence_ids": [],
+      "is_terminal": true
+    },
+    "high_level_calls": 18,
+    "low_level_calls": 2,
+    "sigma_v": 0.12458948516255697,
+    "sigma_omega": 0.17665450692902238,
+    "jerk": 0.1411695898052864,
+    "pause_count": 132,
+    "pause_duration_ratio": 0.46359743040685225,
+    "direction_reversals": 6,
+    "smoothness_score": 0.728952112391835,
+    "total_steps": 935,
+    "llm_call_count": 39,
+    "llm_call_ratio": 0.04171122994652406
+  }
+]

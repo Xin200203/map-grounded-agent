@@ -1,0 +1,195 @@
+You are SmoothNav's BEV frontier-branch planner.
+You will see an annotated bird's-eye-view map image. The robot is marked A; frontier branches are labeled B1, B2, ... .
+
+TARGET DESCRIPTION:
+The screen of the television in this image is gray and has a silver frame. This image has a blue and white abstract painting hanging on the wall next to the sofa. On the right side of the picture, there is a gray sofa with a white pillow placed on it. Below the sofa is a brown coffee table with a white dining table top on top. In front of the sofa is a white carpet with black patterns. The ceiling above is white, and there are two small round light bulbs in the upper right corner.
+
+CURRENT TEXT STRATEGY:
+- target_region: unexplored north
+- anchor_object: 
+- trigger: frontier_reached
+- step_idx: 145
+- already_explored: ["bedroom"]
+
+SCENE GRAPH TEXT:
+ROOMS AND OBJECTS:
+  bedroom: cabinet, mirror, windows
+SPATIAL RELATIONSHIPS:
+  mirror next to windows
+  cabinet above mirror
+  cabinet next to windows
+
+BEV BRANCH IDS YOU MAY CHOOSE:
+["B4", "B3", "B6", "B5", "B2", "B1"]
+
+BRANCH SUMMARY:
+[
+  {
+    "id": "B4",
+    "direction_from_agent": "south",
+    "centroid": [
+      442.0897435897436,
+      268.1025641025641
+    ],
+    "representative_coord": [
+      451,
+      284
+    ],
+    "candidate_point_count": 24,
+    "pixel_count": 78,
+    "score_terms": {
+      "distance_mean": 3.1844614639039306,
+      "base_score_max": 9.967110035959738,
+      "bias_score_max": 0.6802586346521807,
+      "novelty_score_max": 0.6982248520710059,
+      "actionability_score_max": 1.0,
+      "target_progress_score_max": 0.0,
+      "repeat_penalty_max": 0.0,
+      "recent_penalty_max": 0.0,
+      "final_score_max": 14.05589489157585
+    }
+  },
+  {
+    "id": "B3",
+    "direction_from_agent": "south",
+    "centroid": [
+      387.72222222222223,
+      174.5
+    ],
+    "representative_coord": [
+      385,
+      199
+    ],
+    "candidate_point_count": 0,
+    "pixel_count": 54,
+    "score_terms": {
+      "distance_mean": 2.4512771171365353,
+      "base_score_max": 9.786319073047375,
+      "bias_score_max": 0.15899104874837777,
+      "novelty_score_max": 0.5266272189349113,
+      "actionability_score_max": 1.0,
+      "target_progress_score_max": 0.0,
+      "repeat_penalty_max": 0.0,
+      "recent_penalty_max": 0.0,
+      "final_score_max": 12.712978312870721
+    }
+  },
+  {
+    "id": "B6",
+    "direction_from_agent": "south",
+    "centroid": [
+      466.0,
+      213.5
+    ],
+    "representative_coord": [
+      466,
+      230
+    ],
+    "candidate_point_count": 0,
+    "pixel_count": 48,
+    "score_terms": {
+      "distance_mean": 3.11861419627569,
+      "base_score_max": 8.200000000000012,
+      "bias_score_max": 0.41520419391461705,
+      "novelty_score_max": 0.46153846153846156,
+      "actionability_score_max": 1.0,
+      "target_progress_score_max": 0.0,
+      "repeat_penalty_max": 0.0,
+      "recent_penalty_max": 0.0,
+      "final_score_max": 12.098382496126165
+    }
+  },
+  {
+    "id": "B5",
+    "direction_from_agent": "south",
+    "centroid": [
+      457.19444444444446,
+      157.52777777777777
+    ],
+    "representative_coord": [
+      459,
+      162
+    ],
+    "candidate_point_count": 0,
+    "pixel_count": 36,
+    "score_terms": {
+      "distance_mean": 4.06899750553299,
+      "base_score_max": 7.590984972844157,
+      "bias_score_max": 0.03809198803119229,
+      "novelty_score_max": 0.7396449704142012,
+      "actionability_score_max": 1.0,
+      "target_progress_score_max": 0.0,
+      "repeat_penalty_max": 0.0,
+      "recent_penalty_max": 0.0,
+      "final_score_max": 9.905887011920123
+    }
+  },
+  {
+    "id": "B2",
+    "direction_from_agent": "east",
+    "centroid": [
+      343.85714285714283,
+      360.25
+    ],
+    "representative_coord": [
+      343,
+      352
+    ],
+    "candidate_point_count": 0,
+    "pixel_count": 56,
+    "score_terms": {
+      "distance_mean": 8.720212939583673,
+      "base_score_max": 2.9196015574624594,
+      "bias_score_max": 0.0,
+      "novelty_score_max": 0.4911242603550296,
+      "actionability_score_max": 0.0,
+      "target_progress_score_max": 0.0,
+      "repeat_penalty_max": 0.0,
+      "recent_penalty_max": 0.0,
+      "final_score_max": 3.3336984090309207
+    }
+  },
+  {
+    "id": "B1",
+    "direction_from_agent": "east",
+    "centroid": [
+      289.0569105691057,
+      385.5853658536585
+    ],
+    "representative_coord": [
+      313,
+      395
+    ],
+    "candidate_point_count": 0,
+    "pixel_count": 123,
+    "score_terms": {
+      "distance_mean": 13.745326512974641,
+      "base_score_max": 0.0,
+      "bias_score_max": 0.4013350097634396,
+      "novelty_score_max": 0.727810650887574,
+      "actionability_score_max": 0.0,
+      "target_progress_score_max": 0.0,
+      "repeat_penalty_max": 0.0,
+      "recent_penalty_max": 1.0,
+      "final_score_max": 2.1284443525751584
+    }
+  }
+]
+
+Task:
+1. If the target or a strong target anchor is visible/known, choose the branch that best approaches or verifies it.
+2. If the target is not visible, infer the most promising exploration branch from the target semantics, room commonsense, current scene graph, and BEV topology.
+3. Choose a branch ID, not a raw coordinate. SmoothNav will convert the branch into executable frontier points.
+4. Prefer actionable candidate branches and avoid repeating branches that look already exhausted.
+
+Output JSON only with exactly this schema shape:
+{
+  "schema_version": "smoothnav.mllm_frontier_plan.v1",
+  "decision_type": "explore_frontier" or "target_anchor" or "hold_or_recover",
+  "target_visible": true or false,
+  "selected_branch_id": "B#",
+  "ranked_branches": [
+    {"id": "B#", "score": 0.0 to 1.0, "rationale": "short reason"}
+  ],
+  "semantic_search_intent": "short sentence"
+}

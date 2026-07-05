@@ -1,0 +1,1439 @@
+{
+  "schema_version": "smoothnav.s22b_capsule_branch_review.v1",
+  "source_run": "results/phase2_revalidation/s22b_bev_mllm_union_ep228_20260427/smoothnav-full/20260427/smoothnav_text_194639_3b40f51d",
+  "suite_summary": {
+    "episodes_requested": [
+      228
+    ],
+    "profiles": {
+      "smoothnav-full": {
+        "SPL": 0.0,
+        "SR": 0.0,
+        "avg_high_level_calls": 7.0,
+        "avg_low_level_calls": 0.0,
+        "episodes": [
+          228
+        ],
+        "executor_override_ratio": 0.0,
+        "goal_update_delay_steps": 3.0,
+        "grounding_noop_reason_counts": {},
+        "missing_epoch_trace_steps": 0,
+        "num_runs": 1,
+        "pending_created_count": 4,
+        "pending_promoted_count": 4,
+        "run_dirs": [
+          "results/phase2_revalidation/s22b_bev_mllm_union_ep228_20260427/smoothnav-full/20260427/smoothnav_text_194639_3b40f51d"
+        ],
+        "strategy_switch_count": 4.0,
+        "terminal_outcome_counts": {
+          "FAILURE_NO_PROGRESS_TIMEOUT": 1
+        }
+      }
+    },
+    "profiles_requested": [
+      "smoothnav-full"
+    ],
+    "results_root": "results/phase2_revalidation/s22b_bev_mllm_union_ep228_20260427"
+  },
+  "run_summary_subset": {
+    "SR": 0.0,
+    "SPL": 0.0,
+    "terminal_outcome_counts": {
+      "FAILURE_NO_PROGRESS_TIMEOUT": 1
+    },
+    "avg_high_level_calls": 7.0,
+    "grounding_attempt_count": 9,
+    "executor_override_ratio": 0.0
+  },
+  "target_steps": [
+    31,
+    43,
+    98,
+    145
+  ],
+  "rows": [
+    {
+      "step": 31,
+      "capsule_dir": "raw/run/task_frame_capsules/episode_000000_step_000031_unexplored_north",
+      "bev_image": "bev_images/step_000031_bev_annotated_branches.png",
+      "bev_image_enriched": "bev_images_enriched/step_000031_bev_enriched.png",
+      "trigger": "frontier_reached",
+      "strategy": {
+        "target_region": "unexplored north",
+        "anchor_object": "",
+        "bias_position": [
+          269,
+          374
+        ]
+      },
+      "dry_branch": "B2",
+      "dry_frontier": [
+        346,
+        347
+      ],
+      "mllm_status": "invalid",
+      "mllm_applied": false,
+      "mllm_branch": "",
+      "mllm_raw_selected_branch": "B2",
+      "mllm_ranked": [],
+      "mllm_raw_response": "{\n  \"schema_version\": \"smoothnav.mllm_frontier_plan.v1\",\n  \"decision_type\": \"explore_frontier\",\n  \"target_visible\": false,\n  \"selected_branch_id\": \"B2\",\n  \"ranked_branches\": [\n    {\n      \"id\": \"B2\",\n      \"score\": 1.0,\n      \"rationale\": \"Closest northern frontier, highest overall score, perfectly aligns with 'unexplored north'26 strategy.\"\n    },\n    {\n      \"id\": \"B3\",\n      \"score\": 0.644,\n      \"rationale\": \"West direction frontier,04 lower score and not aligned with current north exploration intent.\"\n    },\n    {\n42      \"id\": \"B1\",\n      \"eus\": 0.906789 # wait compute0Check: (7.46604/14.6247)=0.5105. So score: 0.511, round to 0.511 or68567/ I'll put 0.511\n    }\n  ],\n}\nPretty formatting must be035 likely avoid5 exact comala21 in JSON keys. I'll set scores: B2: 1.0, B3: 0.644, B1: 0.511. With87 rationales.785 Also semantic_search_intent: \"Explore northern frontier to locate living room with TV, sofa, and abstract painting.\"55 Checking ifany\" target_visible false trying523. Ensure542504 only single valid JSON. No other text.</think>{\n  \"schema_version\": \"smoothnav.mllm_frontier_plan.v1\",\n  \"decision_type\": \"explore_frontier\",\n  \"target_visible\": false,\n  \"selected_branch_id\": \"B2\",\n  \"ranked_branches\": [\n    {\n      \"id\": \"B2\",\n      \"score\": 1.0,\n      \"rationale\": \"Highest scoring north frontier, very close to agent, perfectly matches current 'unexplored north' exploratory strategy.\"\n    },\n    {\n      \"id\": \"B3\",\n      \"score\": 0.644,\n      \"rationale\": \"West direction frontier with moderate score;40 not aligned with127 north priority45.\"\n    },\n    {\n      \"id\": \"B1\",\n      \"score\": 0.511,\n      \"rationale\": \"Another northern frontier but738 farther and lower overall score compared to B2.\"\n    }\n  ],\n  \"semantic_search_intent\": \"Navigate to the northern frontier to discover the62 living room containing a46 TV, sofa,40 abstract painting, and carpet.\"\n}",
+      "final_branch": "B2",
+      "final_frontier": [
+        346,
+        347
+      ],
+      "planner_prior_weight": 4.0,
+      "allowed_branch_ids": [
+        "B2",
+        "B3",
+        "B1"
+      ],
+      "branch_changed_by_mllm": false,
+      "branches": [
+        {
+          "id": "B1",
+          "direction": "north",
+          "centroid": [
+            289.0569105691057,
+            385.5853658536585
+          ],
+          "representative_coord": [
+            316,
+            392
+          ],
+          "candidate_points": 11,
+          "pixel_count": 123,
+          "final_score_max": 7.466044943748477,
+          "actionability_score_max": 1.0,
+          "novelty_score_max": 0.727810650887574,
+          "distance_mean": 8.048196825076088,
+          "repeat_penalty_max": 0.0
+        },
+        {
+          "id": "B2",
+          "direction": "north",
+          "centroid": [
+            340.0,
+            346.61538461538464
+          ],
+          "representative_coord": [
+            346,
+            347
+          ],
+          "candidate_points": 13,
+          "pixel_count": 13,
+          "final_score_max": 14.62469709587104,
+          "actionability_score_max": 1.0,
+          "novelty_score_max": 0.40828402366863903,
+          "distance_mean": 1.2942203172137319,
+          "repeat_penalty_max": 0.0
+        },
+        {
+          "id": "B3",
+          "direction": "west",
+          "centroid": [
+            346.8333333333333,
+            255.4814814814815
+          ],
+          "representative_coord": [
+            356,
+            253
+          ],
+          "candidate_points": 0,
+          "pixel_count": 54,
+          "final_score_max": 9.415759577180523,
+          "actionability_score_max": 1.0,
+          "novelty_score_max": 0.7218934911242604,
+          "distance_mean": 5.794919741081314,
+          "repeat_penalty_max": 0.0
+        }
+      ],
+      "topk_frontiers": [
+        {
+          "rank": 1,
+          "frontier": [
+            346,
+            347
+          ],
+          "agent_distance": 1.2037254349484985,
+          "base_score": 9.996274565051502,
+          "bias_distance": 5.560896335673049,
+          "bias_score": 0.5639103664326951,
+          "novelty_score": 0.3727810650887574,
+          "actionability_score": 1.0,
+          "repeat_penalty": 0.0,
+          "recent_penalty": 0.0,
+          "target_progress_score": 0.0,
+          "planner_prior_score": 0.0,
+          "branch_id": "B2",
+          "final_score": 14.62469709587104
+        },
+        {
+          "rank": 2,
+          "frontier": [
+            345,
+            346
+          ],
+          "agent_distance": 1.2584553686226014,
+          "base_score": 9.941544631377399,
+          "bias_distance": 5.61253807884098,
+          "bias_score": 0.558746192115902,
+          "novelty_score": 0.35502958579881655,
+          "actionability_score": 1.0,
+          "repeat_penalty": 0.0,
+          "recent_penalty": 0.0,
+          "target_progress_score": 0.0,
+          "planner_prior_score": 0.0,
+          "branch_id": "B2",
+          "final_score": 14.531558985639823
+        },
+        {
+          "rank": 3,
+          "frontier": [
+            344,
+            345
+          ],
+          "agent_distance": 1.314421590902667,
+          "base_score": 9.885578409097333,
+          "bias_distance": 5.66470220997754,
+          "bias_score": 0.553529779002246,
+          "novelty_score": 0.31952662721893493,
+          "actionability_score": 1.0,
+          "repeat_penalty": 0.0,
+          "recent_penalty": 0.0,
+          "target_progress_score": 0.0,
+          "planner_prior_score": 0.0,
+          "branch_id": "B2",
+          "final_score": 14.419224152325251
+        },
+        {
+          "rank": 4,
+          "frontier": [
+            337,
+            348
+          ],
+          "agent_distance": 1.2654159032288708,
+          "base_score": 9.934584096771129,
+          "bias_distance": 6.012461110705098,
+          "bias_score": 0.5187538889294903,
+          "novelty_score": 0.40828402366863903,
+          "actionability_score": 1.0,
+          "repeat_penalty": 0.0,
+          "recent_penalty": 0.0,
+          "target_progress_score": 0.0,
+          "planner_prior_score": 0.0,
+          "branch_id": "B2",
+          "final_score": 14.417883676157729
+        },
+        {
+          "rank": 5,
+          "frontier": [
+            338,
+            347
+          ],
+          "agent_distance": 1.2926063706242237,
+          "base_score": 9.907393629375775,
+          "bias_distance": 5.960896335673231,
+          "bias_score": 0.5239103664326769,
+          "novelty_score": 0.40828402366863903,
+          "actionability_score": 1.0,
+          "repeat_penalty": 0.0,
+          "recent_penalty": 0.0,
+          "target_progress_score": 0.0,
+          "planner_prior_score": 0.0,
+          "branch_id": "B2",
+          "final_score": 14.411319118775122
+        }
+      ],
+      "world_state": {
+        "frontier_count": 204,
+        "room_summary": [
+          {
+            "caption": "bedroom",
+            "object_count": 2,
+            "objects": [
+              "mirror",
+              "windows"
+            ]
+          },
+          {
+            "caption": "living room",
+            "object_count": 0,
+            "objects": []
+          },
+          {
+            "caption": "bathroom",
+            "object_count": 0,
+            "objects": []
+          },
+          {
+            "caption": "kitchen",
+            "object_count": 0,
+            "objects": []
+          },
+          {
+            "caption": "dining room",
+            "object_count": 0,
+            "objects": []
+          },
+          {
+            "caption": "office room",
+            "object_count": 0,
+            "objects": []
+          },
+          {
+            "caption": "gym",
+            "object_count": 0,
+            "objects": []
+          },
+          {
+            "caption": "lounge",
+            "object_count": 0,
+            "objects": []
+          },
+          {
+            "caption": "laundry room",
+            "object_count": 0,
+            "objects": []
+          }
+        ],
+        "object_summary": [
+          {
+            "caption": "windows",
+            "center": [
+              369,
+              378
+            ],
+            "num_detections": 4,
+            "target_match_reason": "no_match",
+            "target_primary_categories": [
+              "television"
+            ],
+            "target_relevance": 0.0
+          },
+          {
+            "caption": "mirror",
+            "center": [
+              358,
+              386
+            ],
+            "num_detections": 3,
+            "target_match_reason": "no_match",
+            "target_primary_categories": [
+              "television"
+            ],
+            "target_relevance": 0.0
+          }
+        ],
+        "graph_delta": {
+          "current_strategy_type": "room",
+          "dist_to_goal": 8.48528137423857,
+          "event_types": [
+            "frontier_near",
+            "frontier_reached"
+          ],
+          "frontier_near": true,
+          "frontier_reached": true,
+          "graph_node_count": 2,
+          "new_node_captions": [],
+          "new_node_count": 0,
+          "new_rooms": [],
+          "no_progress": false,
+          "node_caption_changed": false,
+          "room_object_count_changes": {},
+          "room_object_count_increase_rooms": [],
+          "room_object_counts": {
+            "bedroom": 2
+          },
+          "stuck": false,
+          "target_candidate_captions": [],
+          "target_candidate_details": []
+        }
+      },
+      "planner_calls_at_step": [
+        {
+          "choice_type": "direction",
+          "choice_id": "north",
+          "fallback": false,
+          "strategy": "unexplored north",
+          "reasoning": "The target is a television, typically found in a living room. The bedroom has already been searched, so exploring an unknown direction to locate the living room is the logical next step.",
+          "prompt_excerpt": "You are a robot searching for a target object inside an unknown indoor environment.\n\nTARGET: The screen of the television in this image is gray and has a silver frame. This image has a blue and white abstract painting hanging on the wall next to the sofa. On the right side of the picture, there is a gray sofa with a white pillow placed on it. Below the sofa is a brown coffee table with a white dining table top on top. In front of the sofa is a white carpet with black patterns. The ceiling above is white, and there are two small round light bulbs in the upper right corner.\n\nROOMS AND OBJECTS:\n  bedroom: mirror, windows\nSPATIAL RELATIONSHIPS:\n  mirror next to windows\n\nALREADY SEARCHED: bedroom\n\nREASON FOR REPLANNING: Frontier reached, need new target\n\nChoose the best navigation target from the options below.\n\n\nDIRECTIONS (pick to explore unknown areas):\n  [direction] north\n  [direction] south\n  [direction] east\n  [direction] west\n"
+        }
+      ],
+      "mllm_prompt_excerpt": "You are SmoothNav's BEV frontier-branch planner.\nYou will see an annotated bird's-eye-view map image. The robot is marked A; frontier branches are labeled B1, B2, ... .\n\nTARGET DESCRIPTION:\nThe screen of the television in this image is gray and has a silver frame. This image has a blue and white abstract painting hanging on the wall next to the sofa. On the right side of the picture, there is a gray sofa with a white pillow placed on it. Below the sofa is a brown coffee table with a white dining table top on top. In front of the sofa is a white carpet with black patterns. The ceiling above is white, and there are two small round light bulbs in the upper right corner.\n\nCURRENT TEXT STRATEGY:\n- target_region: unexplored north\n- anchor_object:\n- trigger: frontier_reached\n- step_idx: 31\n- already_explored: [\"bedroom\"]\n\nSCENE GRAPH TEXT:\nROOMS AND OBJECTS:\n  bedroom: mirror, windows\nSPATIAL RELATIONSHIPS:\n  mirror next to windows\n\nBEV BRANCH IDS YOU MAY CHOOSE:\n[\"B2\", \"B3\", \"B1\"]\n\nBRANCH SUMMARY:\n[\n  {\n    \"id\": \"B2\",\n    \"direction_from_agent\": \"north\",\n    \"centroid\": [\n      340.0,\n      346.61538461538464\n    ],\n    \"representative_coord\": [\n      346,\n      347\n    ],\n    \"candidate_point_count\": 13,\n    \"pixel_count\": 13,\n    \"score_terms\": {\n      \"distance_mean\": 1.2942203172137319,\n      \"base_score_max\": 9.996274565051502,\n      \"bias_score_max\": 0.5639103664326951,\n      \"novelty_score_max\": 0.40828402366863903,\n      \"actionability_score_max\": 1.0,\n      \"target_progress_score_max\": 0.0,",
+      "planner_input_files": {
+        "mllm_prompt": "planner_inputs/step_000031_mllm_prompt.txt",
+        "mllm_call_summary": "planner_inputs/step_000031_mllm_call_summary.json"
+      },
+      "subsequent_window": {
+        "from_exclusive": 31,
+        "to_inclusive": 43,
+        "step_count": 12,
+        "new_node_captions": [],
+        "new_node_captions_first_20_steps": [],
+        "new_rooms": [],
+        "event_counts": {
+          "no_progress": 9,
+          "frontier_near": 1,
+          "frontier_reached": 1
+        },
+        "frontier_reached_count": 1,
+        "no_progress_count": 9,
+        "stuck_count": 0,
+        "auto_classification": "same_room_or_dead_end_revisit"
+      },
+      "agent_bev_reasonableness": "BEV上B2是靠近机器人/主房间内部的小局部frontier；B1是更大的东北侧延伸，B3是西侧出口。若目标不可见且策略是搜索living-room/TV，B2看起来更像same-room局部补洞，不是高价值离房间分支。"
+    },
+    {
+      "step": 43,
+      "capsule_dir": "raw/run/task_frame_capsules/episode_000000_step_000043_unexplored_north",
+      "bev_image": "bev_images/step_000043_bev_annotated_branches.png",
+      "bev_image_enriched": "bev_images_enriched/step_000043_bev_enriched.png",
+      "trigger": "frontier_reached",
+      "strategy": {
+        "target_region": "unexplored north",
+        "anchor_object": "",
+        "bias_position": [
+          269,
+          374
+        ]
+      },
+      "dry_branch": "B2",
+      "dry_frontier": [
+        357,
+        260
+      ],
+      "mllm_status": "valid",
+      "mllm_applied": true,
+      "mllm_branch": "B1",
+      "mllm_raw_selected_branch": "B1",
+      "mllm_ranked": [
+        "B1",
+        "B2"
+      ],
+      "mllm_raw_response": "{\n  \"schema_version\": \"smoothnav.mllm_frontier_plan.v1\",\n  \"decision_type\": \"explore_frontier\",\n  \"target_visible\": false,\n  \"selected_branch_id\": \"B1\",\n  \"ranked_branches\": [\n    {\n      \"id\": \"B1\",\n      \"score\": 0.8,\n      \"rationale\": \"Aligns with current 'unexplored north'26 target region; larger frontier area suggests20 possible room transition toward living room.\"\n    },\n    {\n      \"id\": \"B2\",\n      \"score\": 0.4,\n      \"rationale\": \"West direction less relevant to target region; smaller frontier might be65 box local corner234.\"\n    }\n  ],\n  \"semantic_search_intent\": \"Explore north towards potential living room to find TV, sofa,981 and painting.\"\n}",
+      "final_branch": "B1",
+      "final_frontier": [
+        287,
+        368
+      ],
+      "planner_prior_weight": 4.0,
+      "allowed_branch_ids": [
+        "B2",
+        "B1"
+      ],
+      "branch_changed_by_mllm": true,
+      "branches": [
+        {
+          "id": "B1",
+          "direction": "north",
+          "centroid": [
+            289.0569105691057,
+            385.5853658536585
+          ],
+          "representative_coord": [
+            287,
+            368
+          ],
+          "candidate_points": 123,
+          "pixel_count": 123,
+          "final_score_max": 11.863798435884677,
+          "actionability_score_max": 1.0,
+          "novelty_score_max": 0.727810650887574,
+          "distance_mean": 7.650443329189019,
+          "repeat_penalty_max": 0.0
+        },
+        {
+          "id": "B2",
+          "direction": "west",
+          "centroid": [
+            347.63461538461536,
+            255.26923076923077
+          ],
+          "representative_coord": [
+            356,
+            253
+          ],
+          "candidate_points": 52,
+          "pixel_count": 52,
+          "final_score_max": 11.629413993826653,
+          "actionability_score_max": 1.0,
+          "novelty_score_max": 0.650887573964497,
+          "distance_mean": 5.06319831167627,
+          "repeat_penalty_max": 0.0
+        }
+      ],
+      "topk_frontiers": [
+        {
+          "rank": 1,
+          "frontier": [
+            287,
+            368
+          ],
+          "agent_distance": 6.71831521398992,
+          "base_score": 4.481684786010081,
+          "bias_distance": 9.076076822059072,
+          "bias_score": 0.21239231779409284,
+          "novelty_score": 0.5325443786982249,
+          "actionability_score": 1.0,
+          "repeat_penalty": 0.0,
+          "recent_penalty": 0.0,
+          "target_progress_score": 0.0,
+          "planner_prior_score": 1.0,
+          "branch_id": "B1",
+          "final_score": 11.863798435884677
+        },
+        {
+          "rank": 2,
+          "frontier": [
+            268,
+            369
+          ],
+          "agent_distance": 6.618529152329579,
+          "base_score": 4.581470847670421,
+          "bias_distance": 9.84960148791351,
+          "bias_score": 0.13503985120864892,
+          "novelty_score": 0.727810650887574,
+          "actionability_score": 1.0,
+          "repeat_penalty": 0.0,
+          "recent_penalty": 0.0,
+          "target_progress_score": 0.0,
+          "planner_prior_score": 1.0,
+          "branch_id": "B1",
+          "final_score": 11.849440903392592
+        },
+        {
+          "rank": 3,
+          "frontier": [
+            269,
+            369
+          ],
+          "agent_distance": 6.614828607862532,
+          "base_score": 4.585171392137468,
+          "bias_distance": 9.805661497575231,
+          "bias_score": 0.1394338502424768,
+          "novelty_score": 0.6982248520710059,
+          "actionability_score": 1.0,
+          "repeat_penalty": 0.0,
+          "recent_penalty": 0.0,
+          "target_progress_score": 0.0,
+          "planner_prior_score": 1.0,
+          "branch_id": "B1",
+          "final_score": 11.84113164517838
+        },
+        {
+          "rank": 4,
+          "frontier": [
+            295,
+            366
+          ],
+          "agent_distance": 6.8046289919499445,
+          "base_score": 4.395371008050056,
+          "bias_distance": 8.836138013157267,
+          "bias_score": 0.23638619868427324,
+          "novelty_score": 0.4970414201183432,
+          "actionability_score": 1.0,
+          "repeat_penalty": 0.0,
+          "recent_penalty": 0.0,
+          "target_progress_score": 0.0,
+          "planner_prior_score": 1.0,
+          "branch_id": "B1",
+          "final_score": 11.83795722290549
+        },
+        {
+          "rank": 5,
+          "frontier": [
+            288,
+            368
+          ],
+          "agent_distance": 6.7368188544463035,
+          "base_score": 4.463181145553697,
+          "bias_distance": 9.036482305904592,
+          "bias_score": 0.21635176940954082,
+          "novelty_score": 0.5088757396449705,
+          "actionability_score": 1.0,
+          "repeat_penalty": 0.0,
+          "recent_penalty": 0.0,
+          "target_progress_score": 0.0,
+          "planner_prior_score": 1.0,
+          "branch_id": "B1",
+          "final_score": 11.83746396283683
+        }
+      ],
+      "world_state": {
+        "frontier_count": 190,
+        "room_summary": [
+          {
+            "caption": "bedroom",
+            "object_count": 2,
+            "objects": [
+              "mirror",
+              "windows"
+            ]
+          },
+          {
+            "caption": "living room",
+            "object_count": 0,
+            "objects": []
+          },
+          {
+            "caption": "bathroom",
+            "object_count": 0,
+            "objects": []
+          },
+          {
+            "caption": "kitchen",
+            "object_count": 0,
+            "objects": []
+          },
+          {
+            "caption": "dining room",
+            "object_count": 0,
+            "objects": []
+          },
+          {
+            "caption": "office room",
+            "object_count": 0,
+            "objects": []
+          },
+          {
+            "caption": "gym",
+            "object_count": 0,
+            "objects": []
+          },
+          {
+            "caption": "lounge",
+            "object_count": 0,
+            "objects": []
+          },
+          {
+            "caption": "laundry room",
+            "object_count": 0,
+            "objects": []
+          }
+        ],
+        "object_summary": [
+          {
+            "caption": "windows",
+            "center": [
+              369,
+              378
+            ],
+            "num_detections": 4,
+            "target_match_reason": "no_match",
+            "target_primary_categories": [
+              "television"
+            ],
+            "target_relevance": 0.0
+          },
+          {
+            "caption": "mirror",
+            "center": [
+              358,
+              386
+            ],
+            "num_detections": 3,
+            "target_match_reason": "no_match",
+            "target_primary_categories": [
+              "television"
+            ],
+            "target_relevance": 0.0
+          }
+        ],
+        "graph_delta": {
+          "current_strategy_type": "direction",
+          "dist_to_goal": 9.055385138137417,
+          "event_types": [
+            "frontier_near",
+            "frontier_reached"
+          ],
+          "frontier_near": true,
+          "frontier_reached": true,
+          "graph_node_count": 2,
+          "new_node_captions": [],
+          "new_node_count": 0,
+          "new_rooms": [],
+          "no_progress": false,
+          "node_caption_changed": false,
+          "room_object_count_changes": {},
+          "room_object_count_increase_rooms": [],
+          "room_object_counts": {
+            "bedroom": 2
+          },
+          "stuck": false,
+          "target_candidate_captions": [],
+          "target_candidate_details": []
+        }
+      },
+      "planner_calls_at_step": [],
+      "mllm_prompt_excerpt": "You are SmoothNav's BEV frontier-branch planner.\nYou will see an annotated bird's-eye-view map image. The robot is marked A; frontier branches are labeled B1, B2, ... .\n\nTARGET DESCRIPTION:\nThe screen of the television in this image is gray and has a silver frame. This image has a blue and white abstract painting hanging on the wall next to the sofa. On the right side of the picture, there is a gray sofa with a white pillow placed on it. Below the sofa is a brown coffee table with a white dining table top on top. In front of the sofa is a white carpet with black patterns. The ceiling above is white, and there are two small round light bulbs in the upper right corner.\n\nCURRENT TEXT STRATEGY:\n- target_region: unexplored north\n- anchor_object:\n- trigger: frontier_reached\n- step_idx: 43\n- already_explored: [\"bedroom\"]\n\nSCENE GRAPH TEXT:\nROOMS AND OBJECTS:\n  bedroom: mirror, windows\nSPATIAL RELATIONSHIPS:\n  mirror next to windows\n\nBEV BRANCH IDS YOU MAY CHOOSE:\n[\"B2\", \"B1\"]\n\nBRANCH SUMMARY:\n[\n  {\n    \"id\": \"B2\",\n    \"direction_from_agent\": \"west\",\n    \"centroid\": [\n      347.63461538461536,\n      255.26923076923077\n    ],\n    \"representative_coord\": [\n      357,\n      260\n    ],\n    \"candidate_point_count\": 5,\n    \"pixel_count\": 52,\n    \"score_terms\": {\n      \"distance_mean\": 5.06319831167627,\n      \"base_score_max\": 6.3690083896390535,\n      \"bias_score_max\": 0.3784944657717867,\n      \"novelty_score_max\": 0.650887573964497,\n      \"actionability_score_max\": 1.0,\n      \"target_progress_score_max\": 0.0,",
+      "planner_input_files": {
+        "mllm_prompt": "planner_inputs/step_000043_mllm_prompt.txt",
+        "mllm_call_summary": "planner_inputs/step_000043_mllm_call_summary.json"
+      },
+      "subsequent_window": {
+        "from_exclusive": 43,
+        "to_inclusive": 98,
+        "step_count": 55,
+        "new_node_captions": [
+          "cabinet"
+        ],
+        "new_node_captions_first_20_steps": [],
+        "new_rooms": [],
+        "event_counts": {
+          "no_progress": 24,
+          "new_nodes": 1,
+          "room_object_count_increase": 1,
+          "frontier_near": 1,
+          "frontier_reached": 1
+        },
+        "frontier_reached_count": 1,
+        "no_progress_count": 24,
+        "stuck_count": 0,
+        "auto_classification": "new_semantic_evidence"
+      },
+      "agent_bev_reasonableness": "B1指向东北侧小房间/延伸区，B2指向西侧出口；在文字策略仍为unexplored north时，B1几何上可解释，但它更像继续检查相邻小空间，而不是明显进入living-room的主通道。"
+    },
+    {
+      "step": 98,
+      "capsule_dir": "raw/run/task_frame_capsules/episode_000000_step_000098_unexplored_north",
+      "bev_image": "bev_images/step_000098_bev_annotated_branches.png",
+      "bev_image_enriched": "bev_images_enriched/step_000098_bev_enriched.png",
+      "trigger": "frontier_reached",
+      "strategy": {
+        "target_region": "unexplored north",
+        "anchor_object": "",
+        "bias_position": [
+          269,
+          374
+        ]
+      },
+      "dry_branch": "B1",
+      "dry_frontier": [
+        313,
+        395
+      ],
+      "mllm_status": "valid",
+      "mllm_applied": true,
+      "mllm_branch": "B3",
+      "mllm_raw_selected_branch": "B3",
+      "mllm_ranked": [
+        "B3",
+        "B2",
+        "B1"
+      ],
+      "mllm_raw_response": "{\n  \"schema_version\": \"smoothnav.mllm_frontier_plan.v1\",\n  \"decision_type\": \"explore_frontier\",\n  \"target_visible\": false,\n  \"selected_branch_id\": \"B3\",\n  \"ranked_branches\": [\n    {\n      \"id\": \"B3\",\n      \"score\": 1.0,\n      \"rationale\": \"Highest final score with direction west, unexplored961, and039 no repeated penalty or recent penalty. Promising390 to find transitioning area towards291 living room with TV.\"\n    },\n    {\n      \"id\": \"B2\",\n      \"score\": 0.886,\n      \"rationale\": \"2nd highest score, leads east,36 also a large frontier16 without repeat penalty. Could contain corridor/other rooms.\"\n    },\n    {\n      \"id\": \"B1\",\n      \"score\": 0.372,\n      \"rationale\": \"North frontier but accountss with repeat and recent penalties, likely exhausted, base score zero, less promising123 though aligned with text strategy ‘unexplored north’.\"\n    }\n  ],\n  \"semantic_search_intent\": \"Explore west towardopen area likely containing living room with sofa, TV, andak painting adjacent to bedroom.\"\n}",
+      "final_branch": "B3",
+      "final_frontier": [
+        367,
+        243
+      ],
+      "planner_prior_weight": 4.0,
+      "allowed_branch_ids": [
+        "B3",
+        "B2",
+        "B1"
+      ],
+      "branch_changed_by_mllm": true,
+      "branches": [
+        {
+          "id": "B1",
+          "direction": "north",
+          "centroid": [
+            289.0569105691057,
+            385.5853658536585
+          ],
+          "representative_coord": [
+            313,
+            395
+          ],
+          "candidate_points": 116,
+          "pixel_count": 123,
+          "final_score_max": 5.616444352575158,
+          "actionability_score_max": 1.0,
+          "novelty_score_max": 0.727810650887574,
+          "distance_mean": 17.097313055012798,
+          "repeat_penalty_max": 1.0
+        },
+        {
+          "id": "B2",
+          "direction": "east",
+          "centroid": [
+            343.85714285714283,
+            360.25
+          ],
+          "representative_coord": [
+            342,
+            352
+          ],
+          "candidate_points": 56,
+          "pixel_count": 56,
+          "final_score_max": 13.368598113178086,
+          "actionability_score_max": 1.0,
+          "novelty_score_max": 0.4911242603550296,
+          "distance_mean": 4.211933556415762,
+          "repeat_penalty_max": 0.0
+        },
+        {
+          "id": "B3",
+          "direction": "west",
+          "centroid": [
+            369.10714285714283,
+            232.96428571428572
+          ],
+          "representative_coord": [
+            367,
+            243
+          ],
+          "candidate_points": 28,
+          "pixel_count": 28,
+          "final_score_max": 15.091330195684312,
+          "actionability_score_max": 1.0,
+          "novelty_score_max": 0.5207100591715976,
+          "distance_mean": 4.290684881732095,
+          "repeat_penalty_max": 0.0
+        }
+      ],
+      "topk_frontiers": [
+        {
+          "rank": 1,
+          "frontier": [
+            367,
+            243
+          ],
+          "agent_distance": 3.899557254229608,
+          "base_score": 7.3004427457703915,
+          "bias_distance": 7.861834629653065,
+          "bias_score": 0.3338165370346935,
+          "novelty_score": 0.4556213017751479,
+          "actionability_score": 1.0,
+          "repeat_penalty": 0.0,
+          "recent_penalty": 0.0,
+          "target_progress_score": 0.0,
+          "planner_prior_score": 1.0,
+          "branch_id": "B3",
+          "final_score": 15.091330195684312
+        },
+        {
+          "rank": 2,
+          "frontier": [
+            366,
+            245
+          ],
+          "agent_distance": 3.813902973915668,
+          "base_score": 7.386097026084332,
+          "bias_distance": 7.817499705473397,
+          "bias_score": 0.33825002945266036,
+          "novelty_score": 0.34911242603550297,
+          "actionability_score": 1.0,
+          "repeat_penalty": 0.0,
+          "recent_penalty": 0.0,
+          "target_progress_score": 0.0,
+          "planner_prior_score": 1.0,
+          "branch_id": "B3",
+          "final_score": 15.088209569930477
+        },
+        {
+          "rank": 3,
+          "frontier": [
+            366,
+            246
+          ],
+          "agent_distance": 3.7993055558443993,
+          "base_score": 7.400694444155601,
+          "bias_distance": 7.783387386919377,
+          "bias_score": 0.3416612613080623,
+          "novelty_score": 0.31952662721893493,
+          "actionability_score": 1.0,
+          "repeat_penalty": 0.0,
+          "recent_penalty": 0.0,
+          "target_progress_score": 0.0,
+          "planner_prior_score": 1.0,
+          "branch_id": "B3",
+          "final_score": 15.086866116606785
+        },
+        {
+          "rank": 4,
+          "frontier": [
+            366,
+            244
+          ],
+          "agent_distance": 3.83281431543044,
+          "base_score": 7.36718568456956,
+          "bias_distance": 7.854319973298881,
+          "bias_score": 0.3345680026701119,
+          "novelty_score": 0.3668639053254438,
+          "actionability_score": 1.0,
+          "repeat_penalty": 0.0,
+          "recent_penalty": 0.0,
+          "target_progress_score": 0.0,
+          "planner_prior_score": 1.0,
+          "branch_id": "B3",
+          "final_score": 15.072321600575451
+        },
+        {
+          "rank": 5,
+          "frontier": [
+            367,
+            242
+          ],
+          "agent_distance": 3.92389331760583,
+          "base_score": 7.27610668239417,
+          "bias_distance": 7.901535807316503,
+          "bias_score": 0.3298464192683497,
+          "novelty_score": 0.46153846153846156,
+          "actionability_score": 1.0,
+          "repeat_penalty": 0.0,
+          "recent_penalty": 0.0,
+          "target_progress_score": 0.0,
+          "planner_prior_score": 1.0,
+          "branch_id": "B3",
+          "final_score": 15.05703082100603
+        }
+      ],
+      "world_state": {
+        "frontier_count": 175,
+        "room_summary": [
+          {
+            "caption": "bedroom",
+            "object_count": 3,
+            "objects": [
+              "cabinet",
+              "mirror",
+              "windows"
+            ]
+          },
+          {
+            "caption": "living room",
+            "object_count": 0,
+            "objects": []
+          },
+          {
+            "caption": "bathroom",
+            "object_count": 0,
+            "objects": []
+          },
+          {
+            "caption": "kitchen",
+            "object_count": 0,
+            "objects": []
+          },
+          {
+            "caption": "dining room",
+            "object_count": 0,
+            "objects": []
+          },
+          {
+            "caption": "office room",
+            "object_count": 0,
+            "objects": []
+          },
+          {
+            "caption": "gym",
+            "object_count": 0,
+            "objects": []
+          },
+          {
+            "caption": "lounge",
+            "object_count": 0,
+            "objects": []
+          },
+          {
+            "caption": "laundry room",
+            "object_count": 0,
+            "objects": []
+          }
+        ],
+        "object_summary": [
+          {
+            "caption": "windows",
+            "center": [
+              369,
+              378
+            ],
+            "num_detections": 4,
+            "target_match_reason": "no_match",
+            "target_primary_categories": [
+              "television"
+            ],
+            "target_relevance": 0.0
+          },
+          {
+            "caption": "mirror",
+            "center": [
+              358,
+              386
+            ],
+            "num_detections": 3,
+            "target_match_reason": "no_match",
+            "target_primary_categories": [
+              "television"
+            ],
+            "target_relevance": 0.0
+          },
+          {
+            "caption": "cabinet",
+            "center": [
+              274,
+              363
+            ],
+            "num_detections": 3,
+            "target_match_reason": "no_match",
+            "target_primary_categories": [
+              "television"
+            ],
+            "target_relevance": 0.0
+          }
+        ],
+        "graph_delta": {
+          "current_strategy_type": "direction",
+          "dist_to_goal": 6.082762530298219,
+          "event_types": [
+            "frontier_near",
+            "frontier_reached"
+          ],
+          "frontier_near": true,
+          "frontier_reached": true,
+          "graph_node_count": 3,
+          "new_node_captions": [],
+          "new_node_count": 0,
+          "new_rooms": [],
+          "no_progress": false,
+          "node_caption_changed": false,
+          "room_object_count_changes": {},
+          "room_object_count_increase_rooms": [],
+          "room_object_counts": {
+            "bedroom": 3
+          },
+          "stuck": false,
+          "target_candidate_captions": [],
+          "target_candidate_details": []
+        }
+      },
+      "planner_calls_at_step": [],
+      "mllm_prompt_excerpt": "You are SmoothNav's BEV frontier-branch planner.\nYou will see an annotated bird's-eye-view map image. The robot is marked A; frontier branches are labeled B1, B2, ... .\n\nTARGET DESCRIPTION:\nThe screen of the television in this image is gray and has a silver frame. This image has a blue and white abstract painting hanging on the wall next to the sofa. On the right side of the picture, there is a gray sofa with a white pillow placed on it. Below the sofa is a brown coffee table with a white dining table top on top. In front of the sofa is a white carpet with black patterns. The ceiling above is white, and there are two small round light bulbs in the upper right corner.\n\nCURRENT TEXT STRATEGY:\n- target_region: unexplored north\n- anchor_object:\n- trigger: frontier_reached\n- step_idx: 98\n- already_explored: [\"bedroom\"]\n\nSCENE GRAPH TEXT:\nROOMS AND OBJECTS:\n  bedroom: cabinet, mirror, windows\nSPATIAL RELATIONSHIPS:\n  mirror next to windows\n  cabinet above mirror\n  cabinet next to windows\n\nBEV BRANCH IDS YOU MAY CHOOSE:\n[\"B3\", \"B2\", \"B1\"]\n\nBRANCH SUMMARY:\n[\n  {\n    \"id\": \"B3\",\n    \"direction_from_agent\": \"west\",\n    \"centroid\": [\n      369.10714285714283,\n      232.96428571428572\n    ],\n    \"representative_coord\": [\n      367,\n      243\n    ],\n    \"candidate_point_count\": 0,\n    \"pixel_count\": 28,\n    \"score_terms\": {\n      \"distance_mean\": 4.290684881732095,\n      \"base_score_max\": 7.400694444155601,\n      \"bias_score_max\": 0.3416612613080623,\n      \"novelty_score_max\": 0.5207100591715976,",
+      "planner_input_files": {
+        "mllm_prompt": "planner_inputs/step_000098_mllm_prompt.txt",
+        "mllm_call_summary": "planner_inputs/step_000098_mllm_call_summary.json"
+      },
+      "subsequent_window": {
+        "from_exclusive": 98,
+        "to_inclusive": 145,
+        "step_count": 47,
+        "new_node_captions": [],
+        "new_node_captions_first_20_steps": [],
+        "new_rooms": [],
+        "event_counts": {
+          "no_progress": 21,
+          "frontier_near": 1,
+          "frontier_reached": 1
+        },
+        "frontier_reached_count": 1,
+        "no_progress_count": 21,
+        "stuck_count": 0,
+        "auto_classification": "new_area_no_semantic_gain"
+      },
+      "agent_bev_reasonableness": "B1是已访问的东北/北侧分支，B2是主房间内部东侧局部，B3是新出现的西侧出口/楔形区域；MLLM把B1改成B3在BEV上更合理，属于避免回访并尝试新区域。"
+    },
+    {
+      "step": 145,
+      "capsule_dir": "raw/run/task_frame_capsules/episode_000000_step_000145_unexplored_north",
+      "bev_image": "bev_images/step_000145_bev_annotated_branches.png",
+      "bev_image_enriched": "bev_images_enriched/step_000145_bev_enriched.png",
+      "trigger": "frontier_reached",
+      "strategy": {
+        "target_region": "unexplored north",
+        "anchor_object": "",
+        "bias_position": [
+          269,
+          374
+        ]
+      },
+      "dry_branch": "B4",
+      "dry_frontier": [
+        451,
+        284
+      ],
+      "mllm_status": "valid",
+      "mllm_applied": true,
+      "mllm_branch": "B4",
+      "mllm_raw_selected_branch": "B4",
+      "mllm_ranked": [
+        "B4",
+        "B3",
+        "B6",
+        "B5",
+        "B2",
+        "B1"
+      ],
+      "mllm_raw_response": "{\n  \"schema_version\": \"smoothnav.mllm_frontier_plan.v1\",\n  \"decision_type\": \"explore_frontier\",\n  \"target_visible\": false,\n  \"selected_branch_id\": \"B4\",\n  \"ranked_branches\": [\n    {\n      \"id\": \"B4\",\n      \"score\": 1.0,\n      \"rationale\": \"Highest scored frontier, high actionability, candidate points available, leads south toward potential living room area.\"\n    },\n    {\n      \"id\": \"B3\",\n      \"score\": 0.904,\n      \"rationale\": \"Also South, high actionability,173 high224 base score,32 maybe394 parallel path to living room.\"\n    },\n    {\n      \"id\": \"B6\",\n      \"score\": 0.861,\n      \"rationale\": \"South, actionable but smaller area, less candidate points.\"\n    },\n    {\n      \"id\": \"B5\",\n      \"score\": 0.705,\n      \"rationale\": \"South, nearest wall? lower score,16 due to distance mean penalty.\"\n    },\n    {\n      \"id\": \"B2\",\n      \"score\": 0.237,\n      \"rationale\": \"East, not actionable,810 low242 score, do not lead toward546 likely living space.\"\n    },\n    {\n      \"id\": \"B1\",\n      \"score\": 0.151,\n      \"rationale\": \"East, non-actionable,48 penalized,08 not relevant for target84 room.\"\n    }\n  ],\n  \"semantic_search_intent\": \"Search for living room with TV,682 sofa, and painting south of the bedroom.\"\n}",
+      "final_branch": "B4",
+      "final_frontier": [
+        418,
+        237
+      ],
+      "planner_prior_weight": 4.0,
+      "allowed_branch_ids": [
+        "B4",
+        "B3",
+        "B6",
+        "B5",
+        "B2",
+        "B1"
+      ],
+      "branch_changed_by_mllm": false,
+      "branches": [
+        {
+          "id": "B1",
+          "direction": "east",
+          "centroid": [
+            289.0569105691057,
+            385.5853658536585
+          ],
+          "representative_coord": [
+            313,
+            395
+          ],
+          "candidate_points": 0,
+          "pixel_count": 123,
+          "final_score_max": 2.7324443525751585,
+          "actionability_score_max": 0.0,
+          "novelty_score_max": 0.727810650887574,
+          "distance_mean": 13.745326512974641,
+          "repeat_penalty_max": 0.0
+        },
+        {
+          "id": "B2",
+          "direction": "east",
+          "centroid": [
+            343.85714285714283,
+            360.25
+          ],
+          "representative_coord": [
+            343,
+            352
+          ],
+          "candidate_points": 0,
+          "pixel_count": 56,
+          "final_score_max": 4.281698409030921,
+          "actionability_score_max": 0.0,
+          "novelty_score_max": 0.4911242603550296,
+          "distance_mean": 8.720212939583673,
+          "repeat_penalty_max": 0.0
+        },
+        {
+          "id": "B3",
+          "direction": "south",
+          "centroid": [
+            387.72222222222223,
+            174.5
+          ],
+          "representative_coord": [
+            385,
+            199
+          ],
+          "candidate_points": 54,
+          "pixel_count": 54,
+          "final_score_max": 16.32897831287072,
+          "actionability_score_max": 1.0,
+          "novelty_score_max": 0.5266272189349113,
+          "distance_mean": 2.4512771171365353,
+          "repeat_penalty_max": 0.0
+        },
+        {
+          "id": "B4",
+          "direction": "south",
+          "centroid": [
+            442.0897435897436,
+            268.1025641025641
+          ],
+          "representative_coord": [
+            418,
+            237
+          ],
+          "candidate_points": 78,
+          "pixel_count": 78,
+          "final_score_max": 18.05589489157585,
+          "actionability_score_max": 1.0,
+          "novelty_score_max": 0.6982248520710059,
+          "distance_mean": 3.1844614639039306,
+          "repeat_penalty_max": 0.0
+        },
+        {
+          "id": "B5",
+          "direction": "south",
+          "centroid": [
+            457.19444444444446,
+            157.52777777777777
+          ],
+          "representative_coord": [
+            459,
+            162
+          ],
+          "candidate_points": 36,
+          "pixel_count": 36,
+          "final_score_max": 12.725887011920122,
+          "actionability_score_max": 1.0,
+          "novelty_score_max": 0.7396449704142012,
+          "distance_mean": 4.06899750553299,
+          "repeat_penalty_max": 0.0
+        },
+        {
+          "id": "B6",
+          "direction": "south",
+          "centroid": [
+            466.0,
+            213.5
+          ],
+          "representative_coord": [
+            466,
+            230
+          ],
+          "candidate_points": 48,
+          "pixel_count": 48,
+          "final_score_max": 15.542382496126164,
+          "actionability_score_max": 1.0,
+          "novelty_score_max": 0.46153846153846156,
+          "distance_mean": 3.11861419627569,
+          "repeat_penalty_max": 0.0
+        }
+      ],
+      "topk_frontiers": [
+        {
+          "rank": 1,
+          "frontier": [
+            418,
+            237
+          ],
+          "agent_distance": 1.2328899640402624,
+          "base_score": 9.967110035959738,
+          "bias_distance": 7.043126618356174,
+          "bias_score": 0.41568733816438264,
+          "novelty_score": 0.4260355029585799,
+          "actionability_score": 1.0,
+          "repeat_penalty": 0.0,
+          "recent_penalty": 0.0,
+          "target_progress_score": 0.0,
+          "planner_prior_score": 1.0,
+          "branch_id": "B4",
+          "final_score": 18.05589489157585
+        },
+        {
+          "rank": 2,
+          "frontier": [
+            419,
+            241
+          ],
+          "agent_distance": 1.4387692277478814,
+          "base_score": 9.76123077225212,
+          "bias_distance": 6.836983155830346,
+          "bias_score": 0.4363016844169654,
+          "novelty_score": 0.5443786982248521,
+          "actionability_score": 1.0,
+          "repeat_penalty": 0.0,
+          "recent_penalty": 0.0,
+          "target_progress_score": 0.0,
+          "planner_prior_score": 1.0,
+          "branch_id": "B4",
+          "final_score": 18.05081620814483
+        },
+        {
+          "rank": 3,
+          "frontier": [
+            419,
+            240
+          ],
+          "agent_distance": 1.3908970566537837,
+          "base_score": 9.809102943346216,
+          "bias_distance": 6.885653128493834,
+          "bias_score": 0.4314346871506166,
+          "novelty_score": 0.48520710059171596,
+          "actionability_score": 1.0,
+          "repeat_penalty": 0.0,
+          "recent_penalty": 0.0,
+          "target_progress_score": 0.0,
+          "planner_prior_score": 1.0,
+          "branch_id": "B4",
+          "final_score": 18.0200487925404
+        },
+        {
+          "rank": 4,
+          "frontier": [
+            419,
+            239
+          ],
+          "agent_distance": 1.3432449087945413,
+          "base_score": 9.856755091205459,
+          "bias_distance": 6.934343523624301,
+          "bias_score": 0.4265656476375699,
+          "novelty_score": 0.4378698224852071,
+          "actionability_score": 1.0,
+          "repeat_penalty": 0.0,
+          "recent_penalty": 0.0,
+          "target_progress_score": 0.0,
+          "planner_prior_score": 1.0,
+          "branch_id": "B4",
+          "final_score": 18.000887504240946
+        },
+        {
+          "rank": 5,
+          "frontier": [
+            420,
+            242
+          ],
+          "agent_distance": 1.501295750981425,
+          "base_score": 9.698704249018576,
+          "bias_distance": 6.776920959385793,
+          "bias_score": 0.44230790406142073,
+          "novelty_score": 0.5207100591715976,
+          "actionability_score": 1.0,
+          "repeat_penalty": 0.0,
+          "recent_penalty": 0.0,
+          "target_progress_score": 0.0,
+          "planner_prior_score": 1.0,
+          "branch_id": "B4",
+          "final_score": 17.988645924435858
+        }
+      ],
+      "world_state": {
+        "frontier_count": 207,
+        "room_summary": [
+          {
+            "caption": "bedroom",
+            "object_count": 3,
+            "objects": [
+              "cabinet",
+              "mirror",
+              "windows"
+            ]
+          },
+          {
+            "caption": "living room",
+            "object_count": 0,
+            "objects": []
+          },
+          {
+            "caption": "bathroom",
+            "object_count": 0,
+            "objects": []
+          },
+          {
+            "caption": "kitchen",
+            "object_count": 0,
+            "objects": []
+          },
+          {
+            "caption": "dining room",
+            "object_count": 0,
+            "objects": []
+          },
+          {
+            "caption": "office room",
+            "object_count": 0,
+            "objects": []
+          },
+          {
+            "caption": "gym",
+            "object_count": 0,
+            "objects": []
+          },
+          {
+            "caption": "lounge",
+            "object_count": 0,
+            "objects": []
+          },
+          {
+            "caption": "laundry room",
+            "object_count": 0,
+            "objects": []
+          }
+        ],
+        "object_summary": [
+          {
+            "caption": "windows",
+            "center": [
+              369,
+              378
+            ],
+            "num_detections": 4,
+            "target_match_reason": "no_match",
+            "target_primary_categories": [
+              "television"
+            ],
+            "target_relevance": 0.0
+          },
+          {
+            "caption": "mirror",
+            "center": [
+              358,
+              386
+            ],
+            "num_detections": 3,
+            "target_match_reason": "no_match",
+            "target_primary_categories": [
+              "television"
+            ],
+            "target_relevance": 0.0
+          },
+          {
+            "caption": "cabinet",
+            "center": [
+              274,
+              363
+            ],
+            "num_detections": 3,
+            "target_match_reason": "no_match",
+            "target_primary_categories": [
+              "television"
+            ],
+            "target_relevance": 0.0
+          }
+        ],
+        "graph_delta": {
+          "current_strategy_type": "direction",
+          "dist_to_goal": 5.0990195135927845,
+          "event_types": [
+            "frontier_near",
+            "frontier_reached"
+          ],
+          "frontier_near": true,
+          "frontier_reached": true,
+          "graph_node_count": 3,
+          "new_node_captions": [],
+          "new_node_count": 0,
+          "new_rooms": [],
+          "no_progress": false,
+          "node_caption_changed": false,
+          "room_object_count_changes": {},
+          "room_object_count_increase_rooms": [],
+          "room_object_counts": {
+            "bedroom": 3
+          },
+          "stuck": false,
+          "target_candidate_captions": [],
+          "target_candidate_details": []
+        }
+      },
+      "planner_calls_at_step": [],
+      "mllm_prompt_excerpt": "You are SmoothNav's BEV frontier-branch planner.\nYou will see an annotated bird's-eye-view map image. The robot is marked A; frontier branches are labeled B1, B2, ... .\n\nTARGET DESCRIPTION:\nThe screen of the television in this image is gray and has a silver frame. This image has a blue and white abstract painting hanging on the wall next to the sofa. On the right side of the picture, there is a gray sofa with a white pillow placed on it. Below the sofa is a brown coffee table with a white dining table top on top. In front of the sofa is a white carpet with black patterns. The ceiling above is white, and there are two small round light bulbs in the upper right corner.\n\nCURRENT TEXT STRATEGY:\n- target_region: unexplored north\n- anchor_object:\n- trigger: frontier_reached\n- step_idx: 145\n- already_explored: [\"bedroom\"]\n\nSCENE GRAPH TEXT:\nROOMS AND OBJECTS:\n  bedroom: cabinet, mirror, windows\nSPATIAL RELATIONSHIPS:\n  mirror next to windows\n  cabinet above mirror\n  cabinet next to windows\n\nBEV BRANCH IDS YOU MAY CHOOSE:\n[\"B4\", \"B3\", \"B6\", \"B5\", \"B2\", \"B1\"]\n\nBRANCH SUMMARY:\n[\n  {\n    \"id\": \"B4\",\n    \"direction_from_agent\": \"south\",\n    \"centroid\": [\n      442.0897435897436,\n      268.1025641025641\n    ],\n    \"representative_coord\": [\n      451,\n      284\n    ],\n    \"candidate_point_count\": 24,\n    \"pixel_count\": 78,\n    \"score_terms\": {\n      \"distance_mean\": 3.1844614639039306,\n      \"base_score_max\": 9.967110035959738,\n      \"bias_score_max\": 0.6802586346521807,\n      \"novelty_score_max\": 0.6982248520710059,",
+      "planner_input_files": {
+        "mllm_prompt": "planner_inputs/step_000145_mllm_prompt.txt",
+        "mllm_call_summary": "planner_inputs/step_000145_mllm_call_summary.json"
+      },
+      "subsequent_window": {
+        "from_exclusive": 145,
+        "to_inclusive": 146,
+        "step_count": 0,
+        "new_node_captions": [],
+        "new_node_captions_first_20_steps": [],
+        "new_rooms": [],
+        "event_counts": {},
+        "frontier_reached_count": 0,
+        "no_progress_count": 0,
+        "stuck_count": 0,
+        "auto_classification": "unclear_no_semantic_gain"
+      },
+      "agent_bev_reasonableness": "BEV已经展开到西南/南侧新区域，B3/B4/B5/B6都是同一片新区域附近的south分支；B4位于较中心的可行动分支，选择本身可解释。但文字策略仍显示unexplored north，说明策略层没有随拓扑变化重写语义搜索意图。"
+    }
+  ]
+}

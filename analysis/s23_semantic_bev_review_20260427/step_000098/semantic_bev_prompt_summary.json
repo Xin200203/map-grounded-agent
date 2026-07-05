@@ -1,0 +1,197 @@
+{
+  "branch_semantic_hints": [
+    {
+      "decision_roles": [
+        "dry"
+      ],
+      "direction_from_agent": "north",
+      "id": "B1",
+      "nearby_object_ids": [
+        "O002",
+        "O003",
+        "O001"
+      ],
+      "nearby_room_ids": [
+        "R001"
+      ],
+      "semantic_target_affinity": 0.093,
+      "visit_state": "selected"
+    },
+    {
+      "decision_roles": [],
+      "direction_from_agent": "east",
+      "id": "B2",
+      "nearby_object_ids": [
+        "O001",
+        "O002",
+        "O003"
+      ],
+      "nearby_room_ids": [
+        "R001"
+      ],
+      "semantic_target_affinity": 0.2215,
+      "visit_state": "candidate"
+    },
+    {
+      "decision_roles": [
+        "mllm",
+        "final"
+      ],
+      "direction_from_agent": "west",
+      "id": "B3",
+      "nearby_object_ids": [],
+      "nearby_room_ids": [
+        "R001"
+      ],
+      "semantic_target_affinity": 0.25,
+      "visit_state": "selected"
+    }
+  ],
+  "coordinate_frame": {
+    "col_axis": "east_right_image_x",
+    "crop": {
+      "c0": 187,
+      "c1": 433,
+      "r0": 235,
+      "r1": 454
+    },
+    "map_shape": [
+      720,
+      720
+    ],
+    "name": "full_map_rc_unflipped",
+    "origin": "full_map[0,0]",
+    "row_axis": "south_down_image_y"
+  },
+  "decision_overlay": {
+    "allowed_branch_ids": [
+      "B3",
+      "B2",
+      "B1"
+    ],
+    "dry_selected_branch_id": "B1",
+    "dry_selected_frontier": [
+      313,
+      395
+    ],
+    "final_selected_branch_id": "B3",
+    "final_selected_frontier": [
+      367,
+      243
+    ],
+    "mllm_reason": "",
+    "mllm_selected_branch_id": "B3",
+    "mllm_status": "valid",
+    "planner_prior_applied": true,
+    "prompt_hash": "92de9e3988b843de31400418aa5edb6df0e00bff",
+    "ranked_branch_ids": [
+      "B3",
+      "B2",
+      "B1"
+    ]
+  },
+  "object_labels": [
+    {
+      "caption": "windows",
+      "center_rc": [
+        369,
+        378
+      ],
+      "id": "O001",
+      "num_detections": 4,
+      "target_relevance": 0.0
+    },
+    {
+      "caption": "mirror",
+      "center_rc": [
+        358,
+        386
+      ],
+      "id": "O002",
+      "num_detections": 3,
+      "target_relevance": 0.0
+    },
+    {
+      "caption": "cabinet",
+      "center_rc": [
+        274,
+        363
+      ],
+      "id": "O003",
+      "num_detections": 3,
+      "target_relevance": 0.0
+    }
+  ],
+  "quality_checks": {
+    "agent_on_free_or_near_free": false,
+    "agent_on_known_or_near_known": false,
+    "agent_within_map_bounds": true,
+    "branch_count": 3,
+    "branches_with_semantic_hints": 3,
+    "localized_object_count": 3,
+    "localized_room_hypothesis_count": 1,
+    "object_count": 3,
+    "room_count": 9,
+    "warnings": [
+      "agent_not_on_known_or_near_known"
+    ]
+  },
+  "room_hypotheses": [
+    {
+      "caption": "bedroom",
+      "center_rc": [
+        334,
+        376
+      ],
+      "confidence": "medium",
+      "geometry_type": "member_object_hypothesis",
+      "id": "R001",
+      "object_ids": [
+        "O003",
+        "O002",
+        "O001"
+      ]
+    },
+    {
+      "caption": "living room",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R002",
+      "object_ids": []
+    },
+    {
+      "caption": "bathroom",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R003",
+      "object_ids": []
+    },
+    {
+      "caption": "kitchen",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R004",
+      "object_ids": []
+    },
+    {
+      "caption": "dining room",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R005",
+      "object_ids": []
+    },
+    {
+      "caption": "office room",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R006",
+      "object_ids": []
+    }
+  ],
+  "schema_version": "smoothnav.semantic_bev_prompt_summary.v1"
+}

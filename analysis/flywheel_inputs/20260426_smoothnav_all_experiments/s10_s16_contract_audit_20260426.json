@@ -1,0 +1,2539 @@
+{
+  "branch_reproducibility_comparisons": [
+    {
+      "episode_id": 228,
+      "first_strategy_divergence_step": 0,
+      "first_target_steps": [
+        null,
+        null,
+        564,
+        null,
+        null,
+        null,
+        668
+      ],
+      "num_runs": 7,
+      "profile": "smoothnav-full",
+      "run_ids": [
+        "smoothnav_text_214505_9ec3ddce",
+        "smoothnav_text_111030_aea1ec8d",
+        "smoothnav_text_112731_317b2c0e",
+        "smoothnav_text_115258_d6b54541",
+        "smoothnav_text_120745_ab9467f3",
+        "smoothnav_text_130030_641105ae",
+        "smoothnav_text_195315_7c1397e9"
+      ],
+      "target_branch_coverage_rate": 0.14285714285714285,
+      "target_branch_covered_flags": [
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "target_event_counts": [
+        0,
+        0,
+        371,
+        0,
+        0,
+        0,
+        2
+      ]
+    }
+  ],
+  "dominant_failure_layer_counts": {
+    "controller_pending_prefetch": 1,
+    "determinism_branch_reproducibility": 5,
+    "planner_menu_choice": 1
+  },
+  "input_paths": [
+    "results/phase2_revalidation/s10_target_anchor_local_map_refresh_20260423",
+    "results/phase2_revalidation/s11_target_anchor_local_map_refresh_rerun_20260424",
+    "results/phase2_revalidation/s12_temperature0_target_anchor_20260424",
+    "results/phase2_revalidation/s13_temp0_pending_fix_20260424",
+    "results/phase2_revalidation/s14_temp0_pending_fix_rerun_20260424",
+    "results/phase2_revalidation/s15_target_anchor_attempt_online_probe_20260424",
+    "results/phase2_revalidation/s16_contract_audit_ep228_20260426"
+  ],
+  "layer_status_counts": {
+    "controller_pending_prefetch": {
+      "fail": 1,
+      "pass": 6
+    },
+    "dataset_scene_episode": {
+      "pass": 7
+    },
+    "determinism_branch_reproducibility": {
+      "pass": 1,
+      "warn": 6
+    },
+    "executor_low_level_control": {
+      "pass": 6,
+      "warn": 1
+    },
+    "grounding_frontier_value": {
+      "fail": 1,
+      "pass": 6
+    },
+    "local_map_lifecycle": {
+      "pass": 7
+    },
+    "monitor_trigger_coverage": {
+      "pass": 7
+    },
+    "perception_graph_target_evidence": {
+      "fail": 5,
+      "pass": 2
+    },
+    "planner_menu_choice": {
+      "fail": 1,
+      "pass": 6
+    },
+    "replay_counterfactual_coverage": {
+      "pass": 1,
+      "warn": 6
+    },
+    "strategy_contract": {
+      "pass": 7
+    },
+    "suite_artifact_config": {
+      "pass": 2,
+      "warn": 5
+    },
+    "target_anchor_attempt": {
+      "pass": 7
+    },
+    "terminal_metric_arbitration": {
+      "pass": 7
+    }
+  },
+  "num_runs": 7,
+  "runs": [
+    {
+      "dominant_failure_layer": "determinism_branch_reproducibility",
+      "dominant_failure_reason": "target branch was not covered in this run",
+      "episode_id": 228,
+      "layers": {
+        "controller_pending_prefetch": {
+          "metrics": {
+            "harmful_pending_promotion_count": 0,
+            "harmful_pending_promotions": [],
+            "pending_age_max": 130,
+            "pending_age_median": 31.0,
+            "stale_pending_discard_steps": []
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "dataset_scene_episode": {
+          "metrics": {
+            "episode_id": 228,
+            "goal_type": "text",
+            "max_episode_length": 1000,
+            "missing_metadata": [],
+            "primary_goal_present": true,
+            "split": "val",
+            "success_dist": 1.0,
+            "text_goal_dataset": "data/datasets/textnav/val/val_text.json.gz"
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "determinism_branch_reproducibility": {
+          "metrics": {
+            "api_provider": "anthropic",
+            "first_strategy_sequence": [
+              {
+                "step_idx": 0,
+                "target_region": "unexplored north"
+              },
+              {
+                "step_idx": 7,
+                "target_region": "unexplored east"
+              },
+              {
+                "step_idx": 12,
+                "target_region": "bedroom"
+              },
+              {
+                "step_idx": 15,
+                "target_region": "unexplored east"
+              },
+              {
+                "step_idx": 31,
+                "target_region": "unexplored north"
+              },
+              {
+                "step_idx": 99,
+                "target_region": "unexplored east"
+              },
+              {
+                "step_idx": 135,
+                "target_region": "unexplored north"
+              },
+              {
+                "step_idx": 316,
+                "target_region": "unexplored east"
+              },
+              {
+                "step_idx": 540,
+                "target_region": "unexplored north"
+              }
+            ],
+            "first_target_anchor_step": null,
+            "first_target_step": null,
+            "llm_model": "claude-sonnet-4-5-20250929",
+            "planner_prompt_hashes_head": [
+              "0b5c76e3d27750904d311c4e01f24adea245aa28",
+              "79c02c1afbc6435a06af77c9891a03587ff9ec1f",
+              "323c4897e7eaeb06839ec9619cbf3a1b0bd7292a",
+              "0ca81f3f94bfe9bef53a60287548135bece9e4eb",
+              "2a64e573b302125e623ce90cf4ebcb2b7c912c9e",
+              "cd26598410e90302667468a8c8ba490f1acf736a",
+              "35da6f4227cb47ab91fd9008d425fc50a99e3400",
+              "0d8f7ee1e14d82c2d8f7abae38c293eb7f02f9ce",
+              "7a438f5551cd8412a642ad8695c6cb489450423b",
+              "f77452f3f18a0224181e57a1d32fbbd506d86c7e",
+              "d1d7e6b218c0d7a40892752a63b75c2963501d75",
+              "2f861c49cd45ffb78aebbf210376538e715ce11d"
+            ],
+            "planner_response_hashes_head": [
+              "9f2dc90c44de7854",
+              "d605307b4cea45fa",
+              "1d639aff3ae7984d",
+              "c9a8b15b6fcaa1e1",
+              "9816daeec2a3d316",
+              "18929732ef66f48e",
+              "ef0c8e479ae69e6f",
+              "400a182e2d4513d9",
+              "4c1e3a032e39598d",
+              "5163e7414328ae0b",
+              "7b1ebe75bf0ab0eb",
+              "ef0c8e479ae69e6f"
+            ],
+            "seed": 1,
+            "target_branch_covered": false,
+            "target_event_count": 0
+          },
+          "observations": [],
+          "status": "warn"
+        },
+        "executor_low_level_control": {
+          "metrics": {
+            "direction_reversals": 2.0,
+            "dist_to_goal_slope": 0.06911193079813657,
+            "executor_adoption_changes": 39,
+            "executor_override_ratios": {
+              "executor_override_ratio": 0.006535947712418301,
+              "global_goal_override_ratio": 0.0,
+              "stuck_goal_override_ratio": 0.006535947712418301,
+              "temp_goal_override_ratio": 0.0,
+              "visible_target_override_ratio": 0.0
+            },
+            "pause_ratio": 0.44502617801047123,
+            "strategy_switch_count": 9.0
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "grounding_frontier_value": {
+          "metrics": {
+            "grounding_event_count": 16,
+            "grounding_noop_reasons": {},
+            "sample_target_grounding_events": [],
+            "target_base_score_zero_count": 0,
+            "target_base_score_zero_rate": 0.0,
+            "target_best_seen_anchor_distance_delta": null,
+            "target_bias_distance_max": null,
+            "target_bias_distance_min": null,
+            "target_bias_score_zero_count": 0,
+            "target_bias_score_zero_rate": 0.0,
+            "target_grounding_event_count": 0,
+            "target_selected_frontier_anchor_distance_delta": null,
+            "target_semantic_term_share_median": null,
+            "target_value_flatline_count": 0,
+            "target_value_flatline_rate": 0.0
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "local_map_lifecycle": {
+          "metrics": {
+            "local_map_move_steps": [],
+            "stale_local_goal_risk_count": 0,
+            "stale_local_goal_risk_steps": [],
+            "target_anchor_refresh_count": 0,
+            "target_anchor_refresh_steps": []
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "monitor_trigger_coverage": {
+          "metrics": {
+            "event_type_counts": {
+              "frontier_near": 14,
+              "frontier_reached": 13,
+              "new_nodes": 33,
+              "new_rooms": 1,
+              "no_progress": 340,
+              "node_caption_changed": 2,
+              "room_object_count_increase": 33,
+              "stuck": 1
+            },
+            "monitor_call_count": 0,
+            "monitor_skip_reasons": {},
+            "unhandled_target_candidate_count": 0,
+            "unhandled_target_candidate_steps": []
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "perception_graph_target_evidence": {
+          "metrics": {
+            "first_target_step": null,
+            "sample_target_steps": [],
+            "target_candidate_captions": {},
+            "target_candidate_flicker_rate": 1.0,
+            "target_center_updates": 0,
+            "target_event_count": 0
+          },
+          "observations": [],
+          "status": "fail"
+        },
+        "planner_menu_choice": {
+          "metrics": {
+            "empty_response_count": 0,
+            "evidence_to_planner_latency": null,
+            "fallback_triggered_count": 0,
+            "first_planner_after_target": null,
+            "invalid_parse_count": 0,
+            "planner_call_count": 16,
+            "selected_target_after_target": null,
+            "target_in_prompt_after_target": null
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "replay_counterfactual_coverage": {
+          "metrics": {
+            "attempt_replay_verdict": null,
+            "pending_fix_verdict": null,
+            "present_artifacts": {
+              "pending_fix_counterfactual": false,
+              "target_anchor_attempt_analysis": false,
+              "target_anchor_attempt_replay": false,
+              "target_branch_capture": false
+            }
+          },
+          "observations": [],
+          "status": "warn"
+        },
+        "strategy_contract": {
+          "metrics": {
+            "direct_object_blocked_reasons": {},
+            "direct_object_goal_step_count": 0,
+            "first_direct_goal_after_target": null,
+            "first_object_commit_after_target": null,
+            "first_target_anchor_after_target": null
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "suite_artifact_config": {
+          "metrics": {
+            "missing_optional_artifacts": [
+              "monitor_calls/episode_*.jsonl"
+            ],
+            "missing_required_artifacts": [],
+            "monitor_call_count": 0,
+            "planner_call_count": 16,
+            "step_count": 765
+          },
+          "observations": [
+            "required artifacts present"
+          ],
+          "status": "warn"
+        },
+        "target_anchor_attempt": {
+          "metrics": {
+            "attempt_observation_count": 0,
+            "last_attempt_summary": null,
+            "max_stall_updates": 0,
+            "stall_replan_steps": []
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "terminal_metric_arbitration": {
+          "metrics": {
+            "SPL": 0.0,
+            "SR": 0.0,
+            "summary_terminal_outcome_counts": {
+              "FAILURE_NO_PROGRESS_TIMEOUT": 1
+            },
+            "terminal_decision": {
+              "evidence_ids": [],
+              "final_verify_timeout": 0,
+              "is_terminal": true,
+              "outcome": "FAILURE_NO_PROGRESS_TIMEOUT",
+              "reason": "environment_done_without_success",
+              "stop_veto_source": null,
+              "termination_confidence": 0.5
+            },
+            "terminal_outcome": "FAILURE_NO_PROGRESS_TIMEOUT",
+            "total_steps": 765
+          },
+          "observations": [],
+          "status": "pass"
+        }
+      },
+      "profile": "smoothnav-full",
+      "run_dir": "results/phase2_revalidation/s10_target_anchor_local_map_refresh_20260423/smoothnav-full/20260423/smoothnav_text_214505_9ec3ddce",
+      "run_id": "smoothnav_text_214505_9ec3ddce",
+      "terminal_outcome": "FAILURE_NO_PROGRESS_TIMEOUT"
+    },
+    {
+      "dominant_failure_layer": "determinism_branch_reproducibility",
+      "dominant_failure_reason": "target branch was not covered in this run",
+      "episode_id": 228,
+      "layers": {
+        "controller_pending_prefetch": {
+          "metrics": {
+            "harmful_pending_promotion_count": 0,
+            "harmful_pending_promotions": [],
+            "pending_age_max": 656,
+            "pending_age_median": 240,
+            "stale_pending_discard_steps": []
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "dataset_scene_episode": {
+          "metrics": {
+            "episode_id": 228,
+            "goal_type": "text",
+            "max_episode_length": 1000,
+            "missing_metadata": [],
+            "primary_goal_present": true,
+            "split": "val",
+            "success_dist": 1.0,
+            "text_goal_dataset": "data/datasets/textnav/val/val_text.json.gz"
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "determinism_branch_reproducibility": {
+          "metrics": {
+            "api_provider": "anthropic",
+            "first_strategy_sequence": [
+              {
+                "step_idx": 0,
+                "target_region": "unexplored north"
+              },
+              {
+                "step_idx": 12,
+                "target_region": "bedroom"
+              },
+              {
+                "step_idx": 15,
+                "target_region": "unexplored east"
+              },
+              {
+                "step_idx": 31,
+                "target_region": "unexplored north"
+              },
+              {
+                "step_idx": 99,
+                "target_region": "unexplored east"
+              },
+              {
+                "step_idx": 135,
+                "target_region": "unexplored north"
+              },
+              {
+                "step_idx": 178,
+                "target_region": "unexplored east"
+              }
+            ],
+            "first_target_anchor_step": null,
+            "first_target_step": null,
+            "llm_model": "claude-sonnet-4-5-20250929",
+            "planner_prompt_hashes_head": [
+              "0b5c76e3d27750904d311c4e01f24adea245aa28",
+              "79c02c1afbc6435a06af77c9891a03587ff9ec1f",
+              "323c4897e7eaeb06839ec9619cbf3a1b0bd7292a",
+              "0ca81f3f94bfe9bef53a60287548135bece9e4eb",
+              "e176bf824768ad3852d2097478a146b2263e6602",
+              "001b8c3b5fbc536ccdc5cd1ed9cadd431c63430e",
+              "4bac831642bc03cf5c56663207a48676908b1ddc",
+              "6001647b2737954e93840f8968936d30b11ffbf7",
+              "30a296a2d9b6518ab1350e7c421be9c81a155eb0",
+              "28f3ae22e1dd88ed3ea8e9691da4dcd736770087",
+              "e1ce0092c8eac9d6c6fcaf59336002657470deaa",
+              "6ecb9468ef83645544890da39734061cab9a368a"
+            ],
+            "planner_response_hashes_head": [
+              "583872d8b2553908",
+              "0a2f7ba473e17a01",
+              "db462558a7eaa598",
+              "57562915b4245b74",
+              "d5490bcd6656970c",
+              "6b863f3bf245ecdb",
+              "ef0c8e479ae69e6f",
+              "a7da3cb64d2e6a43",
+              "bbb98c216584f639",
+              "dd1eb827af45646f",
+              "964b9ff535b30872",
+              "eee423a61c8076e4"
+            ],
+            "seed": 1,
+            "target_branch_covered": false,
+            "target_event_count": 0
+          },
+          "observations": [],
+          "status": "warn"
+        },
+        "executor_low_level_control": {
+          "metrics": {
+            "direction_reversals": 4.0,
+            "dist_to_goal_slope": 0.025130132673315538,
+            "executor_adoption_changes": 24,
+            "executor_override_ratios": {
+              "executor_override_ratio": 0.0,
+              "global_goal_override_ratio": 0.0,
+              "stuck_goal_override_ratio": 0.0,
+              "temp_goal_override_ratio": 0.0,
+              "visible_target_override_ratio": 0.0
+            },
+            "pause_ratio": 0.39478957915831664,
+            "strategy_switch_count": 7.0
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "grounding_frontier_value": {
+          "metrics": {
+            "grounding_event_count": 13,
+            "grounding_noop_reasons": {},
+            "sample_target_grounding_events": [],
+            "target_base_score_zero_count": 0,
+            "target_base_score_zero_rate": 0.0,
+            "target_best_seen_anchor_distance_delta": null,
+            "target_bias_distance_max": null,
+            "target_bias_distance_min": null,
+            "target_bias_score_zero_count": 0,
+            "target_bias_score_zero_rate": 0.0,
+            "target_grounding_event_count": 0,
+            "target_selected_frontier_anchor_distance_delta": null,
+            "target_semantic_term_share_median": null,
+            "target_value_flatline_count": 0,
+            "target_value_flatline_rate": 0.0
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "local_map_lifecycle": {
+          "metrics": {
+            "local_map_move_steps": [],
+            "stale_local_goal_risk_count": 0,
+            "stale_local_goal_risk_steps": [],
+            "target_anchor_refresh_count": 0,
+            "target_anchor_refresh_steps": []
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "monitor_trigger_coverage": {
+          "metrics": {
+            "event_type_counts": {
+              "frontier_near": 12,
+              "frontier_reached": 11,
+              "new_nodes": 30,
+              "new_rooms": 1,
+              "no_progress": 394,
+              "room_object_count_increase": 30
+            },
+            "monitor_call_count": 0,
+            "monitor_skip_reasons": {},
+            "unhandled_target_candidate_count": 0,
+            "unhandled_target_candidate_steps": []
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "perception_graph_target_evidence": {
+          "metrics": {
+            "first_target_step": null,
+            "sample_target_steps": [],
+            "target_candidate_captions": {},
+            "target_candidate_flicker_rate": 1.0,
+            "target_center_updates": 0,
+            "target_event_count": 0
+          },
+          "observations": [],
+          "status": "fail"
+        },
+        "planner_menu_choice": {
+          "metrics": {
+            "empty_response_count": 0,
+            "evidence_to_planner_latency": null,
+            "fallback_triggered_count": 0,
+            "first_planner_after_target": null,
+            "invalid_parse_count": 0,
+            "planner_call_count": 12,
+            "selected_target_after_target": null,
+            "target_in_prompt_after_target": null
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "replay_counterfactual_coverage": {
+          "metrics": {
+            "attempt_replay_verdict": null,
+            "pending_fix_verdict": null,
+            "present_artifacts": {
+              "pending_fix_counterfactual": false,
+              "target_anchor_attempt_analysis": false,
+              "target_anchor_attempt_replay": false,
+              "target_branch_capture": false
+            }
+          },
+          "observations": [],
+          "status": "warn"
+        },
+        "strategy_contract": {
+          "metrics": {
+            "direct_object_blocked_reasons": {},
+            "direct_object_goal_step_count": 0,
+            "first_direct_goal_after_target": null,
+            "first_object_commit_after_target": null,
+            "first_target_anchor_after_target": null
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "suite_artifact_config": {
+          "metrics": {
+            "missing_optional_artifacts": [
+              "monitor_calls/episode_*.jsonl"
+            ],
+            "missing_required_artifacts": [],
+            "monitor_call_count": 0,
+            "planner_call_count": 12,
+            "step_count": 999
+          },
+          "observations": [
+            "required artifacts present"
+          ],
+          "status": "warn"
+        },
+        "target_anchor_attempt": {
+          "metrics": {
+            "attempt_observation_count": 0,
+            "last_attempt_summary": null,
+            "max_stall_updates": 0,
+            "stall_replan_steps": []
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "terminal_metric_arbitration": {
+          "metrics": {
+            "SPL": 0.0,
+            "SR": 0.0,
+            "summary_terminal_outcome_counts": {
+              "FAILURE_NO_PROGRESS_TIMEOUT": 1
+            },
+            "terminal_decision": {
+              "evidence_ids": [],
+              "final_verify_timeout": 0,
+              "is_terminal": true,
+              "outcome": "FAILURE_NO_PROGRESS_TIMEOUT",
+              "reason": "environment_done_without_success",
+              "stop_veto_source": null,
+              "termination_confidence": 0.5
+            },
+            "terminal_outcome": "FAILURE_NO_PROGRESS_TIMEOUT",
+            "total_steps": 999
+          },
+          "observations": [],
+          "status": "pass"
+        }
+      },
+      "profile": "smoothnav-full",
+      "run_dir": "results/phase2_revalidation/s11_target_anchor_local_map_refresh_rerun_20260424/smoothnav-full/20260424/smoothnav_text_111030_aea1ec8d",
+      "run_id": "smoothnav_text_111030_aea1ec8d",
+      "terminal_outcome": "FAILURE_NO_PROGRESS_TIMEOUT"
+    },
+    {
+      "dominant_failure_layer": "controller_pending_prefetch",
+      "dominant_failure_reason": "harmful stale pending promotion",
+      "episode_id": 228,
+      "layers": {
+        "controller_pending_prefetch": {
+          "metrics": {
+            "harmful_pending_promotion_count": 1,
+            "harmful_pending_promotions": [
+              {
+                "from_region": "unexplored target:tv",
+                "pending_region_previous_step": "unexplored east",
+                "planner_reasons": [
+                  "frontier_reached"
+                ],
+                "step_idx": 610,
+                "to_region": "unexplored east"
+              }
+            ],
+            "pending_age_max": 279,
+            "pending_age_median": 108,
+            "stale_pending_discard_steps": [
+              674
+            ]
+          },
+          "observations": [],
+          "status": "fail"
+        },
+        "dataset_scene_episode": {
+          "metrics": {
+            "episode_id": 228,
+            "goal_type": "text",
+            "max_episode_length": 1000,
+            "missing_metadata": [],
+            "primary_goal_present": true,
+            "split": "val",
+            "success_dist": 1.0,
+            "text_goal_dataset": "data/datasets/textnav/val/val_text.json.gz"
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "determinism_branch_reproducibility": {
+          "metrics": {
+            "api_provider": "anthropic",
+            "first_strategy_sequence": [
+              {
+                "step_idx": 0,
+                "target_region": "unexplored north"
+              },
+              {
+                "step_idx": 12,
+                "target_region": "bedroom"
+              },
+              {
+                "step_idx": 15,
+                "target_region": "unexplored east"
+              },
+              {
+                "step_idx": 31,
+                "target_region": "unexplored north"
+              },
+              {
+                "step_idx": 44,
+                "target_region": "unexplored east"
+              },
+              {
+                "step_idx": 182,
+                "target_region": "unexplored west"
+              },
+              {
+                "step_idx": 251,
+                "target_region": "unexplored south"
+              },
+              {
+                "step_idx": 259,
+                "target_region": "unexplored east"
+              },
+              {
+                "step_idx": 273,
+                "target_region": "unexplored north"
+              },
+              {
+                "step_idx": 312,
+                "target_region": "unexplored east"
+              },
+              {
+                "step_idx": 564,
+                "target_region": "unexplored target:tv"
+              },
+              {
+                "step_idx": 610,
+                "target_region": "unexplored east"
+              }
+            ],
+            "first_target_anchor_step": 564,
+            "first_target_step": 564,
+            "llm_model": "claude-sonnet-4-5-20250929",
+            "planner_prompt_hashes_head": [
+              "0b5c76e3d27750904d311c4e01f24adea245aa28",
+              "79c02c1afbc6435a06af77c9891a03587ff9ec1f",
+              "323c4897e7eaeb06839ec9619cbf3a1b0bd7292a",
+              "0ca81f3f94bfe9bef53a60287548135bece9e4eb",
+              "4b035b16fca2a0d29c33773fdde3d93a34dda938",
+              "25008e00f9a1e7715f979fab2be5faf14e19f3ac",
+              "b969a7f4a6e6332374fe63ecbbbe60929fda2699",
+              "7e0221a3c3fd3d0fe3a6b0e55302781eb6f45b0e",
+              "87f3e4630113822d1abc80b3af80455477a71125",
+              "30ecdc108684f3cc40b14c4e1916f38670bf4df3",
+              "9791de45a8276ea7a15a0a9b6d59d101af5cf2ca",
+              "6235a17b6b3eea4e7f24f011374b98adf2da04b9"
+            ],
+            "planner_response_hashes_head": [
+              "ca559e015d42134d",
+              "5a7070b424b712fd",
+              "b81d55cc5bf76b53",
+              "14b95c0645ed2718",
+              "b1f312d80ccaf451",
+              "b72958442b29f587",
+              "6b81f7cc99069e20",
+              "c81954945d69163f",
+              "b3fba3355d6fbf8d",
+              "9cf64c62bce2c654",
+              "75af20b7d3c17c35",
+              "6dfe5473493bb2f4"
+            ],
+            "seed": 1,
+            "target_branch_covered": true,
+            "target_event_count": 371
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "executor_low_level_control": {
+          "metrics": {
+            "direction_reversals": 6.0,
+            "dist_to_goal_slope": 0.10574126445504402,
+            "executor_adoption_changes": 43,
+            "executor_override_ratios": {
+              "executor_override_ratio": 0.0042780748663101605,
+              "global_goal_override_ratio": 0.0,
+              "stuck_goal_override_ratio": 0.0042780748663101605,
+              "temp_goal_override_ratio": 0.0,
+              "visible_target_override_ratio": 0.0
+            },
+            "pause_ratio": 0.46359743040685225,
+            "strategy_switch_count": 13.0
+          },
+          "observations": [],
+          "status": "warn"
+        },
+        "grounding_frontier_value": {
+          "metrics": {
+            "grounding_event_count": 29,
+            "grounding_noop_reasons": {},
+            "sample_target_grounding_events": [
+              {
+                "actionability_score": 1.0,
+                "anchor_euclidean_distance": 331.21745123106064,
+                "base_score": 4.029776642754823,
+                "bias_distance": 2.8719815994511975,
+                "bias_input": [
+                  166,
+                  296
+                ],
+                "bias_score": 0.8328018400548802,
+                "candidate_frontier_count_after_bias_filter": 5,
+                "changed": true,
+                "filtered_frontier_count": 678,
+                "final_score": 9.810688144986177,
+                "local_projection_valid": true,
+                "novelty_score": 0.44970414201183434,
+                "projected_goal": [
+                  195,
+                  237
+                ],
+                "raw_frontier_count": 785,
+                "recent_penalty": 0.0,
+                "repeat_penalty": 0.0,
+                "selected_from_bias_filtered_subset": true,
+                "selected_frontier": [
+                  497,
+                  284
+                ],
+                "semantic_term_share": 0.3395487972902246,
+                "step_idx": 564,
+                "target_region": "unexplored target:tv",
+                "top1_top2_gap": 0.014237444454389347,
+                "trigger": "target_candidate_detected"
+              },
+              {
+                "actionability_score": 1.0,
+                "anchor_euclidean_distance": 296.108088373148,
+                "base_score": 9.987665434918386,
+                "bias_distance": 4.573027146715876,
+                "bias_input": [
+                  166,
+                  296
+                ],
+                "bias_score": 0.6626972853284124,
+                "candidate_frontier_count_after_bias_filter": 24,
+                "changed": true,
+                "filtered_frontier_count": 553,
+                "final_score": 15.117744517060437,
+                "local_projection_valid": true,
+                "novelty_score": 0.47928994082840237,
+                "projected_goal": [
+                  97,
+                  127
+                ],
+                "raw_frontier_count": 635,
+                "recent_penalty": 0.0,
+                "repeat_penalty": 0.0,
+                "selected_from_bias_filtered_subset": true,
+                "selected_frontier": [
+                  462,
+                  288
+                ],
+                "semantic_term_share": 0.17534289842788542,
+                "step_idx": 599,
+                "target_region": "unexplored target:tv",
+                "top1_top2_gap": 0.04984186328034923,
+                "trigger": "target_anchor_local_map_refresh"
+              },
+              {
+                "actionability_score": 1.0,
+                "anchor_euclidean_distance": 361.0013850388943,
+                "base_score": 4.030946770794751,
+                "bias_distance": 11.693489482918855,
+                "bias_input": [
+                  166,
+                  296
+                ],
+                "bias_score": 0.0,
+                "candidate_frontier_count_after_bias_filter": 21,
+                "changed": true,
+                "filtered_frontier_count": 340,
+                "final_score": 6.397810676120194,
+                "local_projection_valid": true,
+                "novelty_score": 0.3668639053254438,
+                "projected_goal": [
+                  196,
+                  2
+                ],
+                "raw_frontier_count": 405,
+                "recent_penalty": 0.0,
+                "repeat_penalty": 0.0,
+                "selected_from_bias_filtered_subset": true,
+                "selected_frontier": [
+                  485,
+                  127
+                ],
+                "semantic_term_share": 0.0,
+                "step_idx": 632,
+                "target_region": "unexplored target:tv",
+                "top1_top2_gap": 0.005852254300421578,
+                "trigger": "frontier_reached"
+              },
+              {
+                "actionability_score": 1.0,
+                "anchor_euclidean_distance": 365.05889935735024,
+                "base_score": 4.303781773577514,
+                "bias_distance": 11.555895285093552,
+                "bias_input": [
+                  166,
+                  296
+                ],
+                "bias_score": 0.0,
+                "candidate_frontier_count_after_bias_filter": 24,
+                "changed": true,
+                "filtered_frontier_count": 340,
+                "final_score": 6.889580590145561,
+                "local_projection_valid": true,
+                "novelty_score": 0.5857988165680473,
+                "projected_goal": [
+                  197,
+                  9
+                ],
+                "raw_frontier_count": 404,
+                "recent_penalty": 0.0,
+                "repeat_penalty": 0.0,
+                "selected_from_bias_filtered_subset": true,
+                "selected_frontier": [
+                  488,
+                  124
+                ],
+                "semantic_term_share": 0.0,
+                "step_idx": 639,
+                "target_region": "unexplored target:tv",
+                "top1_top2_gap": 0.0009128310835331277,
+                "trigger": "target_anchor_local_map_refresh"
+              },
+              {
+                "actionability_score": 1.0,
+                "anchor_euclidean_distance": 272.47018185482244,
+                "base_score": 0.0,
+                "bias_distance": 25.148270612882364,
+                "bias_input": [
+                  166,
+                  296
+                ],
+                "bias_score": 0.0,
+                "candidate_frontier_count_after_bias_filter": 20,
+                "changed": true,
+                "filtered_frontier_count": 295,
+                "final_score": 2.6508875739644973,
+                "local_projection_valid": true,
+                "novelty_score": 0.650887573964497,
+                "projected_goal": [
+                  11,
+                  112
+                ],
+                "raw_frontier_count": 337,
+                "recent_penalty": 0.0,
+                "repeat_penalty": 0.0,
+                "selected_from_bias_filtered_subset": true,
+                "selected_frontier": [
+                  374,
+                  120
+                ],
+                "semantic_term_share": 0.0,
+                "step_idx": 674,
+                "target_region": "unexplored target:tv",
+                "top1_top2_gap": 0.0,
+                "trigger": "frontier_reached"
+              },
+              {
+                "actionability_score": 1.0,
+                "anchor_euclidean_distance": 270.9464891819047,
+                "base_score": 0.0,
+                "bias_distance": 25.110260769505313,
+                "bias_input": [
+                  166,
+                  296
+                ],
+                "bias_score": 0.0,
+                "candidate_frontier_count_after_bias_filter": 20,
+                "changed": true,
+                "filtered_frontier_count": 295,
+                "final_score": 2.6508875739644973,
+                "local_projection_valid": true,
+                "novelty_score": 0.650887573964497,
+                "projected_goal": [
+                  9,
+                  112
+                ],
+                "raw_frontier_count": 335,
+                "recent_penalty": 0.0,
+                "repeat_penalty": 0.0,
+                "selected_from_bias_filtered_subset": true,
+                "selected_frontier": [
+                  372,
+                  120
+                ],
+                "semantic_term_share": 0.0,
+                "step_idx": 679,
+                "target_region": "unexplored target:tv",
+                "top1_top2_gap": 0.005917159763313862,
+                "trigger": "target_anchor_local_map_refresh"
+              },
+              {
+                "actionability_score": 1.0,
+                "anchor_euclidean_distance": 275.8042784294689,
+                "base_score": 0.0,
+                "bias_distance": 23.84863464860677,
+                "bias_input": [
+                  166,
+                  296
+                ],
+                "bias_score": 0.0,
+                "candidate_frontier_count_after_bias_filter": 123,
+                "changed": true,
+                "filtered_frontier_count": 295,
+                "final_score": 2.7633136094674557,
+                "local_projection_valid": true,
+                "novelty_score": 0.7633136094674556,
+                "projected_goal": [
+                  57,
+                  98
+                ],
+                "raw_frontier_count": 335,
+                "recent_penalty": 0.0,
+                "repeat_penalty": 0.0,
+                "selected_from_bias_filtered_subset": true,
+                "selected_frontier": [
+                  358,
+                  98
+                ],
+                "semantic_term_share": 0.0,
+                "step_idx": 719,
+                "target_region": "unexplored target:tv",
+                "top1_top2_gap": 0.01775147928994114,
+                "trigger": "target_anchor_local_map_refresh"
+              },
+              {
+                "actionability_score": 1.0,
+                "anchor_euclidean_distance": 275.10906927980403,
+                "base_score": 0.0,
+                "bias_distance": 23.837619436131813,
+                "bias_input": [
+                  166,
+                  296
+                ],
+                "bias_score": 0.0,
+                "candidate_frontier_count_after_bias_filter": 123,
+                "changed": true,
+                "filtered_frontier_count": 295,
+                "final_score": 2.7455621301775146,
+                "local_projection_valid": true,
+                "novelty_score": 0.7455621301775148,
+                "projected_goal": [
+                  88,
+                  4
+                ],
+                "raw_frontier_count": 334,
+                "recent_penalty": 0.0,
+                "repeat_penalty": 0.0,
+                "selected_from_bias_filtered_subset": true,
+                "selected_frontier": [
+                  357,
+                  98
+                ],
+                "semantic_term_share": 0.0,
+                "step_idx": 759,
+                "target_region": "unexplored target:tv",
+                "top1_top2_gap": 0.017751479289940697,
+                "trigger": "target_anchor_local_map_refresh"
+              },
+              {
+                "actionability_score": 1.0,
+                "anchor_euclidean_distance": 273.80467490530543,
+                "base_score": 0.0,
+                "bias_distance": 24.489554104725975,
+                "bias_input": [
+                  166,
+                  296
+                ],
+                "bias_score": 0.0,
+                "candidate_frontier_count_after_bias_filter": 152,
+                "changed": true,
+                "filtered_frontier_count": 324,
+                "final_score": 2.7928994082840237,
+                "local_projection_valid": true,
+                "novelty_score": 0.7928994082840237,
+                "projected_goal": [
+                  66,
+                  109
+                ],
+                "raw_frontier_count": 359,
+                "recent_penalty": 0.0,
+                "repeat_penalty": 0.0,
+                "selected_from_bias_filtered_subset": true,
+                "selected_frontier": [
+                  366,
+                  109
+                ],
+                "semantic_term_share": 0.0,
+                "step_idx": 799,
+                "target_region": "unexplored target:tv",
+                "top1_top2_gap": 0.0,
+                "trigger": "target_anchor_local_map_refresh"
+              },
+              {
+                "actionability_score": 1.0,
+                "anchor_euclidean_distance": 265.88719412562915,
+                "base_score": 0.0,
+                "bias_distance": 24.939716654456795,
+                "bias_input": [
+                  179,
+                  300
+                ],
+                "bias_score": 0.0,
+                "candidate_frontier_count_after_bias_filter": 152,
+                "changed": true,
+                "filtered_frontier_count": 324,
+                "final_score": 2.7928994082840237,
+                "local_projection_valid": true,
+                "novelty_score": 0.7928994082840237,
+                "projected_goal": [
+                  65,
+                  110
+                ],
+                "raw_frontier_count": 359,
+                "recent_penalty": 0.0,
+                "repeat_penalty": 0.0,
+                "selected_from_bias_filtered_subset": true,
+                "selected_frontier": [
+                  365,
+                  110
+                ],
+                "semantic_term_share": 0.0,
+                "step_idx": 824,
+                "target_region": "unexplored target:tv",
+                "top1_top2_gap": 0.005917159763313862,
+                "trigger": "target_candidate_detected"
+              },
+              {
+                "actionability_score": 1.0,
+                "anchor_euclidean_distance": 268.7042984397533,
+                "base_score": 0.0,
+                "bias_distance": 24.943790488816557,
+                "bias_input": [
+                  179,
+                  300
+                ],
+                "bias_score": 0.0,
+                "candidate_frontier_count_after_bias_filter": 150,
+                "changed": true,
+                "filtered_frontier_count": 324,
+                "final_score": 2.78698224852071,
+                "local_projection_valid": true,
+                "novelty_score": 0.7869822485207101,
+                "projected_goal": [
+                  107,
+                  10
+                ],
+                "raw_frontier_count": 358,
+                "recent_penalty": 0.0,
+                "repeat_penalty": 0.0,
+                "selected_from_bias_filtered_subset": true,
+                "selected_frontier": [
+                  368,
+                  109
+                ],
+                "semantic_term_share": 0.0,
+                "step_idx": 839,
+                "target_region": "unexplored target:tv",
+                "top1_top2_gap": 0.0,
+                "trigger": "target_anchor_local_map_refresh"
+              },
+              {
+                "actionability_score": 1.0,
+                "anchor_euclidean_distance": 268.00186566514793,
+                "base_score": 0.0,
+                "bias_distance": 24.925664601906824,
+                "bias_input": [
+                  179,
+                  300
+                ],
+                "bias_score": 0.0,
+                "candidate_frontier_count_after_bias_filter": 153,
+                "changed": true,
+                "filtered_frontier_count": 325,
+                "final_score": 2.78698224852071,
+                "local_projection_valid": true,
+                "novelty_score": 0.7869822485207101,
+                "projected_goal": [
+                  63,
+                  105
+                ],
+                "raw_frontier_count": 359,
+                "recent_penalty": 0.0,
+                "repeat_penalty": 0.0,
+                "selected_from_bias_filtered_subset": true,
+                "selected_frontier": [
+                  367,
+                  109
+                ],
+                "semantic_term_share": 0.0,
+                "step_idx": 879,
+                "target_region": "unexplored target:tv",
+                "top1_top2_gap": 0.005917159763313418,
+                "trigger": "target_anchor_local_map_refresh"
+              }
+            ],
+            "target_base_score_zero_count": 9,
+            "target_base_score_zero_rate": 0.6923076923076923,
+            "target_best_seen_anchor_distance_delta": 66.04392314049124,
+            "target_bias_distance_max": 25.148270612882364,
+            "target_bias_distance_min": 2.8719815994511975,
+            "target_bias_score_zero_count": 11,
+            "target_bias_score_zero_rate": 0.8461538461538461,
+            "target_grounding_event_count": 13,
+            "target_selected_frontier_anchor_distance_delta": 66.04392314049124,
+            "target_semantic_term_share_median": 0.0,
+            "target_value_flatline_count": 3,
+            "target_value_flatline_rate": 0.23076923076923078
+          },
+          "observations": [
+            "target branch semantic value signal collapsed"
+          ],
+          "status": "fail"
+        },
+        "local_map_lifecycle": {
+          "metrics": {
+            "local_map_move_steps": [],
+            "stale_local_goal_risk_count": 0,
+            "stale_local_goal_risk_steps": [],
+            "target_anchor_refresh_count": 9,
+            "target_anchor_refresh_steps": [
+              599,
+              639,
+              679,
+              719,
+              759,
+              799,
+              839,
+              879,
+              919
+            ]
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "monitor_trigger_coverage": {
+          "metrics": {
+            "event_type_counts": {
+              "frontier_near": 16,
+              "frontier_reached": 15,
+              "new_nodes": 43,
+              "new_rooms": 1,
+              "no_progress": 433,
+              "node_caption_changed": 3,
+              "room_object_count_increase": 43,
+              "stuck": 1,
+              "target_candidate_detected": 2
+            },
+            "monitor_call_count": 2,
+            "monitor_skip_reasons": {},
+            "unhandled_target_candidate_count": 0,
+            "unhandled_target_candidate_steps": []
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "perception_graph_target_evidence": {
+          "metrics": {
+            "first_target_step": 564,
+            "sample_target_steps": [
+              {
+                "captions": [
+                  "tv"
+                ],
+                "count": 1,
+                "step_idx": 564
+              },
+              {
+                "captions": [
+                  "tv"
+                ],
+                "count": 1,
+                "step_idx": 565
+              },
+              {
+                "captions": [
+                  "tv"
+                ],
+                "count": 1,
+                "step_idx": 566
+              },
+              {
+                "captions": [
+                  "tv"
+                ],
+                "count": 1,
+                "step_idx": 567
+              },
+              {
+                "captions": [
+                  "tv"
+                ],
+                "count": 1,
+                "step_idx": 568
+              },
+              {
+                "captions": [
+                  "tv"
+                ],
+                "count": 1,
+                "step_idx": 569
+              },
+              {
+                "captions": [
+                  "tv"
+                ],
+                "count": 1,
+                "step_idx": 570
+              },
+              {
+                "captions": [
+                  "tv"
+                ],
+                "count": 1,
+                "step_idx": 571
+              }
+            ],
+            "target_candidate_captions": {
+              "tv": 371
+            },
+            "target_candidate_flicker_rate": 0.6032085561497327,
+            "target_center_updates": 371,
+            "target_event_count": 371
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "planner_menu_choice": {
+          "metrics": {
+            "empty_response_count": 0,
+            "evidence_to_planner_latency": 0,
+            "fallback_triggered_count": 0,
+            "first_planner_after_target": 564,
+            "invalid_parse_count": 0,
+            "planner_call_count": 18,
+            "selected_target_after_target": true,
+            "target_in_prompt_after_target": true
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "replay_counterfactual_coverage": {
+          "metrics": {
+            "attempt_replay_verdict": null,
+            "pending_fix_verdict": {
+              "avoided_historical_drop": true,
+              "bug_fixed_on_captured_context": true,
+              "cleared_stale_pending": true,
+              "kept_target_anchor": true
+            },
+            "present_artifacts": {
+              "pending_fix_counterfactual": true,
+              "target_anchor_attempt_analysis": true,
+              "target_anchor_attempt_replay": true,
+              "target_branch_capture": true
+            }
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "strategy_contract": {
+          "metrics": {
+            "direct_object_blocked_reasons": {},
+            "direct_object_goal_step_count": 0,
+            "first_direct_goal_after_target": null,
+            "first_object_commit_after_target": null,
+            "first_target_anchor_after_target": 564
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "suite_artifact_config": {
+          "metrics": {
+            "missing_optional_artifacts": [],
+            "missing_required_artifacts": [],
+            "monitor_call_count": 2,
+            "planner_call_count": 18,
+            "step_count": 935
+          },
+          "observations": [
+            "required artifacts present"
+          ],
+          "status": "pass"
+        },
+        "target_anchor_attempt": {
+          "metrics": {
+            "attempt_observation_count": 0,
+            "last_attempt_summary": null,
+            "max_stall_updates": 0,
+            "stall_replan_steps": []
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "terminal_metric_arbitration": {
+          "metrics": {
+            "SPL": 0.0,
+            "SR": 0.0,
+            "summary_terminal_outcome_counts": {
+              "FAILURE_NO_PROGRESS_TIMEOUT": 1
+            },
+            "terminal_decision": {
+              "evidence_ids": [],
+              "final_verify_timeout": 0,
+              "is_terminal": true,
+              "outcome": "FAILURE_NO_PROGRESS_TIMEOUT",
+              "reason": "environment_done_without_success",
+              "stop_veto_source": null,
+              "termination_confidence": 0.5
+            },
+            "terminal_outcome": "FAILURE_NO_PROGRESS_TIMEOUT",
+            "total_steps": 935
+          },
+          "observations": [],
+          "status": "pass"
+        }
+      },
+      "profile": "smoothnav-full",
+      "run_dir": "results/phase2_revalidation/s12_temperature0_target_anchor_20260424/smoothnav-full/20260424/smoothnav_text_112731_317b2c0e",
+      "run_id": "smoothnav_text_112731_317b2c0e",
+      "terminal_outcome": "FAILURE_NO_PROGRESS_TIMEOUT"
+    },
+    {
+      "dominant_failure_layer": "determinism_branch_reproducibility",
+      "dominant_failure_reason": "target branch was not covered in this run",
+      "episode_id": 228,
+      "layers": {
+        "controller_pending_prefetch": {
+          "metrics": {
+            "harmful_pending_promotion_count": 0,
+            "harmful_pending_promotions": [],
+            "pending_age_max": 656,
+            "pending_age_median": 240,
+            "stale_pending_discard_steps": []
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "dataset_scene_episode": {
+          "metrics": {
+            "episode_id": 228,
+            "goal_type": "text",
+            "max_episode_length": 1000,
+            "missing_metadata": [],
+            "primary_goal_present": true,
+            "split": "val",
+            "success_dist": 1.0,
+            "text_goal_dataset": "data/datasets/textnav/val/val_text.json.gz"
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "determinism_branch_reproducibility": {
+          "metrics": {
+            "api_provider": "anthropic",
+            "first_strategy_sequence": [
+              {
+                "step_idx": 0,
+                "target_region": "unexplored north"
+              },
+              {
+                "step_idx": 12,
+                "target_region": "bedroom"
+              },
+              {
+                "step_idx": 15,
+                "target_region": "unexplored east"
+              },
+              {
+                "step_idx": 31,
+                "target_region": "unexplored north"
+              },
+              {
+                "step_idx": 99,
+                "target_region": "unexplored east"
+              }
+            ],
+            "first_target_anchor_step": null,
+            "first_target_step": null,
+            "llm_model": "claude-sonnet-4-5-20250929",
+            "planner_prompt_hashes_head": [
+              "0b5c76e3d27750904d311c4e01f24adea245aa28",
+              "79c02c1afbc6435a06af77c9891a03587ff9ec1f",
+              "323c4897e7eaeb06839ec9619cbf3a1b0bd7292a",
+              "0ca81f3f94bfe9bef53a60287548135bece9e4eb",
+              "e176bf824768ad3852d2097478a146b2263e6602",
+              "e24d507a693e9201820cb1bbdd1d1b3082dee87d",
+              "dc74aea7f77e68c1a1ef7d41ea1542471d470350",
+              "3bd61615ad56cb2f8f6964172da14b93bbf0354c",
+              "77722ccd88fa3ba749c63ef9413a01cdf817c03f",
+              "bb454688e625dae44b05a053cb17f81112561a56",
+              "acb7dcb14f1a5632394f3ab190b56b04c5607617",
+              "3a781e57c793391e7da4dfa2cb1fd04e2b4ac5df"
+            ],
+            "planner_response_hashes_head": [
+              "583872d8b2553908",
+              "31bc0d37c25f615a",
+              "a954e1f6100f6903",
+              "aba580a44260cbe2",
+              "165dba1d3b6cc2f8",
+              "c0027390c79e5afe",
+              "ef0c8e479ae69e6f",
+              "6a2e3473d275d34e",
+              "1750d84ca4660475",
+              "87f1c2b5cdc5fbf5",
+              "f927a541727ad3fc",
+              "2955ab1b14575316"
+            ],
+            "seed": 1,
+            "target_branch_covered": false,
+            "target_event_count": 0
+          },
+          "observations": [],
+          "status": "warn"
+        },
+        "executor_low_level_control": {
+          "metrics": {
+            "direction_reversals": 4.0,
+            "dist_to_goal_slope": 0.025130132673315538,
+            "executor_adoption_changes": 24,
+            "executor_override_ratios": {
+              "executor_override_ratio": 0.0,
+              "global_goal_override_ratio": 0.0,
+              "stuck_goal_override_ratio": 0.0,
+              "temp_goal_override_ratio": 0.0,
+              "visible_target_override_ratio": 0.0
+            },
+            "pause_ratio": 0.39478957915831664,
+            "strategy_switch_count": 5.0
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "grounding_frontier_value": {
+          "metrics": {
+            "grounding_event_count": 13,
+            "grounding_noop_reasons": {},
+            "sample_target_grounding_events": [],
+            "target_base_score_zero_count": 0,
+            "target_base_score_zero_rate": 0.0,
+            "target_best_seen_anchor_distance_delta": null,
+            "target_bias_distance_max": null,
+            "target_bias_distance_min": null,
+            "target_bias_score_zero_count": 0,
+            "target_bias_score_zero_rate": 0.0,
+            "target_grounding_event_count": 0,
+            "target_selected_frontier_anchor_distance_delta": null,
+            "target_semantic_term_share_median": null,
+            "target_value_flatline_count": 0,
+            "target_value_flatline_rate": 0.0
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "local_map_lifecycle": {
+          "metrics": {
+            "local_map_move_steps": [],
+            "stale_local_goal_risk_count": 0,
+            "stale_local_goal_risk_steps": [],
+            "target_anchor_refresh_count": 0,
+            "target_anchor_refresh_steps": []
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "monitor_trigger_coverage": {
+          "metrics": {
+            "event_type_counts": {
+              "frontier_near": 12,
+              "frontier_reached": 11,
+              "new_nodes": 30,
+              "new_rooms": 1,
+              "no_progress": 394,
+              "room_object_count_increase": 30
+            },
+            "monitor_call_count": 0,
+            "monitor_skip_reasons": {},
+            "unhandled_target_candidate_count": 0,
+            "unhandled_target_candidate_steps": []
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "perception_graph_target_evidence": {
+          "metrics": {
+            "first_target_step": null,
+            "sample_target_steps": [],
+            "target_candidate_captions": {},
+            "target_candidate_flicker_rate": 1.0,
+            "target_center_updates": 0,
+            "target_event_count": 0
+          },
+          "observations": [],
+          "status": "fail"
+        },
+        "planner_menu_choice": {
+          "metrics": {
+            "empty_response_count": 0,
+            "evidence_to_planner_latency": null,
+            "fallback_triggered_count": 0,
+            "first_planner_after_target": null,
+            "invalid_parse_count": 0,
+            "planner_call_count": 12,
+            "selected_target_after_target": null,
+            "target_in_prompt_after_target": null
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "replay_counterfactual_coverage": {
+          "metrics": {
+            "attempt_replay_verdict": null,
+            "pending_fix_verdict": null,
+            "present_artifacts": {
+              "pending_fix_counterfactual": false,
+              "target_anchor_attempt_analysis": false,
+              "target_anchor_attempt_replay": false,
+              "target_branch_capture": false
+            }
+          },
+          "observations": [],
+          "status": "warn"
+        },
+        "strategy_contract": {
+          "metrics": {
+            "direct_object_blocked_reasons": {},
+            "direct_object_goal_step_count": 0,
+            "first_direct_goal_after_target": null,
+            "first_object_commit_after_target": null,
+            "first_target_anchor_after_target": null
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "suite_artifact_config": {
+          "metrics": {
+            "missing_optional_artifacts": [
+              "monitor_calls/episode_*.jsonl"
+            ],
+            "missing_required_artifacts": [],
+            "monitor_call_count": 0,
+            "planner_call_count": 12,
+            "step_count": 999
+          },
+          "observations": [
+            "required artifacts present"
+          ],
+          "status": "warn"
+        },
+        "target_anchor_attempt": {
+          "metrics": {
+            "attempt_observation_count": 0,
+            "last_attempt_summary": null,
+            "max_stall_updates": 0,
+            "stall_replan_steps": []
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "terminal_metric_arbitration": {
+          "metrics": {
+            "SPL": 0.0,
+            "SR": 0.0,
+            "summary_terminal_outcome_counts": {
+              "FAILURE_NO_PROGRESS_TIMEOUT": 1
+            },
+            "terminal_decision": {
+              "evidence_ids": [],
+              "final_verify_timeout": 0,
+              "is_terminal": true,
+              "outcome": "FAILURE_NO_PROGRESS_TIMEOUT",
+              "reason": "environment_done_without_success",
+              "stop_veto_source": null,
+              "termination_confidence": 0.5
+            },
+            "terminal_outcome": "FAILURE_NO_PROGRESS_TIMEOUT",
+            "total_steps": 999
+          },
+          "observations": [],
+          "status": "pass"
+        }
+      },
+      "profile": "smoothnav-full",
+      "run_dir": "results/phase2_revalidation/s13_temp0_pending_fix_20260424/smoothnav-full/20260424/smoothnav_text_115258_d6b54541",
+      "run_id": "smoothnav_text_115258_d6b54541",
+      "terminal_outcome": "FAILURE_NO_PROGRESS_TIMEOUT"
+    },
+    {
+      "dominant_failure_layer": "determinism_branch_reproducibility",
+      "dominant_failure_reason": "target branch was not covered in this run",
+      "episode_id": 228,
+      "layers": {
+        "controller_pending_prefetch": {
+          "metrics": {
+            "harmful_pending_promotion_count": 0,
+            "harmful_pending_promotions": [],
+            "pending_age_max": 636,
+            "pending_age_median": 284,
+            "stale_pending_discard_steps": []
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "dataset_scene_episode": {
+          "metrics": {
+            "episode_id": 228,
+            "goal_type": "text",
+            "max_episode_length": 1000,
+            "missing_metadata": [],
+            "primary_goal_present": true,
+            "split": "val",
+            "success_dist": 1.0,
+            "text_goal_dataset": "data/datasets/textnav/val/val_text.json.gz"
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "determinism_branch_reproducibility": {
+          "metrics": {
+            "api_provider": "anthropic",
+            "first_strategy_sequence": [
+              {
+                "step_idx": 0,
+                "target_region": "unexplored north"
+              },
+              {
+                "step_idx": 12,
+                "target_region": "bedroom"
+              },
+              {
+                "step_idx": 15,
+                "target_region": "unexplored east"
+              },
+              {
+                "step_idx": 196,
+                "target_region": "unexplored west"
+              },
+              {
+                "step_idx": 316,
+                "target_region": "unexplored east"
+              }
+            ],
+            "first_target_anchor_step": null,
+            "first_target_step": null,
+            "llm_model": "claude-sonnet-4-5-20250929",
+            "planner_prompt_hashes_head": [
+              "0b5c76e3d27750904d311c4e01f24adea245aa28",
+              "79c02c1afbc6435a06af77c9891a03587ff9ec1f",
+              "323c4897e7eaeb06839ec9619cbf3a1b0bd7292a",
+              "0ca81f3f94bfe9bef53a60287548135bece9e4eb",
+              "2a64e573b302125e623ce90cf4ebcb2b7c912c9e",
+              "a3335f316d883bc77dc09a8153d9c660ced4095c",
+              "ad9fc0f31b560cac9965bd623ee3885584671d3e",
+              "52481ba24375c744320121614c4a500718cd3706"
+            ],
+            "planner_response_hashes_head": [
+              "3f81351808c9523d",
+              "0055af2d1dd36a87",
+              "71cc421c442d021f",
+              "e4e3bc24adc5c7fa",
+              "53252d9c5229e7fc",
+              "c81954945d69163f",
+              "af2ba82b95d6cda9",
+              "e667b29822bf3416"
+            ],
+            "seed": 1,
+            "target_branch_covered": false,
+            "target_event_count": 0
+          },
+          "observations": [],
+          "status": "warn"
+        },
+        "executor_low_level_control": {
+          "metrics": {
+            "direction_reversals": 5.0,
+            "dist_to_goal_slope": 0.1361029830381375,
+            "executor_adoption_changes": 16,
+            "executor_override_ratios": {
+              "executor_override_ratio": 0.0,
+              "global_goal_override_ratio": 0.0,
+              "stuck_goal_override_ratio": 0.0,
+              "temp_goal_override_ratio": 0.0,
+              "visible_target_override_ratio": 0.0
+            },
+            "pause_ratio": 0.3927855711422846,
+            "strategy_switch_count": 5.0
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "grounding_frontier_value": {
+          "metrics": {
+            "grounding_event_count": 8,
+            "grounding_noop_reasons": {},
+            "sample_target_grounding_events": [],
+            "target_base_score_zero_count": 0,
+            "target_base_score_zero_rate": 0.0,
+            "target_best_seen_anchor_distance_delta": null,
+            "target_bias_distance_max": null,
+            "target_bias_distance_min": null,
+            "target_bias_score_zero_count": 0,
+            "target_bias_score_zero_rate": 0.0,
+            "target_grounding_event_count": 0,
+            "target_selected_frontier_anchor_distance_delta": null,
+            "target_semantic_term_share_median": null,
+            "target_value_flatline_count": 0,
+            "target_value_flatline_rate": 0.0
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "local_map_lifecycle": {
+          "metrics": {
+            "local_map_move_steps": [],
+            "stale_local_goal_risk_count": 0,
+            "stale_local_goal_risk_steps": [],
+            "target_anchor_refresh_count": 0,
+            "target_anchor_refresh_steps": []
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "monitor_trigger_coverage": {
+          "metrics": {
+            "event_type_counts": {
+              "frontier_near": 7,
+              "frontier_reached": 6,
+              "new_nodes": 20,
+              "new_rooms": 1,
+              "no_progress": 392,
+              "room_object_count_increase": 20
+            },
+            "monitor_call_count": 0,
+            "monitor_skip_reasons": {},
+            "unhandled_target_candidate_count": 0,
+            "unhandled_target_candidate_steps": []
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "perception_graph_target_evidence": {
+          "metrics": {
+            "first_target_step": null,
+            "sample_target_steps": [],
+            "target_candidate_captions": {},
+            "target_candidate_flicker_rate": 1.0,
+            "target_center_updates": 0,
+            "target_event_count": 0
+          },
+          "observations": [],
+          "status": "fail"
+        },
+        "planner_menu_choice": {
+          "metrics": {
+            "empty_response_count": 0,
+            "evidence_to_planner_latency": null,
+            "fallback_triggered_count": 0,
+            "first_planner_after_target": null,
+            "invalid_parse_count": 0,
+            "planner_call_count": 8,
+            "selected_target_after_target": null,
+            "target_in_prompt_after_target": null
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "replay_counterfactual_coverage": {
+          "metrics": {
+            "attempt_replay_verdict": null,
+            "pending_fix_verdict": null,
+            "present_artifacts": {
+              "pending_fix_counterfactual": false,
+              "target_anchor_attempt_analysis": false,
+              "target_anchor_attempt_replay": false,
+              "target_branch_capture": false
+            }
+          },
+          "observations": [],
+          "status": "warn"
+        },
+        "strategy_contract": {
+          "metrics": {
+            "direct_object_blocked_reasons": {},
+            "direct_object_goal_step_count": 0,
+            "first_direct_goal_after_target": null,
+            "first_object_commit_after_target": null,
+            "first_target_anchor_after_target": null
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "suite_artifact_config": {
+          "metrics": {
+            "missing_optional_artifacts": [
+              "monitor_calls/episode_*.jsonl"
+            ],
+            "missing_required_artifacts": [],
+            "monitor_call_count": 0,
+            "planner_call_count": 8,
+            "step_count": 999
+          },
+          "observations": [
+            "required artifacts present"
+          ],
+          "status": "warn"
+        },
+        "target_anchor_attempt": {
+          "metrics": {
+            "attempt_observation_count": 0,
+            "last_attempt_summary": null,
+            "max_stall_updates": 0,
+            "stall_replan_steps": []
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "terminal_metric_arbitration": {
+          "metrics": {
+            "SPL": 0.0,
+            "SR": 0.0,
+            "summary_terminal_outcome_counts": {
+              "FAILURE_NO_PROGRESS_TIMEOUT": 1
+            },
+            "terminal_decision": {
+              "evidence_ids": [],
+              "final_verify_timeout": 0,
+              "is_terminal": true,
+              "outcome": "FAILURE_NO_PROGRESS_TIMEOUT",
+              "reason": "environment_done_without_success",
+              "stop_veto_source": null,
+              "termination_confidence": 0.5
+            },
+            "terminal_outcome": "FAILURE_NO_PROGRESS_TIMEOUT",
+            "total_steps": 999
+          },
+          "observations": [],
+          "status": "pass"
+        }
+      },
+      "profile": "smoothnav-full",
+      "run_dir": "results/phase2_revalidation/s14_temp0_pending_fix_rerun_20260424/smoothnav-full/20260424/smoothnav_text_120745_ab9467f3",
+      "run_id": "smoothnav_text_120745_ab9467f3",
+      "terminal_outcome": "FAILURE_NO_PROGRESS_TIMEOUT"
+    },
+    {
+      "dominant_failure_layer": "determinism_branch_reproducibility",
+      "dominant_failure_reason": "target branch was not covered in this run",
+      "episode_id": 228,
+      "layers": {
+        "controller_pending_prefetch": {
+          "metrics": {
+            "harmful_pending_promotion_count": 0,
+            "harmful_pending_promotions": [],
+            "pending_age_max": 668,
+            "pending_age_median": 312,
+            "stale_pending_discard_steps": []
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "dataset_scene_episode": {
+          "metrics": {
+            "episode_id": 228,
+            "goal_type": "text",
+            "max_episode_length": 1000,
+            "missing_metadata": [],
+            "primary_goal_present": true,
+            "split": "val",
+            "success_dist": 1.0,
+            "text_goal_dataset": "data/datasets/textnav/val/val_text.json.gz"
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "determinism_branch_reproducibility": {
+          "metrics": {
+            "api_provider": "anthropic",
+            "first_strategy_sequence": [
+              {
+                "step_idx": 0,
+                "target_region": "unexplored north"
+              },
+              {
+                "step_idx": 25,
+                "target_region": "bedroom"
+              },
+              {
+                "step_idx": 31,
+                "target_region": "unexplored east"
+              },
+              {
+                "step_idx": 219,
+                "target_region": "unexplored south"
+              },
+              {
+                "step_idx": 274,
+                "target_region": "unexplored east"
+              }
+            ],
+            "first_target_anchor_step": null,
+            "first_target_step": null,
+            "llm_model": "claude-sonnet-4-5-20250929",
+            "planner_prompt_hashes_head": [
+              "0b5c76e3d27750904d311c4e01f24adea245aa28",
+              "79c02c1afbc6435a06af77c9891a03587ff9ec1f",
+              "323c4897e7eaeb06839ec9619cbf3a1b0bd7292a",
+              "34e953e282b4d89c0dc99ea317f1bdee05dec803",
+              "0c339e9762ab0ed4c3a1776439ff51962ad553af",
+              "81cf157d5fbee0b8a2cc00c35f41ac948485b48b",
+              "ccf1a724b904b06873ee1cb9b48a83a4a97cf993",
+              "9b9821b60906f5002c9e69bc330cf889eeb14bbc",
+              "67a766a7c3e113b77971ea58206e6ead6d6d7628",
+              "4376c11eaf2703b491df44da03b11a0a13abd410",
+              "701e0238cf61d378bb9d99bb0866563b5ec66875",
+              "ce71e909e199f503de6a2254afbb8ffe418d640e"
+            ],
+            "planner_response_hashes_head": [
+              "651c9be8ba54b2f5",
+              "ff6f2b395a26b7f3",
+              "e893ef4346d29273",
+              "24dc16a74f7db40d",
+              "9fd274c8b21d6da9",
+              "a3b38061eb3d5e5f",
+              "e57cde98f402bae6",
+              "b3fba3355d6fbf8d",
+              "78dcd7f39695d5c6",
+              "ad7f84b468637e88",
+              "7f0760c6a5632948",
+              "09a0bd1438c631da"
+            ],
+            "seed": 1,
+            "target_branch_covered": false,
+            "target_event_count": 0
+          },
+          "observations": [],
+          "status": "warn"
+        },
+        "executor_low_level_control": {
+          "metrics": {
+            "direction_reversals": 2.0,
+            "dist_to_goal_slope": 0.05395956720575655,
+            "executor_adoption_changes": 27,
+            "executor_override_ratios": {
+              "executor_override_ratio": 0.0,
+              "global_goal_override_ratio": 0.0,
+              "stuck_goal_override_ratio": 0.0,
+              "temp_goal_override_ratio": 0.0,
+              "visible_target_override_ratio": 0.0
+            },
+            "pause_ratio": 0.405811623246493,
+            "strategy_switch_count": 5.0
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "grounding_frontier_value": {
+          "metrics": {
+            "grounding_event_count": 14,
+            "grounding_noop_reasons": {},
+            "sample_target_grounding_events": [],
+            "target_base_score_zero_count": 0,
+            "target_base_score_zero_rate": 0.0,
+            "target_best_seen_anchor_distance_delta": null,
+            "target_bias_distance_max": null,
+            "target_bias_distance_min": null,
+            "target_bias_score_zero_count": 0,
+            "target_bias_score_zero_rate": 0.0,
+            "target_grounding_event_count": 0,
+            "target_selected_frontier_anchor_distance_delta": null,
+            "target_semantic_term_share_median": null,
+            "target_value_flatline_count": 0,
+            "target_value_flatline_rate": 0.0
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "local_map_lifecycle": {
+          "metrics": {
+            "local_map_move_steps": [],
+            "stale_local_goal_risk_count": 0,
+            "stale_local_goal_risk_steps": [],
+            "target_anchor_refresh_count": 0,
+            "target_anchor_refresh_steps": []
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "monitor_trigger_coverage": {
+          "metrics": {
+            "event_type_counts": {
+              "frontier_near": 11,
+              "frontier_reached": 10,
+              "new_nodes": 31,
+              "new_rooms": 1,
+              "no_progress": 405,
+              "node_caption_changed": 5,
+              "room_object_count_increase": 31,
+              "stuck": 1
+            },
+            "monitor_call_count": 0,
+            "monitor_skip_reasons": {},
+            "unhandled_target_candidate_count": 0,
+            "unhandled_target_candidate_steps": []
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "perception_graph_target_evidence": {
+          "metrics": {
+            "first_target_step": null,
+            "sample_target_steps": [],
+            "target_candidate_captions": {},
+            "target_candidate_flicker_rate": 1.0,
+            "target_center_updates": 0,
+            "target_event_count": 0
+          },
+          "observations": [],
+          "status": "fail"
+        },
+        "planner_menu_choice": {
+          "metrics": {
+            "empty_response_count": 0,
+            "evidence_to_planner_latency": null,
+            "fallback_triggered_count": 0,
+            "first_planner_after_target": null,
+            "invalid_parse_count": 0,
+            "planner_call_count": 12,
+            "selected_target_after_target": null,
+            "target_in_prompt_after_target": null
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "replay_counterfactual_coverage": {
+          "metrics": {
+            "attempt_replay_verdict": null,
+            "pending_fix_verdict": null,
+            "present_artifacts": {
+              "pending_fix_counterfactual": false,
+              "target_anchor_attempt_analysis": false,
+              "target_anchor_attempt_replay": false,
+              "target_branch_capture": false
+            }
+          },
+          "observations": [],
+          "status": "warn"
+        },
+        "strategy_contract": {
+          "metrics": {
+            "direct_object_blocked_reasons": {},
+            "direct_object_goal_step_count": 0,
+            "first_direct_goal_after_target": null,
+            "first_object_commit_after_target": null,
+            "first_target_anchor_after_target": null
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "suite_artifact_config": {
+          "metrics": {
+            "missing_optional_artifacts": [
+              "monitor_calls/episode_*.jsonl"
+            ],
+            "missing_required_artifacts": [],
+            "monitor_call_count": 0,
+            "planner_call_count": 12,
+            "step_count": 999
+          },
+          "observations": [
+            "required artifacts present"
+          ],
+          "status": "warn"
+        },
+        "target_anchor_attempt": {
+          "metrics": {
+            "attempt_observation_count": 0,
+            "last_attempt_summary": null,
+            "max_stall_updates": 0,
+            "stall_replan_steps": []
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "terminal_metric_arbitration": {
+          "metrics": {
+            "SPL": 0.0,
+            "SR": 0.0,
+            "summary_terminal_outcome_counts": {
+              "FAILURE_NO_PROGRESS_TIMEOUT": 1
+            },
+            "terminal_decision": {
+              "evidence_ids": [],
+              "final_verify_timeout": 0,
+              "is_terminal": true,
+              "outcome": "FAILURE_NO_PROGRESS_TIMEOUT",
+              "reason": "environment_done_without_success",
+              "stop_veto_source": null,
+              "termination_confidence": 0.5
+            },
+            "terminal_outcome": "FAILURE_NO_PROGRESS_TIMEOUT",
+            "total_steps": 999
+          },
+          "observations": [],
+          "status": "pass"
+        }
+      },
+      "profile": "smoothnav-full",
+      "run_dir": "results/phase2_revalidation/s15_target_anchor_attempt_online_probe_20260424/smoothnav-full/20260424/smoothnav_text_130030_641105ae",
+      "run_id": "smoothnav_text_130030_641105ae",
+      "terminal_outcome": "FAILURE_NO_PROGRESS_TIMEOUT"
+    },
+    {
+      "dominant_failure_layer": "planner_menu_choice",
+      "dominant_failure_reason": "target evidence was not consumed by planner",
+      "episode_id": 228,
+      "layers": {
+        "controller_pending_prefetch": {
+          "metrics": {
+            "harmful_pending_promotion_count": 0,
+            "harmful_pending_promotions": [],
+            "pending_age_max": 0,
+            "pending_age_median": 0,
+            "stale_pending_discard_steps": []
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "dataset_scene_episode": {
+          "metrics": {
+            "episode_id": 228,
+            "goal_type": "text",
+            "max_episode_length": 1000,
+            "missing_metadata": [],
+            "primary_goal_present": true,
+            "split": "val",
+            "success_dist": 1.0,
+            "text_goal_dataset": "data/datasets/textnav/val/val_text.json.gz"
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "determinism_branch_reproducibility": {
+          "metrics": {
+            "api_provider": "anthropic",
+            "first_strategy_sequence": [
+              {
+                "step_idx": 0,
+                "target_region": "unexplored east"
+              },
+              {
+                "step_idx": 59,
+                "target_region": "unexplored north"
+              },
+              {
+                "step_idx": 139,
+                "target_region": "unexplored east"
+              },
+              {
+                "step_idx": 259,
+                "target_region": "unexplored south"
+              },
+              {
+                "step_idx": 315,
+                "target_region": "unexplored west"
+              },
+              {
+                "step_idx": 445,
+                "target_region": "unexplored south"
+              }
+            ],
+            "first_target_anchor_step": null,
+            "first_target_step": 668,
+            "llm_model": "claude-sonnet-4-5-20250929",
+            "planner_prompt_hashes_head": [
+              "0b5c76e3d27750904d311c4e01f24adea245aa28",
+              "79c02c1afbc6435a06af77c9891a03587ff9ec1f",
+              "0239f97124440e3484246d6ddd67ad2e87efb974",
+              "323c4897e7eaeb06839ec9619cbf3a1b0bd7292a",
+              "3fd5613bc6300309b443688bc7e1e10c7b7acc82",
+              "eeb832794caed77add4b525fa704ca9ce3820e76",
+              "84bde7fb0c5fda1a27edbb0a336400ada6b1fb46",
+              "702b16813ff0503c802b88ba0dba5378cbab94ee",
+              "051a782531ae6fc93f086a4fdbc9d116a2d873eb",
+              "1f09df82879c45bc42b82779613864344a852f02",
+              "cb9c982e8e38d7071853ff2bbaf11d332eeba696",
+              "5e915472d5f9cd8807fc47389ff4215d41e069c2"
+            ],
+            "planner_response_hashes_head": [
+              "da39a3ee5e6b4b0d",
+              "da39a3ee5e6b4b0d",
+              "b262778aa9fe1405",
+              "da39a3ee5e6b4b0d",
+              "ef0c8e479ae69e6f",
+              "da39a3ee5e6b4b0d",
+              "b3fba3355d6fbf8d",
+              "da39a3ee5e6b4b0d",
+              "da39a3ee5e6b4b0d",
+              "da39a3ee5e6b4b0d",
+              "da39a3ee5e6b4b0d",
+              "da39a3ee5e6b4b0d"
+            ],
+            "seed": 1,
+            "target_branch_covered": false,
+            "target_event_count": 2
+          },
+          "observations": [],
+          "status": "warn"
+        },
+        "executor_low_level_control": {
+          "metrics": {
+            "direction_reversals": 3.0,
+            "dist_to_goal_slope": 0.23958793773919596,
+            "executor_adoption_changes": 37,
+            "executor_override_ratios": {
+              "executor_override_ratio": 0.0,
+              "global_goal_override_ratio": 0.0,
+              "stuck_goal_override_ratio": 0.0,
+              "temp_goal_override_ratio": 0.0,
+              "visible_target_override_ratio": 0.0
+            },
+            "pause_ratio": 0.4288577154308617,
+            "strategy_switch_count": 6.0
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "grounding_frontier_value": {
+          "metrics": {
+            "grounding_event_count": 14,
+            "grounding_noop_reasons": {},
+            "sample_target_grounding_events": [],
+            "target_base_score_zero_count": 0,
+            "target_base_score_zero_rate": 0.0,
+            "target_best_seen_anchor_distance_delta": null,
+            "target_bias_distance_max": null,
+            "target_bias_distance_min": null,
+            "target_bias_score_zero_count": 0,
+            "target_bias_score_zero_rate": 0.0,
+            "target_grounding_event_count": 0,
+            "target_selected_frontier_anchor_distance_delta": null,
+            "target_semantic_term_share_median": null,
+            "target_value_flatline_count": 0,
+            "target_value_flatline_rate": 0.0
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "local_map_lifecycle": {
+          "metrics": {
+            "local_map_move_steps": [],
+            "stale_local_goal_risk_count": 0,
+            "stale_local_goal_risk_steps": [],
+            "target_anchor_refresh_count": 0,
+            "target_anchor_refresh_steps": []
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "monitor_trigger_coverage": {
+          "metrics": {
+            "event_type_counts": {
+              "frontier_near": 11,
+              "frontier_reached": 10,
+              "new_nodes": 28,
+              "new_rooms": 1,
+              "no_progress": 428,
+              "node_caption_changed": 1,
+              "room_object_count_increase": 28,
+              "target_candidate_detected": 2
+            },
+            "monitor_call_count": 2,
+            "monitor_skip_reasons": {},
+            "unhandled_target_candidate_count": 0,
+            "unhandled_target_candidate_steps": []
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "perception_graph_target_evidence": {
+          "metrics": {
+            "first_target_step": 668,
+            "sample_target_steps": [
+              {
+                "captions": [
+                  "tv"
+                ],
+                "count": 1,
+                "step_idx": 668
+              },
+              {
+                "captions": [
+                  "tv"
+                ],
+                "count": 1,
+                "step_idx": 768
+              }
+            ],
+            "target_candidate_captions": {
+              "tv": 2
+            },
+            "target_candidate_flicker_rate": 0.997997997997998,
+            "target_center_updates": 2,
+            "target_event_count": 2
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "planner_menu_choice": {
+          "metrics": {
+            "empty_response_count": 13,
+            "evidence_to_planner_latency": 0,
+            "fallback_triggered_count": 13,
+            "first_planner_after_target": 668,
+            "invalid_parse_count": 0,
+            "planner_call_count": 16,
+            "selected_target_after_target": false,
+            "target_in_prompt_after_target": true
+          },
+          "observations": [],
+          "status": "fail"
+        },
+        "replay_counterfactual_coverage": {
+          "metrics": {
+            "attempt_replay_verdict": null,
+            "pending_fix_verdict": null,
+            "present_artifacts": {
+              "pending_fix_counterfactual": false,
+              "target_anchor_attempt_analysis": false,
+              "target_anchor_attempt_replay": false,
+              "target_branch_capture": false
+            }
+          },
+          "observations": [],
+          "status": "warn"
+        },
+        "strategy_contract": {
+          "metrics": {
+            "direct_object_blocked_reasons": {},
+            "direct_object_goal_step_count": 0,
+            "first_direct_goal_after_target": null,
+            "first_object_commit_after_target": null,
+            "first_target_anchor_after_target": null
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "suite_artifact_config": {
+          "metrics": {
+            "missing_optional_artifacts": [],
+            "missing_required_artifacts": [],
+            "monitor_call_count": 2,
+            "planner_call_count": 16,
+            "step_count": 999
+          },
+          "observations": [
+            "required artifacts present"
+          ],
+          "status": "pass"
+        },
+        "target_anchor_attempt": {
+          "metrics": {
+            "attempt_observation_count": 0,
+            "last_attempt_summary": null,
+            "max_stall_updates": 0,
+            "stall_replan_steps": []
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "terminal_metric_arbitration": {
+          "metrics": {
+            "SPL": 0.0,
+            "SR": 0.0,
+            "summary_terminal_outcome_counts": {
+              "FAILURE_NO_PROGRESS_TIMEOUT": 1
+            },
+            "terminal_decision": {
+              "evidence_ids": [],
+              "final_verify_timeout": 0,
+              "is_terminal": true,
+              "outcome": "FAILURE_NO_PROGRESS_TIMEOUT",
+              "reason": "environment_done_without_success",
+              "stop_veto_source": null,
+              "termination_confidence": 0.5
+            },
+            "terminal_outcome": "FAILURE_NO_PROGRESS_TIMEOUT",
+            "total_steps": 999
+          },
+          "observations": [],
+          "status": "pass"
+        }
+      },
+      "profile": "smoothnav-full",
+      "run_dir": "results/phase2_revalidation/s16_contract_audit_ep228_20260426/smoothnav-full/20260426/smoothnav_text_195315_7c1397e9",
+      "run_id": "smoothnav_text_195315_7c1397e9",
+      "terminal_outcome": "FAILURE_NO_PROGRESS_TIMEOUT"
+    }
+  ],
+  "schema_version": "smoothnav_trace_contract_audit_v1"
+}

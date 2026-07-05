@@ -1,0 +1,38 @@
+{
+  "episodes_requested": [
+    228,
+    661
+  ],
+  "profiles": {
+    "smoothnav-full": {
+      "SPL": 0.4264592216220349,
+      "SR": 0.5,
+      "avg_high_level_calls": 12.0,
+      "avg_low_level_calls": 1.5,
+      "episodes": [
+        228,
+        661
+      ],
+      "executor_override_ratio": 0.0029895366218236174,
+      "goal_update_delay_steps": 5.487179487179487,
+      "grounding_noop_reason_counts": {},
+      "missing_epoch_trace_steps": 0,
+      "num_runs": 2,
+      "pending_created_count": 5.5,
+      "pending_promoted_count": 3,
+      "run_dirs": [
+        "results/phase2_revalidation/s8_target_evidence_uptake_20260423/smoothnav-full/20260423/smoothnav_text_203017_460133fb",
+        "results/phase2_revalidation/s8_target_evidence_uptake_20260423/smoothnav-full/20260423/smoothnav_text_204745_02c954d4"
+      ],
+      "strategy_switch_count": 7.5,
+      "terminal_outcome_counts": {
+        "FAILURE_NO_PROGRESS_TIMEOUT": 1,
+        "SUCCESS": 1
+      }
+    }
+  },
+  "profiles_requested": [
+    "smoothnav-full"
+  ],
+  "results_root": "results/phase2_revalidation/s8_target_evidence_uptake_20260423"
+}

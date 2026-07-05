@@ -1,0 +1,331 @@
+{
+  "evaluations": [
+    {
+      "active_semantic_category_count": 0,
+      "branch_evidence_counts": {
+        "anchor": 0,
+        "direct": 0,
+        "geometry_only": 3,
+        "room_prior": 0
+      },
+      "direct_target_pixel_count": 0,
+      "dry_branch": "B2",
+      "final_branch": "B2",
+      "final_evidence_level": "geometry_only",
+      "final_executable_decision_rank": 1,
+      "final_heatmap_rank": 2,
+      "final_target_value_rank": 2,
+      "frame_path": "analysis/s37_contract_replay_review_20260501/step_000031/semantic_bev_frame.json",
+      "issues": [
+        {
+          "code": "agent_display_repaired",
+          "detail": "raw agent coord differs from map-current by 25.0",
+          "severity": "warning"
+        },
+        {
+          "code": "no_active_semantic_channels",
+          "detail": "MLLM image cannot use dense BEV semantics in this frame.",
+          "severity": "blocker_for_semantic_reasoning"
+        },
+        {
+          "code": "direct_target_channel_empty",
+          "detail": "Target visibility must be false; any target choice is exploration/prior only.",
+          "severity": "target_not_visible"
+        },
+        {
+          "code": "no_target_heatmap",
+          "detail": "No spatial target/query heatmap supports a branch preference.",
+          "severity": "weak_support"
+        }
+      ],
+      "mllm_branch": "",
+      "mllm_evidence_level": "",
+      "mllm_heatmap_rank": null,
+      "mllm_target_value_rank": null,
+      "notes": [],
+      "schema_version": "smoothnav.semantic_bev_branch_decision_eval.v1",
+      "selection_contract": {
+        "contract_note": "target_value ranks semantic search value; Graph.get_goal final branch may override it when executable frontier score or actionability is stronger",
+        "drift_is_explained": true,
+        "dry_branch_id": "B2",
+        "final_actionability_score": 1.0,
+        "final_branch_id": "B2",
+        "final_executable_decision_rank": 1,
+        "final_frontier_score": 14.6247,
+        "final_target_value_score": 1.0,
+        "mllm_branch_id": "",
+        "override_reason": "within_target_value_tolerance",
+        "schema_version": "smoothnav.target_value_selection_contract.v1",
+        "target_value_aligned": false,
+        "target_value_gap": 0.0,
+        "top_executable_decision_branch_id": "B2",
+        "top_frontier_score": 14.6247,
+        "top_frontier_score_branch_id": "B2",
+        "top_target_value_actionability_score": 1.0,
+        "top_target_value_branch_id": "B1",
+        "top_target_value_score": 1.0
+      },
+      "semantic_region_count": 0,
+      "step_idx": 31,
+      "support_class": "geometry_only_or_graph_only",
+      "target_anchor_semantic_region_count": 0,
+      "target_heatmap_positive_pixel_count": 0,
+      "target_heatmap_source": "none",
+      "target_value_available": true,
+      "target_value_peak": 1.0,
+      "top_executable_decision_branch": "B2",
+      "top_heatmap_branch": "B1",
+      "top_target_value_branch": "B1"
+    },
+    {
+      "active_semantic_category_count": 0,
+      "branch_evidence_counts": {
+        "anchor": 0,
+        "direct": 0,
+        "geometry_only": 2,
+        "room_prior": 0
+      },
+      "direct_target_pixel_count": 0,
+      "dry_branch": "B2",
+      "final_branch": "B1",
+      "final_evidence_level": "geometry_only",
+      "final_executable_decision_rank": 1,
+      "final_heatmap_rank": 1,
+      "final_target_value_rank": 1,
+      "frame_path": "analysis/s37_contract_replay_review_20260501/step_000043/semantic_bev_frame.json",
+      "issues": [
+        {
+          "code": "agent_display_repaired",
+          "detail": "raw agent coord differs from map-current by 25.0",
+          "severity": "warning"
+        },
+        {
+          "code": "no_active_semantic_channels",
+          "detail": "MLLM image cannot use dense BEV semantics in this frame.",
+          "severity": "blocker_for_semantic_reasoning"
+        },
+        {
+          "code": "direct_target_channel_empty",
+          "detail": "Target visibility must be false; any target choice is exploration/prior only.",
+          "severity": "target_not_visible"
+        },
+        {
+          "code": "no_target_heatmap",
+          "detail": "No spatial target/query heatmap supports a branch preference.",
+          "severity": "weak_support"
+        },
+        {
+          "code": "geometry_only_branch_hard_gated",
+          "detail": "final=B1 has geometry-only evidence but planner prior was applied.",
+          "severity": "gate_mismatch"
+        }
+      ],
+      "mllm_branch": "B1",
+      "mllm_evidence_level": "geometry_only",
+      "mllm_heatmap_rank": 1,
+      "mllm_target_value_rank": 1,
+      "notes": [],
+      "schema_version": "smoothnav.semantic_bev_branch_decision_eval.v1",
+      "selection_contract": {
+        "contract_note": "target_value ranks semantic search value; Graph.get_goal final branch may override it when executable frontier score or actionability is stronger",
+        "drift_is_explained": true,
+        "dry_branch_id": "B2",
+        "final_actionability_score": 1.0,
+        "final_branch_id": "B1",
+        "final_executable_decision_rank": 1,
+        "final_frontier_score": 11.8638,
+        "final_target_value_score": 1.0,
+        "mllm_branch_id": "B1",
+        "override_reason": "target_value_aligned",
+        "schema_version": "smoothnav.target_value_selection_contract.v1",
+        "target_value_aligned": true,
+        "target_value_gap": 0.0,
+        "top_executable_decision_branch_id": "B1",
+        "top_frontier_score": 11.8638,
+        "top_frontier_score_branch_id": "B1",
+        "top_target_value_actionability_score": 1.0,
+        "top_target_value_branch_id": "B1",
+        "top_target_value_score": 1.0
+      },
+      "semantic_region_count": 0,
+      "step_idx": 43,
+      "support_class": "geometry_only_or_graph_only",
+      "target_anchor_semantic_region_count": 0,
+      "target_heatmap_positive_pixel_count": 0,
+      "target_heatmap_source": "none",
+      "target_value_available": true,
+      "target_value_peak": 1.0,
+      "top_executable_decision_branch": "B1",
+      "top_heatmap_branch": "B1",
+      "top_target_value_branch": "B1"
+    },
+    {
+      "active_semantic_category_count": 1,
+      "branch_evidence_counts": {
+        "anchor": 0,
+        "direct": 0,
+        "geometry_only": 3,
+        "room_prior": 0
+      },
+      "direct_target_pixel_count": 0,
+      "dry_branch": "B1",
+      "final_branch": "B3",
+      "final_evidence_level": "geometry_only",
+      "final_executable_decision_rank": 1,
+      "final_heatmap_rank": 1,
+      "final_target_value_rank": 2,
+      "frame_path": "analysis/s37_contract_replay_review_20260501/step_000098/semantic_bev_frame.json",
+      "issues": [
+        {
+          "code": "agent_display_repaired",
+          "detail": "raw agent coord differs from map-current by 113.0",
+          "severity": "warning"
+        },
+        {
+          "code": "direct_target_channel_empty",
+          "detail": "Target visibility must be false; any target choice is exploration/prior only.",
+          "severity": "target_not_visible"
+        },
+        {
+          "code": "no_target_heatmap",
+          "detail": "No spatial target/query heatmap supports a branch preference.",
+          "severity": "weak_support"
+        },
+        {
+          "code": "geometry_only_branch_hard_gated",
+          "detail": "final=B3 has geometry-only evidence but planner prior was applied.",
+          "severity": "gate_mismatch"
+        }
+      ],
+      "mllm_branch": "B3",
+      "mllm_evidence_level": "geometry_only",
+      "mllm_heatmap_rank": 1,
+      "mllm_target_value_rank": 2,
+      "notes": [],
+      "schema_version": "smoothnav.semantic_bev_branch_decision_eval.v1",
+      "selection_contract": {
+        "contract_note": "target_value ranks semantic search value; Graph.get_goal final branch may override it when executable frontier score or actionability is stronger",
+        "drift_is_explained": true,
+        "dry_branch_id": "B1",
+        "final_actionability_score": 1.0,
+        "final_branch_id": "B3",
+        "final_executable_decision_rank": 1,
+        "final_frontier_score": 15.0913,
+        "final_target_value_score": 1.0,
+        "mllm_branch_id": "B3",
+        "override_reason": "within_target_value_tolerance",
+        "schema_version": "smoothnav.target_value_selection_contract.v1",
+        "target_value_aligned": false,
+        "target_value_gap": 0.0,
+        "top_executable_decision_branch_id": "B3",
+        "top_frontier_score": 15.0913,
+        "top_frontier_score_branch_id": "B3",
+        "top_target_value_actionability_score": 1.0,
+        "top_target_value_branch_id": "B2",
+        "top_target_value_score": 1.0
+      },
+      "semantic_region_count": 1,
+      "step_idx": 98,
+      "support_class": "semantic_context_only",
+      "target_anchor_semantic_region_count": 0,
+      "target_heatmap_positive_pixel_count": 0,
+      "target_heatmap_source": "none",
+      "target_value_available": true,
+      "target_value_peak": 1.0,
+      "top_executable_decision_branch": "B3",
+      "top_heatmap_branch": "B3",
+      "top_target_value_branch": "B2"
+    },
+    {
+      "active_semantic_category_count": 3,
+      "branch_evidence_counts": {
+        "anchor": 2,
+        "direct": 0,
+        "geometry_only": 4,
+        "room_prior": 0
+      },
+      "direct_target_pixel_count": 0,
+      "dry_branch": "B4",
+      "final_branch": "B4",
+      "final_evidence_level": "anchor",
+      "final_executable_decision_rank": 1,
+      "final_heatmap_rank": 2,
+      "final_target_value_rank": 2,
+      "frame_path": "analysis/s37_contract_replay_review_20260501/step_000145/semantic_bev_frame.json",
+      "issues": [
+        {
+          "code": "agent_display_repaired",
+          "detail": "raw agent coord differs from map-current by 93.0",
+          "severity": "warning"
+        },
+        {
+          "code": "direct_target_channel_empty",
+          "detail": "Target visibility must be false; any target choice is exploration/prior only.",
+          "severity": "target_not_visible"
+        },
+        {
+          "code": "target_heatmap_prior_only",
+          "detail": "Branch preference can be used for exploration, not target grounding.",
+          "severity": "prior_only"
+        }
+      ],
+      "mllm_branch": "B4",
+      "mllm_evidence_level": "anchor",
+      "mllm_heatmap_rank": 2,
+      "mllm_target_value_rank": 2,
+      "notes": [
+        {
+          "code": "final_heatmap_override_explained",
+          "detail": "final=B4 heatmap rank=2, top=B6, score_gap=0.317, reason=graph_frontier_score_contract",
+          "severity": "info"
+        },
+        {
+          "code": "mllm_heatmap_override_explained",
+          "detail": "mllm=B4 heatmap rank=2, top=B6, score_gap=0.317, reason=graph_frontier_score_contract",
+          "severity": "info"
+        },
+        {
+          "code": "final_target_value_override_explained",
+          "detail": "final=B4 target-value rank=2, top=B6, value_gap=0.461, reason=graph_frontier_score_contract",
+          "severity": "info"
+        }
+      ],
+      "schema_version": "smoothnav.semantic_bev_branch_decision_eval.v1",
+      "selection_contract": {
+        "contract_note": "target_value ranks semantic search value; Graph.get_goal final branch may override it when executable frontier score or actionability is stronger",
+        "drift_is_explained": true,
+        "dry_branch_id": "B4",
+        "final_actionability_score": 1.0,
+        "final_branch_id": "B4",
+        "final_executable_decision_rank": 1,
+        "final_frontier_score": 18.0559,
+        "final_target_value_score": 0.5388,
+        "mllm_branch_id": "B4",
+        "override_reason": "graph_frontier_score_contract",
+        "schema_version": "smoothnav.target_value_selection_contract.v1",
+        "target_value_aligned": false,
+        "target_value_gap": 0.4612,
+        "top_executable_decision_branch_id": "B4",
+        "top_frontier_score": 18.0559,
+        "top_frontier_score_branch_id": "B4",
+        "top_target_value_actionability_score": 1.0,
+        "top_target_value_branch_id": "B6",
+        "top_target_value_score": 1.0
+      },
+      "semantic_region_count": 9,
+      "step_idx": 145,
+      "support_class": "anchor_supported_exploration",
+      "target_anchor_semantic_region_count": 6,
+      "target_heatmap_positive_pixel_count": 19,
+      "target_heatmap_source": "semantic_prior_only",
+      "target_value_available": true,
+      "target_value_peak": 1.0,
+      "top_executable_decision_branch": "B4",
+      "top_heatmap_branch": "B6",
+      "top_target_value_branch": "B6"
+    }
+  ],
+  "out_dir": "analysis/s37_contract_replay_review_20260501/branch_decision_eval",
+  "replay_dir": "analysis/s37_contract_replay_review_20260501",
+  "schema_version": "smoothnav.semantic_bev_branch_decision_eval.summary.v1"
+}

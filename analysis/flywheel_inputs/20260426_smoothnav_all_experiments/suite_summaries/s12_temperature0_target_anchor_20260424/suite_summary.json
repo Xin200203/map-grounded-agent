@@ -1,0 +1,34 @@
+{
+  "episodes_requested": [
+    228
+  ],
+  "profiles": {
+    "smoothnav-full": {
+      "SPL": 0.0,
+      "SR": 0.0,
+      "avg_high_level_calls": 18.0,
+      "avg_low_level_calls": 2.0,
+      "episodes": [
+        228
+      ],
+      "executor_override_ratio": 0.0042780748663101605,
+      "goal_update_delay_steps": 19.470588235294116,
+      "grounding_noop_reason_counts": {},
+      "missing_epoch_trace_steps": 0,
+      "num_runs": 1,
+      "pending_created_count": 11,
+      "pending_promoted_count": 10,
+      "run_dirs": [
+        "results/phase2_revalidation/s12_temperature0_target_anchor_20260424/smoothnav-full/20260424/smoothnav_text_112731_317b2c0e"
+      ],
+      "strategy_switch_count": 13.0,
+      "terminal_outcome_counts": {
+        "FAILURE_NO_PROGRESS_TIMEOUT": 1
+      }
+    }
+  },
+  "profiles_requested": [
+    "smoothnav-full"
+  ],
+  "results_root": "results/phase2_revalidation/s12_temperature0_target_anchor_20260424"
+}

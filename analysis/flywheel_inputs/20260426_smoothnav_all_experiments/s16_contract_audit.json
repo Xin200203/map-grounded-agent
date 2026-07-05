@@ -1,0 +1,343 @@
+{
+  "branch_reproducibility_comparisons": [],
+  "dominant_failure_layer_counts": {
+    "planner_menu_choice": 1
+  },
+  "input_paths": [
+    "results/phase2_revalidation/s16_contract_audit_ep228_20260426"
+  ],
+  "layer_status_counts": {
+    "controller_pending_prefetch": {
+      "pass": 1
+    },
+    "dataset_scene_episode": {
+      "pass": 1
+    },
+    "determinism_branch_reproducibility": {
+      "warn": 1
+    },
+    "executor_low_level_control": {
+      "pass": 1
+    },
+    "grounding_frontier_value": {
+      "pass": 1
+    },
+    "local_map_lifecycle": {
+      "pass": 1
+    },
+    "monitor_trigger_coverage": {
+      "pass": 1
+    },
+    "perception_graph_target_evidence": {
+      "pass": 1
+    },
+    "planner_menu_choice": {
+      "fail": 1
+    },
+    "replay_counterfactual_coverage": {
+      "warn": 1
+    },
+    "strategy_contract": {
+      "pass": 1
+    },
+    "suite_artifact_config": {
+      "pass": 1
+    },
+    "target_anchor_attempt": {
+      "pass": 1
+    },
+    "terminal_metric_arbitration": {
+      "pass": 1
+    }
+  },
+  "num_runs": 1,
+  "runs": [
+    {
+      "dominant_failure_layer": "planner_menu_choice",
+      "dominant_failure_reason": "target evidence was not consumed by planner",
+      "episode_id": 228,
+      "layers": {
+        "controller_pending_prefetch": {
+          "metrics": {
+            "harmful_pending_promotion_count": 0,
+            "harmful_pending_promotions": [],
+            "pending_age_max": 0,
+            "pending_age_median": 0,
+            "stale_pending_discard_steps": []
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "dataset_scene_episode": {
+          "metrics": {
+            "episode_id": 228,
+            "goal_type": "text",
+            "max_episode_length": 1000,
+            "missing_metadata": [],
+            "primary_goal_present": true,
+            "split": "val",
+            "success_dist": 1.0,
+            "text_goal_dataset": "data/datasets/textnav/val/val_text.json.gz"
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "determinism_branch_reproducibility": {
+          "metrics": {
+            "api_provider": "anthropic",
+            "first_strategy_sequence": [
+              {
+                "step_idx": 0,
+                "target_region": "unexplored east"
+              },
+              {
+                "step_idx": 59,
+                "target_region": "unexplored north"
+              },
+              {
+                "step_idx": 139,
+                "target_region": "unexplored east"
+              },
+              {
+                "step_idx": 259,
+                "target_region": "unexplored south"
+              },
+              {
+                "step_idx": 315,
+                "target_region": "unexplored west"
+              },
+              {
+                "step_idx": 445,
+                "target_region": "unexplored south"
+              }
+            ],
+            "first_target_anchor_step": null,
+            "first_target_step": 668,
+            "llm_model": "claude-sonnet-4-5-20250929",
+            "planner_prompt_hashes_head": [
+              "0b5c76e3d27750904d311c4e01f24adea245aa28",
+              "79c02c1afbc6435a06af77c9891a03587ff9ec1f",
+              "0239f97124440e3484246d6ddd67ad2e87efb974",
+              "323c4897e7eaeb06839ec9619cbf3a1b0bd7292a",
+              "3fd5613bc6300309b443688bc7e1e10c7b7acc82",
+              "eeb832794caed77add4b525fa704ca9ce3820e76",
+              "84bde7fb0c5fda1a27edbb0a336400ada6b1fb46",
+              "702b16813ff0503c802b88ba0dba5378cbab94ee",
+              "051a782531ae6fc93f086a4fdbc9d116a2d873eb",
+              "1f09df82879c45bc42b82779613864344a852f02",
+              "cb9c982e8e38d7071853ff2bbaf11d332eeba696",
+              "5e915472d5f9cd8807fc47389ff4215d41e069c2"
+            ],
+            "planner_response_hashes_head": [
+              "da39a3ee5e6b4b0d",
+              "da39a3ee5e6b4b0d",
+              "b262778aa9fe1405",
+              "da39a3ee5e6b4b0d",
+              "ef0c8e479ae69e6f",
+              "da39a3ee5e6b4b0d",
+              "b3fba3355d6fbf8d",
+              "da39a3ee5e6b4b0d",
+              "da39a3ee5e6b4b0d",
+              "da39a3ee5e6b4b0d",
+              "da39a3ee5e6b4b0d",
+              "da39a3ee5e6b4b0d"
+            ],
+            "seed": 1,
+            "target_branch_covered": false,
+            "target_event_count": 2
+          },
+          "observations": [],
+          "status": "warn"
+        },
+        "executor_low_level_control": {
+          "metrics": {
+            "direction_reversals": 3.0,
+            "dist_to_goal_slope": 0.23958793773919596,
+            "executor_adoption_changes": 37,
+            "executor_override_ratios": {
+              "executor_override_ratio": 0.0,
+              "global_goal_override_ratio": 0.0,
+              "stuck_goal_override_ratio": 0.0,
+              "temp_goal_override_ratio": 0.0,
+              "visible_target_override_ratio": 0.0
+            },
+            "pause_ratio": 0.4288577154308617,
+            "strategy_switch_count": 6.0
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "grounding_frontier_value": {
+          "metrics": {
+            "grounding_event_count": 14,
+            "grounding_noop_reasons": {},
+            "sample_target_grounding_events": [],
+            "target_base_score_zero_count": 0,
+            "target_base_score_zero_rate": 0.0,
+            "target_best_seen_anchor_distance_delta": null,
+            "target_bias_distance_max": null,
+            "target_bias_distance_min": null,
+            "target_bias_score_zero_count": 0,
+            "target_bias_score_zero_rate": 0.0,
+            "target_grounding_event_count": 0,
+            "target_selected_frontier_anchor_distance_delta": null,
+            "target_semantic_term_share_median": null,
+            "target_value_flatline_count": 0,
+            "target_value_flatline_rate": 0.0
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "local_map_lifecycle": {
+          "metrics": {
+            "local_map_move_steps": [],
+            "stale_local_goal_risk_count": 0,
+            "stale_local_goal_risk_steps": [],
+            "target_anchor_refresh_count": 0,
+            "target_anchor_refresh_steps": []
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "monitor_trigger_coverage": {
+          "metrics": {
+            "event_type_counts": {
+              "frontier_near": 11,
+              "frontier_reached": 10,
+              "new_nodes": 28,
+              "new_rooms": 1,
+              "no_progress": 428,
+              "node_caption_changed": 1,
+              "room_object_count_increase": 28,
+              "target_candidate_detected": 2
+            },
+            "monitor_call_count": 2,
+            "monitor_skip_reasons": {},
+            "unhandled_target_candidate_count": 0,
+            "unhandled_target_candidate_steps": []
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "perception_graph_target_evidence": {
+          "metrics": {
+            "first_target_step": 668,
+            "sample_target_steps": [
+              {
+                "captions": [
+                  "tv"
+                ],
+                "count": 1,
+                "step_idx": 668
+              },
+              {
+                "captions": [
+                  "tv"
+                ],
+                "count": 1,
+                "step_idx": 768
+              }
+            ],
+            "target_candidate_captions": {
+              "tv": 2
+            },
+            "target_candidate_flicker_rate": 0.997997997997998,
+            "target_center_updates": 2,
+            "target_event_count": 2
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "planner_menu_choice": {
+          "metrics": {
+            "empty_response_count": 13,
+            "evidence_to_planner_latency": 0,
+            "fallback_triggered_count": 13,
+            "first_planner_after_target": 668,
+            "invalid_parse_count": 0,
+            "planner_call_count": 16,
+            "selected_target_after_target": false,
+            "target_in_prompt_after_target": true
+          },
+          "observations": [],
+          "status": "fail"
+        },
+        "replay_counterfactual_coverage": {
+          "metrics": {
+            "attempt_replay_verdict": null,
+            "pending_fix_verdict": null,
+            "present_artifacts": {
+              "pending_fix_counterfactual": false,
+              "target_anchor_attempt_analysis": false,
+              "target_anchor_attempt_replay": false,
+              "target_branch_capture": false
+            }
+          },
+          "observations": [],
+          "status": "warn"
+        },
+        "strategy_contract": {
+          "metrics": {
+            "direct_object_blocked_reasons": {},
+            "direct_object_goal_step_count": 0,
+            "first_direct_goal_after_target": null,
+            "first_object_commit_after_target": null,
+            "first_target_anchor_after_target": null
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "suite_artifact_config": {
+          "metrics": {
+            "missing_optional_artifacts": [],
+            "missing_required_artifacts": [],
+            "monitor_call_count": 2,
+            "planner_call_count": 16,
+            "step_count": 999
+          },
+          "observations": [
+            "required artifacts present"
+          ],
+          "status": "pass"
+        },
+        "target_anchor_attempt": {
+          "metrics": {
+            "attempt_observation_count": 0,
+            "last_attempt_summary": null,
+            "max_stall_updates": 0,
+            "stall_replan_steps": []
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "terminal_metric_arbitration": {
+          "metrics": {
+            "SPL": 0.0,
+            "SR": 0.0,
+            "summary_terminal_outcome_counts": {
+              "FAILURE_NO_PROGRESS_TIMEOUT": 1
+            },
+            "terminal_decision": {
+              "evidence_ids": [],
+              "final_verify_timeout": 0,
+              "is_terminal": true,
+              "outcome": "FAILURE_NO_PROGRESS_TIMEOUT",
+              "reason": "environment_done_without_success",
+              "stop_veto_source": null,
+              "termination_confidence": 0.5
+            },
+            "terminal_outcome": "FAILURE_NO_PROGRESS_TIMEOUT",
+            "total_steps": 999
+          },
+          "observations": [],
+          "status": "pass"
+        }
+      },
+      "profile": "smoothnav-full",
+      "run_dir": "results/phase2_revalidation/s16_contract_audit_ep228_20260426/smoothnav-full/20260426/smoothnav_text_195315_7c1397e9",
+      "run_id": "smoothnav_text_195315_7c1397e9",
+      "terminal_outcome": "FAILURE_NO_PROGRESS_TIMEOUT"
+    }
+  ],
+  "schema_version": "smoothnav_trace_contract_audit_v1"
+}

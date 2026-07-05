@@ -1,0 +1,11 @@
+{
+  "anchor_object": "",
+  "created_local": "2026-04-27T19:52:55.271",
+  "episode_id": 0,
+  "label": "unexplored east",
+  "policy": "all",
+  "schema_version": "smoothnav.task_frame_capsule.v1",
+  "step_idx": 0,
+  "target_region": "unexplored east",
+  "trigger": "episode_start"
+}

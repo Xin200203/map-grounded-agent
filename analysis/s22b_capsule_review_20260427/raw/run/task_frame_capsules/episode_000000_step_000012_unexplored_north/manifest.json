@@ -1,0 +1,11 @@
+{
+  "anchor_object": "",
+  "created_local": "2026-04-27T19:55:09.452",
+  "episode_id": 0,
+  "label": "unexplored north",
+  "policy": "all",
+  "schema_version": "smoothnav.task_frame_capsule.v1",
+  "step_idx": 12,
+  "target_region": "unexplored north",
+  "trigger": "new_room_discovered"
+}

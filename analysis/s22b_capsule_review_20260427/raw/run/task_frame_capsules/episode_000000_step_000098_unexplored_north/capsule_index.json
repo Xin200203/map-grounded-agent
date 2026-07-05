@@ -1,0 +1,18 @@
+{
+  "capsule_dir": "/mnt/sdd/xxy/SmoothNav/results/phase2_revalidation/s22b_bev_mllm_union_ep228_20260427/smoothnav-full/20260427/smoothnav_text_194639_3b40f51d/task_frame_capsules/episode_000000_step_000098_unexplored_north",
+  "files": [
+    "bev_annotated_branches.png",
+    "executor_followup.json",
+    "frontier_branches.json",
+    "frontier_raw.json",
+    "grounding_result.json",
+    "manifest.json",
+    "maps.npz",
+    "planner_contract_verdict.json",
+    "planner_prompt.json",
+    "scoring_input.json",
+    "scoring_replay.json",
+    "world_state.json"
+  ],
+  "schema_version": "smoothnav.task_frame_capsule.v1.index"
+}

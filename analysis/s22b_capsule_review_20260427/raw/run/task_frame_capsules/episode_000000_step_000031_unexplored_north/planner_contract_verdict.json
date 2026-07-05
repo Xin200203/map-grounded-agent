@@ -1,0 +1,10 @@
+{
+  "decision_type": "",
+  "invalid_reason": "Expecting property name enclosed in double quotes: line 18 column 1 (char 525)",
+  "plan": null,
+  "prior_scores": [],
+  "ranked_branch_ids": [],
+  "schema_version": "smoothnav.mllm_frontier_plan.verdict.v1",
+  "selected_branch_id": "",
+  "valid": false
+}

@@ -1,0 +1,11 @@
+{
+  "anchor_object": "",
+  "created_local": "2026-04-27T19:59:12.348",
+  "episode_id": 0,
+  "label": "bedroom",
+  "policy": "all",
+  "schema_version": "smoothnav.task_frame_capsule.v1",
+  "step_idx": 25,
+  "target_region": "bedroom",
+  "trigger": "pending_promotion"
+}

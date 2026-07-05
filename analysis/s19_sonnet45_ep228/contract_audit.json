@@ -1,0 +1,832 @@
+{
+  "branch_reproducibility_comparisons": [],
+  "dominant_failure_layer_counts": {
+    "grounding_frontier_value": 1
+  },
+  "input_paths": [
+    "results/phase2_revalidation/s19_sonnet45_ep228_20260426"
+  ],
+  "layer_status_counts": {
+    "controller_pending_prefetch": {
+      "pass": 1
+    },
+    "dataset_scene_episode": {
+      "pass": 1
+    },
+    "determinism_branch_reproducibility": {
+      "pass": 1
+    },
+    "executor_low_level_control": {
+      "pass": 1
+    },
+    "grounding_frontier_value": {
+      "fail": 1
+    },
+    "local_map_lifecycle": {
+      "fail": 1
+    },
+    "monitor_trigger_coverage": {
+      "pass": 1
+    },
+    "perception_graph_target_evidence": {
+      "pass": 1
+    },
+    "planner_menu_choice": {
+      "pass": 1
+    },
+    "replay_counterfactual_coverage": {
+      "warn": 1
+    },
+    "strategy_contract": {
+      "pass": 1
+    },
+    "suite_artifact_config": {
+      "pass": 1
+    },
+    "target_anchor_attempt": {
+      "pass": 1
+    },
+    "terminal_metric_arbitration": {
+      "pass": 1
+    }
+  },
+  "num_runs": 1,
+  "runs": [
+    {
+      "dominant_failure_layer": "grounding_frontier_value",
+      "dominant_failure_reason": "target frontier value lost semantic signal",
+      "episode_id": 228,
+      "layers": {
+        "controller_pending_prefetch": {
+          "metrics": {
+            "harmful_pending_promotion_count": 0,
+            "harmful_pending_promotions": [],
+            "pending_age_max": 558,
+            "pending_age_median": 116,
+            "stale_pending_discard_steps": [
+              334,
+              355,
+              435
+            ]
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "dataset_scene_episode": {
+          "metrics": {
+            "episode_id": 228,
+            "goal_type": "text",
+            "max_episode_length": 1000,
+            "missing_metadata": [],
+            "primary_goal_present": true,
+            "split": "val",
+            "success_dist": 1.0,
+            "text_goal_dataset": "data/datasets/textnav/val/val_text.json.gz"
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "determinism_branch_reproducibility": {
+          "metrics": {
+            "api_provider": "anthropic",
+            "first_strategy_sequence": [
+              {
+                "step_idx": 0,
+                "target_region": "unexplored north"
+              },
+              {
+                "step_idx": 15,
+                "target_region": "unexplored south"
+              },
+              {
+                "step_idx": 147,
+                "target_region": "unexplored north"
+              },
+              {
+                "step_idx": 330,
+                "target_region": "unexplored target:tv"
+              }
+            ],
+            "first_target_anchor_step": 330,
+            "first_target_step": 330,
+            "llm_model": "claude-sonnet-4-5-20250929",
+            "planner_prompt_hashes_head": [
+              "0b5c76e3d27750904d311c4e01f24adea245aa28",
+              "79c02c1afbc6435a06af77c9891a03587ff9ec1f",
+              "323c4897e7eaeb06839ec9619cbf3a1b0bd7292a",
+              "34e953e282b4d89c0dc99ea317f1bdee05dec803",
+              "7cff7791723933cb317d214543b05e9cd84f0690",
+              "101ad34105dff56df9064aed10dffd81423c4713",
+              "9fb2234ec028e2811be97bde5e7d9058b62d3a34",
+              "1a00dfa131b26f64d111d8ddae2c2a3144962e0d",
+              "6934e089f51c05c7b07ef2875189a40f54b1800a",
+              "16066e34ad987e7bb962b8a7c3ae318525cd126c",
+              "7aaddb80995ae67976d2069f0d8ed557083424d5",
+              "a84f32d489e3f5a371e7dc80f9768dda937188dd"
+            ],
+            "planner_response_hashes_head": [
+              "3bbf5e79249582dc",
+              "98d4740a6191fc2e",
+              "556ae71fba7178ec",
+              "4e9586e83106b10f",
+              "eb51659d3db0f385",
+              "35d9970287440c62",
+              "452515f6ad40b53c",
+              "9ea6faa6a8e23099",
+              "6836b5a1b2c356e0",
+              "8498b379e5e9af40",
+              "eb21a1e592484397",
+              "9a6ecffaa0732418"
+            ],
+            "seed": 1,
+            "target_branch_covered": true,
+            "target_event_count": 669
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "executor_low_level_control": {
+          "metrics": {
+            "direction_reversals": 6.0,
+            "dist_to_goal_slope": 0.044019804882743076,
+            "executor_adoption_changes": 36,
+            "executor_override_ratios": {
+              "executor_override_ratio": 0.0,
+              "global_goal_override_ratio": 0.0,
+              "stuck_goal_override_ratio": 0.0,
+              "temp_goal_override_ratio": 0.0,
+              "visible_target_override_ratio": 0.0
+            },
+            "pause_ratio": 0.43887775551102204,
+            "strategy_switch_count": 4.0
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "grounding_frontier_value": {
+          "metrics": {
+            "grounding_event_count": 39,
+            "grounding_noop_reasons": {
+              "out_of_local_window": 8
+            },
+            "sample_target_grounding_events": [
+              {
+                "actionability_score": 1.0,
+                "anchor_euclidean_distance": 357.23661626434654,
+                "base_score": 9.967485587388001,
+                "bias_distance": 1.2895029620858103,
+                "bias_input": [
+                  170,
+                  180
+                ],
+                "bias_score": 0.991049703791419,
+                "candidate_frontier_count_after_bias_filter": 24,
+                "changed": true,
+                "filtered_frontier_count": 585,
+                "final_score": 16.393222864092138,
+                "local_projection_valid": true,
+                "novelty_score": 0.46153846153846156,
+                "projected_goal": [
+                  100,
+                  106
+                ],
+                "raw_frontier_count": 744,
+                "recent_penalty": 0.0,
+                "repeat_penalty": 0.0,
+                "selected_from_bias_filtered_subset": true,
+                "selected_frontier": [
+                  527,
+                  167
+                ],
+                "semantic_term_share": 0.24181936938397222,
+                "step_idx": 330,
+                "target_region": "unexplored target:tv",
+                "top1_top2_gap": 0.05856297632365681,
+                "trigger": "target_candidate_detected"
+              },
+              {
+                "actionability_score": 0.0,
+                "anchor_euclidean_distance": 276.12316092642425,
+                "base_score": 0.0,
+                "bias_distance": 14.82189625087355,
+                "bias_input": [
+                  170,
+                  180
+                ],
+                "bias_score": 0.0,
+                "candidate_frontier_count_after_bias_filter": 24,
+                "changed": false,
+                "filtered_frontier_count": 509,
+                "final_score": 0.4556213017751479,
+                "local_projection_valid": false,
+                "novelty_score": 0.4556213017751479,
+                "projected_goal": [
+                  -5,
+                  272
+                ],
+                "raw_frontier_count": 673,
+                "recent_penalty": 0.0,
+                "repeat_penalty": 0.0,
+                "selected_from_bias_filtered_subset": true,
+                "selected_frontier": [
+                  408,
+                  320
+                ],
+                "semantic_term_share": 0.0,
+                "step_idx": 334,
+                "target_region": "unexplored target:tv",
+                "top1_top2_gap": 0.03550295857988167,
+                "trigger": "frontier_reached"
+              },
+              {
+                "actionability_score": 0.0,
+                "anchor_euclidean_distance": 275.6174885597792,
+                "base_score": 0.0,
+                "bias_distance": 14.782036940967995,
+                "bias_input": [
+                  170,
+                  180
+                ],
+                "bias_score": 0.0,
+                "candidate_frontier_count_after_bias_filter": 24,
+                "changed": false,
+                "filtered_frontier_count": 509,
+                "final_score": 0.42011834319526625,
+                "local_projection_valid": false,
+                "novelty_score": 0.42011834319526625,
+                "projected_goal": [
+                  -5,
+                  271
+                ],
+                "raw_frontier_count": 673,
+                "recent_penalty": 0.0,
+                "repeat_penalty": 0.0,
+                "selected_from_bias_filtered_subset": true,
+                "selected_frontier": [
+                  408,
+                  319
+                ],
+                "semantic_term_share": 0.0,
+                "step_idx": 334,
+                "target_region": "unexplored target:tv",
+                "top1_top2_gap": 0.0650887573964497,
+                "trigger": "grounding_out_of_local_window_retry"
+              },
+              {
+                "actionability_score": 1.0,
+                "anchor_euclidean_distance": 370.22830793984406,
+                "base_score": 9.953938663940635,
+                "bias_distance": 0.8029187056719618,
+                "bias_input": [
+                  170,
+                  180
+                ],
+                "bias_score": 1.0397081294328039,
+                "candidate_frontier_count_after_bias_filter": 5,
+                "changed": true,
+                "filtered_frontier_count": 509,
+                "final_score": 16.42046348936416,
+                "local_projection_valid": true,
+                "novelty_score": 0.3076923076923077,
+                "projected_goal": [
+                  143,
+                  129
+                ],
+                "raw_frontier_count": 663,
+                "recent_penalty": 0.0,
+                "repeat_penalty": 0.0,
+                "selected_from_bias_filtered_subset": true,
+                "selected_frontier": [
+                  540,
+                  167
+                ],
+                "semantic_term_share": 0.2532713233353595,
+                "step_idx": 341,
+                "target_region": "unexplored target:tv",
+                "top1_top2_gap": 0.06517710565432111,
+                "trigger": "frontier_reached"
+              },
+              {
+                "actionability_score": 0.0,
+                "anchor_euclidean_distance": 274.9127134200963,
+                "base_score": 0.0,
+                "bias_distance": 14.802572485989103,
+                "bias_input": [
+                  170,
+                  180
+                ],
+                "bias_score": 0.0,
+                "candidate_frontier_count_after_bias_filter": 24,
+                "changed": false,
+                "filtered_frontier_count": 494,
+                "final_score": 0.35502958579881655,
+                "local_projection_valid": false,
+                "novelty_score": 0.35502958579881655,
+                "projected_goal": [
+                  -10,
+                  277
+                ],
+                "raw_frontier_count": 648,
+                "recent_penalty": 0.0,
+                "repeat_penalty": 0.0,
+                "selected_from_bias_filtered_subset": true,
+                "selected_frontier": [
+                  406,
+                  321
+                ],
+                "semantic_term_share": 0.0,
+                "step_idx": 355,
+                "target_region": "unexplored target:tv",
+                "top1_top2_gap": 0.0,
+                "trigger": "frontier_reached"
+              },
+              {
+                "actionability_score": 0.0,
+                "anchor_euclidean_distance": 274.40116617827994,
+                "base_score": 0.0,
+                "bias_distance": 14.762193366421922,
+                "bias_input": [
+                  170,
+                  180
+                ],
+                "bias_score": 0.0,
+                "candidate_frontier_count_after_bias_filter": 24,
+                "changed": false,
+                "filtered_frontier_count": 494,
+                "final_score": 0.35502958579881655,
+                "local_projection_valid": false,
+                "novelty_score": 0.35502958579881655,
+                "projected_goal": [
+                  -10,
+                  276
+                ],
+                "raw_frontier_count": 648,
+                "recent_penalty": 0.0,
+                "repeat_penalty": 0.0,
+                "selected_from_bias_filtered_subset": true,
+                "selected_frontier": [
+                  406,
+                  320
+                ],
+                "semantic_term_share": 0.0,
+                "step_idx": 355,
+                "target_region": "unexplored target:tv",
+                "top1_top2_gap": 0.005917159763313584,
+                "trigger": "grounding_out_of_local_window_retry"
+              },
+              {
+                "actionability_score": 0.0,
+                "anchor_euclidean_distance": 274.2498860528478,
+                "base_score": 0.0,
+                "bias_distance": 14.711995848917516,
+                "bias_input": [
+                  170,
+                  180
+                ],
+                "bias_score": 0.0,
+                "candidate_frontier_count_after_bias_filter": 24,
+                "changed": false,
+                "filtered_frontier_count": 494,
+                "final_score": 0.34911242603550297,
+                "local_projection_valid": false,
+                "novelty_score": 0.34911242603550297,
+                "projected_goal": [
+                  -9,
+                  274
+                ],
+                "raw_frontier_count": 648,
+                "recent_penalty": 0.0,
+                "repeat_penalty": 0.0,
+                "selected_from_bias_filtered_subset": true,
+                "selected_frontier": [
+                  407,
+                  318
+                ],
+                "semantic_term_share": 0.0,
+                "step_idx": 359,
+                "target_region": "unexplored target:tv",
+                "top1_top2_gap": 0.0,
+                "trigger": "target_anchor_local_map_refresh"
+              },
+              {
+                "actionability_score": 1.0,
+                "anchor_euclidean_distance": 356.23728047468586,
+                "base_score": 5.672313828949873,
+                "bias_distance": 1.3327491533576064,
+                "bias_input": [
+                  170,
+                  180
+                ],
+                "bias_score": 0.9867250846642394,
+                "candidate_frontier_count_after_bias_filter": 21,
+                "changed": true,
+                "filtered_frontier_count": 494,
+                "final_score": 11.755308842163045,
+                "local_projection_valid": true,
+                "novelty_score": 0.13609467455621302,
+                "projected_goal": [
+                  203,
+                  121
+                ],
+                "raw_frontier_count": 633,
+                "recent_penalty": 0.0,
+                "repeat_penalty": 0.0,
+                "selected_from_bias_filtered_subset": true,
+                "selected_frontier": [
+                  526,
+                  167
+                ],
+                "semantic_term_share": 0.33575471233052734,
+                "step_idx": 399,
+                "target_region": "unexplored target:tv",
+                "top1_top2_gap": 0.03112123244256715,
+                "trigger": "target_anchor_local_map_refresh"
+              },
+              {
+                "actionability_score": 0.0,
+                "anchor_euclidean_distance": 275.4269413111216,
+                "base_score": 0.0,
+                "bias_distance": 14.84202386585066,
+                "bias_input": [
+                  170,
+                  180
+                ],
+                "bias_score": 0.0,
+                "candidate_frontier_count_after_bias_filter": 24,
+                "changed": false,
+                "filtered_frontier_count": 473,
+                "final_score": 0.34911242603550297,
+                "local_projection_valid": false,
+                "novelty_score": 0.34911242603550297,
+                "projected_goal": [
+                  7,
+                  268
+                ],
+                "raw_frontier_count": 605,
+                "recent_penalty": 0.0,
+                "repeat_penalty": 0.0,
+                "selected_from_bias_filtered_subset": true,
+                "selected_frontier": [
+                  406,
+                  322
+                ],
+                "semantic_term_share": 0.0,
+                "step_idx": 435,
+                "target_region": "unexplored target:tv",
+                "top1_top2_gap": 0.029585798816568032,
+                "trigger": "frontier_reached"
+              },
+              {
+                "actionability_score": 0.0,
+                "anchor_euclidean_distance": 273.7480593538519,
+                "base_score": 0.0,
+                "bias_distance": 14.671136302134471,
+                "bias_input": [
+                  170,
+                  180
+                ],
+                "bias_score": 0.0,
+                "candidate_frontier_count_after_bias_filter": 24,
+                "changed": false,
+                "filtered_frontier_count": 473,
+                "final_score": 0.31952662721893493,
+                "local_projection_valid": false,
+                "novelty_score": 0.31952662721893493,
+                "projected_goal": [
+                  8,
+                  263
+                ],
+                "raw_frontier_count": 605,
+                "recent_penalty": 0.0,
+                "repeat_penalty": 0.0,
+                "selected_from_bias_filtered_subset": true,
+                "selected_frontier": [
+                  407,
+                  317
+                ],
+                "semantic_term_share": 0.0,
+                "step_idx": 435,
+                "target_region": "unexplored target:tv",
+                "top1_top2_gap": 0.023668639053254448,
+                "trigger": "grounding_out_of_local_window_retry"
+              },
+              {
+                "actionability_score": 0.0,
+                "anchor_euclidean_distance": 276.12316092642425,
+                "base_score": 0.0,
+                "bias_distance": 14.820800722797216,
+                "bias_input": [
+                  170,
+                  180
+                ],
+                "bias_score": 0.0,
+                "candidate_frontier_count_after_bias_filter": 24,
+                "changed": false,
+                "filtered_frontier_count": 473,
+                "final_score": 0.4556213017751479,
+                "local_projection_valid": false,
+                "novelty_score": 0.4556213017751479,
+                "projected_goal": [
+                  9,
+                  266
+                ],
+                "raw_frontier_count": 605,
+                "recent_penalty": 0.0,
+                "repeat_penalty": 0.0,
+                "selected_from_bias_filtered_subset": true,
+                "selected_frontier": [
+                  408,
+                  320
+                ],
+                "semantic_term_share": 0.0,
+                "step_idx": 439,
+                "target_region": "unexplored target:tv",
+                "top1_top2_gap": 0.15976331360946744,
+                "trigger": "target_anchor_local_map_refresh"
+              },
+              {
+                "actionability_score": 1.0,
+                "anchor_euclidean_distance": 209.15305400591214,
+                "base_score": 0.0,
+                "bias_distance": 37.27433021799386,
+                "bias_input": [
+                  170,
+                  180
+                ],
+                "bias_score": 0.0,
+                "candidate_frontier_count_after_bias_filter": 164,
+                "changed": true,
+                "filtered_frontier_count": 473,
+                "final_score": 2.8106508875739644,
+                "local_projection_valid": true,
+                "novelty_score": 0.8106508875739645,
+                "projected_goal": [
+                  42,
+                  60
+                ],
+                "raw_frontier_count": 605,
+                "recent_penalty": 0.0,
+                "repeat_penalty": 0.0,
+                "selected_from_bias_filtered_subset": true,
+                "selected_frontier": [
+                  366,
+                  107
+                ],
+                "semantic_term_share": 0.0,
+                "step_idx": 479,
+                "target_region": "unexplored target:tv",
+                "top1_top2_gap": 0.005917159763313418,
+                "trigger": "target_anchor_local_map_refresh"
+              }
+            ],
+            "target_base_score_zero_count": 27,
+            "target_base_score_zero_rate": 0.9,
+            "target_best_seen_anchor_distance_delta": 150.65249296345007,
+            "target_bias_distance_max": 37.27433021799386,
+            "target_bias_distance_min": 0.8029187056719618,
+            "target_bias_score_zero_count": 27,
+            "target_bias_score_zero_rate": 0.9,
+            "target_grounding_event_count": 30,
+            "target_selected_frontier_anchor_distance_delta": 85.64869311605929,
+            "target_semantic_term_share_median": 0.0,
+            "target_value_flatline_count": 7,
+            "target_value_flatline_rate": 0.23333333333333334
+          },
+          "observations": [
+            "target branch semantic value signal collapsed"
+          ],
+          "status": "fail"
+        },
+        "local_map_lifecycle": {
+          "metrics": {
+            "local_map_move_steps": [
+              334,
+              355,
+              435
+            ],
+            "stale_local_goal_risk_count": 3,
+            "stale_local_goal_risk_steps": [
+              334,
+              355,
+              435
+            ],
+            "target_anchor_refresh_count": 16,
+            "target_anchor_refresh_steps": [
+              359,
+              399,
+              439,
+              479,
+              519,
+              559,
+              599,
+              639,
+              679,
+              719,
+              759,
+              799,
+              839,
+              879,
+              919,
+              959
+            ]
+          },
+          "observations": [],
+          "status": "fail"
+        },
+        "monitor_trigger_coverage": {
+          "metrics": {
+            "event_type_counts": {
+              "frontier_near": 11,
+              "frontier_reached": 10,
+              "new_nodes": 66,
+              "new_rooms": 1,
+              "no_progress": 438,
+              "node_caption_changed": 7,
+              "room_object_count_increase": 66,
+              "stuck": 1,
+              "target_candidate_detected": 6
+            },
+            "monitor_call_count": 6,
+            "monitor_skip_reasons": {},
+            "unhandled_target_candidate_count": 0,
+            "unhandled_target_candidate_steps": []
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "perception_graph_target_evidence": {
+          "metrics": {
+            "first_target_step": 330,
+            "sample_target_steps": [
+              {
+                "captions": [
+                  "tv"
+                ],
+                "count": 1,
+                "step_idx": 330
+              },
+              {
+                "captions": [
+                  "tv"
+                ],
+                "count": 1,
+                "step_idx": 331
+              },
+              {
+                "captions": [
+                  "tv"
+                ],
+                "count": 1,
+                "step_idx": 332
+              },
+              {
+                "captions": [
+                  "tv"
+                ],
+                "count": 1,
+                "step_idx": 333
+              },
+              {
+                "captions": [
+                  "tv"
+                ],
+                "count": 1,
+                "step_idx": 334
+              },
+              {
+                "captions": [
+                  "tv"
+                ],
+                "count": 1,
+                "step_idx": 335
+              },
+              {
+                "captions": [
+                  "tv"
+                ],
+                "count": 1,
+                "step_idx": 336
+              },
+              {
+                "captions": [
+                  "tv"
+                ],
+                "count": 1,
+                "step_idx": 337
+              }
+            ],
+            "target_candidate_captions": {
+              "tv": 669
+            },
+            "target_candidate_flicker_rate": 0.3303303303303303,
+            "target_center_updates": 669,
+            "target_event_count": 669
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "planner_menu_choice": {
+          "metrics": {
+            "empty_response_count": 0,
+            "evidence_to_planner_latency": 0,
+            "fallback_triggered_count": 0,
+            "first_planner_after_target": 330,
+            "invalid_parse_count": 0,
+            "planner_call_count": 20,
+            "selected_target_after_target": true,
+            "target_in_prompt_after_target": true
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "replay_counterfactual_coverage": {
+          "metrics": {
+            "attempt_replay_verdict": null,
+            "pending_fix_verdict": null,
+            "present_artifacts": {
+              "pending_fix_counterfactual": false,
+              "target_anchor_attempt_analysis": false,
+              "target_anchor_attempt_replay": false,
+              "target_branch_capture": false
+            }
+          },
+          "observations": [],
+          "status": "warn"
+        },
+        "strategy_contract": {
+          "metrics": {
+            "direct_object_blocked_reasons": {},
+            "direct_object_goal_step_count": 0,
+            "first_direct_goal_after_target": null,
+            "first_object_commit_after_target": null,
+            "first_target_anchor_after_target": 330
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "suite_artifact_config": {
+          "metrics": {
+            "missing_optional_artifacts": [],
+            "missing_required_artifacts": [],
+            "monitor_call_count": 6,
+            "planner_call_count": 20,
+            "step_count": 999
+          },
+          "observations": [
+            "required artifacts present"
+          ],
+          "status": "pass"
+        },
+        "target_anchor_attempt": {
+          "metrics": {
+            "attempt_observation_count": 669,
+            "last_attempt_summary": {
+              "active": true,
+              "attempt_id": 1,
+              "best_distance": 206.58412330089647,
+              "last_distance": 271.58792314828725,
+              "last_improvement_step": 519,
+              "last_trigger": "target_anchor_local_map_refresh",
+              "last_update_step": 959,
+              "stall_updates": 1,
+              "step_idx": 998,
+              "target_region": "unexplored target:tv",
+              "update_count": 26
+            },
+            "max_stall_updates": 5,
+            "stall_replan_steps": []
+          },
+          "observations": [],
+          "status": "pass"
+        },
+        "terminal_metric_arbitration": {
+          "metrics": {
+            "SPL": 0.0,
+            "SR": 0.0,
+            "summary_terminal_outcome_counts": {
+              "FAILURE_NO_PROGRESS_TIMEOUT": 1
+            },
+            "terminal_decision": {
+              "evidence_ids": [],
+              "final_verify_timeout": 0,
+              "is_terminal": true,
+              "outcome": "FAILURE_NO_PROGRESS_TIMEOUT",
+              "reason": "environment_done_without_success",
+              "stop_veto_source": null,
+              "termination_confidence": 0.5
+            },
+            "terminal_outcome": "FAILURE_NO_PROGRESS_TIMEOUT",
+            "total_steps": 999
+          },
+          "observations": [],
+          "status": "pass"
+        }
+      },
+      "profile": "smoothnav-full",
+      "run_dir": "results/phase2_revalidation/s19_sonnet45_ep228_20260426/smoothnav-full/20260426/smoothnav_text_212734_c46b851b",
+      "run_id": "smoothnav_text_212734_c46b851b",
+      "terminal_outcome": "FAILURE_NO_PROGRESS_TIMEOUT"
+    }
+  ],
+  "schema_version": "smoothnav_trace_contract_audit_v1"
+}

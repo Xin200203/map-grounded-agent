@@ -1,0 +1,48 @@
+{
+  "run_id": "smoothnav_text_194639_3b40f51d",
+  "created_at_local": "2026-04-27T19:46:39",
+  "hostname": "dell",
+  "cwd": "/mnt/sdd/xxy/SmoothNav",
+  "repo_root": "/mnt/sdd/xxy/SmoothNav",
+  "results_root": "/mnt/sdd/xxy/SmoothNav/results/phase2_revalidation/s22b_bev_mllm_union_ep228_20260427/smoothnav-full",
+  "run_dir": "/mnt/sdd/xxy/SmoothNav/results/phase2_revalidation/s22b_bev_mllm_union_ep228_20260427/smoothnav-full/20260427/smoothnav_text_194639_3b40f51d",
+  "command": "smoothnav/main.py --config-file base_UniGoal/configs/config_habitat_deepseek_v4_bev_mllm.yaml --goal_type text --controller-profile smoothnav-full --episode_id 228 --num_eval 1 --api-provider openai --api-protocol openai-chat-completions --results-root results/phase2_revalidation/s22b_bev_mllm_union_ep228_20260427/smoothnav-full",
+  "config_file": "base_UniGoal/configs/config_habitat_deepseek_v4_bev_mllm.yaml",
+  "mode": "smoothnav",
+  "goal_type": "text",
+  "num_eval": 1,
+  "num_eval_episodes": 1,
+  "models": {
+    "planner": "deepseek-v4-pro",
+    "monitor": "deepseek-v4-pro",
+    "vision": "deepseek-v4-pro"
+  },
+  "prompt_schema_versions": {
+    "planner": "smoothnav_planner_v1",
+    "monitor": "smoothnav_monitor_escalation_v1"
+  },
+  "git_hash": "155d197",
+  "api_env": {
+    "api_key_env": "DASHSCOPE_API_KEY",
+    "base_url_env": "DASHSCOPE_BASE_URL",
+    "provider": "openai",
+    "protocol": "openai-chat-completions"
+  },
+  "trace": {
+    "enable_controller_trace": true
+  },
+  "controller": {
+    "profile": "smoothnav-full",
+    "enable_monitor": true,
+    "monitor_policy": "llm_escalation",
+    "enable_prefetch": true,
+    "replan_policy": "event",
+    "enable_stuck_replan": true,
+    "stuck_suppression_steps": 8,
+    "direction_reuse_limit": 1,
+    "grounding_noop_replan_threshold": 2,
+    "same_frontier_reuse_threshold": 2,
+    "fixed_plan_interval_steps": 40,
+    "prefetch_near_threshold": 10.0
+  }
+}

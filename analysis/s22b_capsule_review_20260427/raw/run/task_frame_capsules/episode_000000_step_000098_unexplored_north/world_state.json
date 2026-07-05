@@ -1,0 +1,186 @@
+{
+  "explored_regions": [
+    "bedroom"
+  ],
+  "frontier_count": 175,
+  "frontier_summary": [
+    {
+      "coord": [
+        268,
+        373
+      ],
+      "rank": 1
+    },
+    {
+      "coord": [
+        268,
+        374
+      ],
+      "rank": 2
+    },
+    {
+      "coord": [
+        268,
+        375
+      ],
+      "rank": 3
+    },
+    {
+      "coord": [
+        269,
+        370
+      ],
+      "rank": 4
+    },
+    {
+      "coord": [
+        269,
+        371
+      ],
+      "rank": 5
+    },
+    {
+      "coord": [
+        269,
+        372
+      ],
+      "rank": 6
+    },
+    {
+      "coord": [
+        269,
+        375
+      ],
+      "rank": 7
+    },
+    {
+      "coord": [
+        270,
+        370
+      ],
+      "rank": 8
+    }
+  ],
+  "graph_delta": {
+    "current_strategy_type": "direction",
+    "dist_to_goal": 6.082762530298219,
+    "event_types": [
+      "frontier_near",
+      "frontier_reached"
+    ],
+    "frontier_near": true,
+    "frontier_reached": true,
+    "graph_node_count": 3,
+    "new_node_captions": [],
+    "new_node_count": 0,
+    "new_rooms": [],
+    "no_progress": false,
+    "node_caption_changed": false,
+    "room_object_count_changes": {},
+    "room_object_count_increase_rooms": [],
+    "room_object_counts": {
+      "bedroom": 3
+    },
+    "stuck": false,
+    "target_candidate_captions": [],
+    "target_candidate_details": []
+  },
+  "no_progress_steps": 0,
+  "object_summary": [
+    {
+      "caption": "windows",
+      "center": [
+        369,
+        378
+      ],
+      "num_detections": 4,
+      "target_match_reason": "no_match",
+      "target_primary_categories": [
+        "television"
+      ],
+      "target_relevance": 0.0
+    },
+    {
+      "caption": "mirror",
+      "center": [
+        358,
+        386
+      ],
+      "num_detections": 3,
+      "target_match_reason": "no_match",
+      "target_primary_categories": [
+        "television"
+      ],
+      "target_relevance": 0.0
+    },
+    {
+      "caption": "cabinet",
+      "center": [
+        274,
+        363
+      ],
+      "num_detections": 3,
+      "target_match_reason": "no_match",
+      "target_primary_categories": [
+        "television"
+      ],
+      "target_relevance": 0.0
+    }
+  ],
+  "room_summary": [
+    {
+      "caption": "bedroom",
+      "object_count": 3,
+      "objects": [
+        "cabinet",
+        "mirror",
+        "windows"
+      ]
+    },
+    {
+      "caption": "living room",
+      "object_count": 0,
+      "objects": []
+    },
+    {
+      "caption": "bathroom",
+      "object_count": 0,
+      "objects": []
+    },
+    {
+      "caption": "kitchen",
+      "object_count": 0,
+      "objects": []
+    },
+    {
+      "caption": "dining room",
+      "object_count": 0,
+      "objects": []
+    },
+    {
+      "caption": "office room",
+      "object_count": 0,
+      "objects": []
+    },
+    {
+      "caption": "gym",
+      "object_count": 0,
+      "objects": []
+    },
+    {
+      "caption": "lounge",
+      "object_count": 0,
+      "objects": []
+    },
+    {
+      "caption": "laundry room",
+      "object_count": 0,
+      "objects": []
+    }
+  ],
+  "step_idx": 98,
+  "stuck_signal": false,
+  "visible_target_summary": [],
+  "visible_targets": [],
+  "world_epoch": 32
+}

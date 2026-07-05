@@ -1,0 +1,64 @@
+{
+  "active_semantic_category_count": 1,
+  "agent_alignment_ok": true,
+  "agent_display_repaired": true,
+  "branch_count": 3,
+  "branch_semantic_hint_coverage": 3,
+  "capsule_dir": "analysis/s22b_capsule_review_20260427/raw/run/task_frame_capsules/episode_000000_step_000098_unexplored_north",
+  "direct_target_pixel_count": 0,
+  "dry_branch": "B1",
+  "files": {
+    "debug_image": "analysis/latest_semantic_bev_manual_check_20260428/step_000098/semantic_annotated_bev_debug.png",
+    "legacy_image": "analysis/latest_semantic_bev_manual_check_20260428/step_000098/legacy_bev_annotated_branches.png",
+    "planner_image": "analysis/latest_semantic_bev_manual_check_20260428/step_000098/semantic_annotated_bev_planner.png",
+    "semantic_bev_frame": "analysis/latest_semantic_bev_manual_check_20260428/step_000098/semantic_bev_frame.json"
+  },
+  "final_branch": "B3",
+  "has_language_query_heatmap": false,
+  "has_semantic_channels": true,
+  "hashes": {
+    "debug_image": "707f503546fa38458c0caa7d8854a46768f317c8",
+    "legacy_image": "b68a6e060bd44e1d8f09a810c25136563990ed3c",
+    "planner_image": "ec2025b37c17bf216ed66d1e4693eaf1050a0883",
+    "semantic_bev_frame": "927a29ad79aea6b25a0f4994397753800909cdbf"
+  },
+  "mllm_branch": "B3",
+  "object_count_localized": 3,
+  "out_dir": "analysis/latest_semantic_bev_manual_check_20260428/step_000098",
+  "planner_prior_applied": true,
+  "quality_warnings": [
+    "agent_display_coord_repaired_from_map_current_channel",
+    "raw_agent_coord_disagrees_with_map_current_channel:113.0",
+    "direct_target_semantic_channel_empty"
+  ],
+  "raw_agent_to_map_current_distance": 113.0,
+  "replay_outcome": {
+    "new_object_captions_next_capsule": [],
+    "new_object_count_next_capsule": 0,
+    "next_capsule_step": 145
+  },
+  "room_hypothesis_count": 1,
+  "semantic_region_count": 1,
+  "step_idx": 98,
+  "target_anchor_semantic_region_count": 0,
+  "target_heatmap_branch_ranking": [
+    {
+      "id": "B3",
+      "semantic_target_affinity": 0.25,
+      "target_heatmap_score": 0.0
+    },
+    {
+      "id": "B2",
+      "semantic_target_affinity": 0.2215,
+      "target_heatmap_score": 0.0
+    },
+    {
+      "id": "B1",
+      "semantic_target_affinity": 0.093,
+      "target_heatmap_score": 0.0
+    }
+  ],
+  "target_heatmap_positive_pixel_count": 0,
+  "target_heatmap_source": "none",
+  "target_relevant_object_count": 0
+}

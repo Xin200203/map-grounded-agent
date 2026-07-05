@@ -1,0 +1,45 @@
+{
+  "notes": [
+    "This artifact is object-center prior support only.",
+    "It is not a true dense semantic map and does not affect semantic_coverage_ratio."
+  ],
+  "pseudo_support_enabled": true,
+  "pseudo_support_objects": [
+    {
+      "caption": "windows",
+      "center_rc": [
+        341,
+        369
+      ],
+      "confidence": 0.3825,
+      "id": "O001",
+      "source": "object_center_prior",
+      "support_radius_px": 10
+    },
+    {
+      "caption": "mirror",
+      "center_rc": [
+        333,
+        358
+      ],
+      "confidence": 0.315,
+      "id": "O002",
+      "source": "object_center_prior",
+      "support_radius_px": 10
+    },
+    {
+      "caption": "cabinet",
+      "center_rc": [
+        356,
+        274
+      ],
+      "confidence": 0.315,
+      "id": "O003",
+      "source": "object_center_prior",
+      "support_radius_px": 10
+    }
+  ],
+  "pseudo_support_pixel_count": 855,
+  "pseudo_support_source": "object_center_prior",
+  "schema_version": "smoothnav.pseudo_semantic_support_raster.v1"
+}

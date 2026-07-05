@@ -1,0 +1,37 @@
+{
+  "episodes_requested": [
+    228
+  ],
+  "profiles": {
+    "smoothnav-full": {
+      "SPL": 0.0,
+      "SR": 0.0,
+      "avg_high_level_calls": 14.0,
+      "avg_low_level_calls": 0.0,
+      "episodes": [
+        228
+      ],
+      "executor_override_ratio": 0.0,
+      "goal_update_delay_steps": 66.85714285714286,
+      "grounding_noop_reason_counts": {
+        "out_of_local_window": 12,
+        "same_frontier_as_prev": 2
+      },
+      "missing_epoch_trace_steps": 0,
+      "num_runs": 1,
+      "pending_created_count": 7,
+      "pending_promoted_count": 6,
+      "run_dirs": [
+        "results/phase2_revalidation/s5_cross_scene_ep228_formal_v4/smoothnav-full/20260423/smoothnav_text_143732_bc58960a"
+      ],
+      "strategy_switch_count": 9.0,
+      "terminal_outcome_counts": {
+        "FAILURE_NO_PROGRESS_TIMEOUT": 1
+      }
+    }
+  },
+  "profiles_requested": [
+    "smoothnav-full"
+  ],
+  "results_root": "results/phase2_revalidation/s5_cross_scene_ep228_formal_v4"
+}

@@ -1,0 +1,863 @@
+[DenseSemanticBEV] semantic channels empty: check obs[:,4:] projection in BEV_Map and upstream segmentation/logits.
+[DenseSemanticBEV] semantic channels empty: check obs[:,4:] projection in BEV_Map and upstream segmentation/logits.
+[DenseSemanticBEV] semantic channels empty: check obs[:,4:] projection in BEV_Map and upstream segmentation/logits.
+[DenseSemanticBEV] semantic channels empty: check obs[:,4:] projection in BEV_Map and upstream segmentation/logits.
+[DenseSemanticBEV] semantic channels empty: check obs[:,4:] projection in BEV_Map and upstream segmentation/logits.
+[DenseSemanticBEV] semantic channels empty: check obs[:,4:] projection in BEV_Map and upstream segmentation/logits.
+[DenseSemanticBEV] semantic channels empty: check obs[:,4:] projection in BEV_Map and upstream segmentation/logits.
+[DenseSemanticBEV] semantic channels empty: check obs[:,4:] projection in BEV_Map and upstream segmentation/logits.
+{
+  "schema_version": "smoothnav.semantic_bev_capsule_replay.summary.v1",
+  "capsule_root": "analysis/s22b_capsule_review_20260427/raw/run/task_frame_capsules",
+  "out_dir": "analysis/s36_bev_correction_review_20260430",
+  "steps": [
+    31,
+    43,
+    98,
+    145
+  ],
+  "results": [
+    {
+      "step_idx": 31,
+      "capsule_dir": "analysis/s22b_capsule_review_20260427/raw/run/task_frame_capsules/episode_000000_step_000031_unexplored_north",
+      "out_dir": "analysis/s36_bev_correction_review_20260430/step_000031",
+      "agent_alignment_ok": true,
+      "agent_display_repaired": true,
+      "raw_agent_to_map_current_distance": 25.0,
+      "object_count_localized": 2,
+      "target_relevant_object_count": 0,
+      "room_hypothesis_count": 1,
+      "has_semantic_channels": false,
+      "active_semantic_category_count": 0,
+      "semantic_region_count": 0,
+      "target_anchor_semantic_region_count": 0,
+      "direct_target_pixel_count": 0,
+      "has_language_query_heatmap": false,
+      "target_heatmap_source": "none",
+      "target_heatmap_positive_pixel_count": 0,
+      "target_heatmap_branch_ranking": [
+        {
+          "id": "B1",
+          "target_heatmap_score": 0.0,
+          "semantic_target_affinity": 0.0
+        },
+        {
+          "id": "B2",
+          "target_heatmap_score": 0.0,
+          "semantic_target_affinity": 0.0
+        },
+        {
+          "id": "B3",
+          "target_heatmap_score": 0.0,
+          "semantic_target_affinity": 0.0
+        }
+      ],
+      "target_value_branch_ranking": [
+        {
+          "id": "B1",
+          "target_value_score": 1.0,
+          "target_value_max": 1.0,
+          "target_value_mean": 0.7965,
+          "evidence_level": "geometry_only",
+          "target_visible": false
+        },
+        {
+          "id": "B2",
+          "target_value_score": 1.0,
+          "target_value_max": 1.0,
+          "target_value_mean": 0.766,
+          "evidence_level": "geometry_only",
+          "target_visible": false
+        },
+        {
+          "id": "B3",
+          "target_value_score": 0.2296,
+          "target_value_max": 0.2296,
+          "target_value_mean": 0.203,
+          "evidence_level": "geometry_only",
+          "target_visible": false
+        }
+      ],
+      "branch_evidence_counts": {
+        "direct": 0,
+        "anchor": 0,
+        "room_prior": 0,
+        "geometry_only": 3
+      },
+      "branch_count": 3,
+      "branch_semantic_hint_coverage": 3,
+      "dry_branch": "B2",
+      "mllm_branch": "",
+      "final_branch": "B2",
+      "planner_prior_applied": false,
+      "quality_warnings": [
+        "agent_display_coord_repaired_from_map_current_channel",
+        "raw_agent_coord_disagrees_with_map_current_channel:25.0",
+        "semantic_channels_present_but_empty",
+        "direct_target_semantic_channel_empty",
+        "target_value_geometry_only"
+      ],
+      "semantic_channel_active_count": 0,
+      "semantic_coverage_ratio": 0.0,
+      "per_category_pixel_count": {
+        "chair": 0,
+        "couch": 0,
+        "potted plant": 0,
+        "bed": 0,
+        "toilet": 0,
+        "tv": 0,
+        "dining-table": 0,
+        "oven": 0,
+        "sink": 0,
+        "refrigerator": 0,
+        "book": 0,
+        "clock": 0,
+        "vase": 0,
+        "cup": 0,
+        "bottle": 0,
+        "other": 0
+      },
+      "true_semantic_pixel_count": 0,
+      "object_footprint_pixel_count": 0,
+      "object_footprint_source": "none",
+      "object_footprint_per_category_pixel_count": {},
+      "rejected_object_footprint_count": 0,
+      "semantic_bbox_footprint_pixel_count": 0,
+      "semantic_bbox_footprint_source": "none",
+      "semantic_bbox_footprint_per_category_pixel_count": {},
+      "display_semantic_pixel_count": 0,
+      "display_semantic_coverage_ratio": 0.0,
+      "display_semantic_source": "empty_map_channels",
+      "pseudo_support_pixel_count": 550,
+      "unlocalized_rooms_drawn_count": 0,
+      "object_labels_drawn_on_dense_map_count": 0,
+      "branch_labels_drawn_on_dense_map_count": 0,
+      "semantic_source": "empty_map_channels",
+      "dense_semantic_warnings": [
+        "semantic_channels_empty",
+        "dense_semantic_bev_cannot_show_object_regions_without_semantic_projection",
+        "object_summaries_missing_projected_footprints"
+      ],
+      "semantic_footprint_metrics": {
+        "semantic_channel_active_count": 0,
+        "semantic_coverage_ratio": 0.0,
+        "per_category_pixel_count": {
+          "chair": 0,
+          "couch": 0,
+          "potted plant": 0,
+          "bed": 0,
+          "toilet": 0,
+          "tv": 0,
+          "dining-table": 0,
+          "oven": 0,
+          "sink": 0,
+          "refrigerator": 0,
+          "book": 0,
+          "clock": 0,
+          "vase": 0,
+          "cup": 0,
+          "bottle": 0,
+          "other": 0
+        },
+        "true_semantic_pixel_count": 0,
+        "object_footprint_pixel_count": 0,
+        "object_footprint_source": "none",
+        "object_footprint_per_category_pixel_count": {},
+        "rejected_object_footprint_count": 0,
+        "semantic_bbox_footprint_pixel_count": 0,
+        "semantic_bbox_footprint_source": "none",
+        "semantic_bbox_footprint_per_category_pixel_count": {},
+        "display_semantic_pixel_count": 0,
+        "display_semantic_coverage_ratio": 0.0,
+        "display_semantic_source": "empty_map_channels",
+        "pseudo_support_pixel_count": 550,
+        "unlocalized_rooms_drawn_count": 0,
+        "object_labels_drawn_on_dense_map_count": 0,
+        "branch_labels_drawn_on_dense_map_count": 0,
+        "semantic_source": "empty_map_channels",
+        "dense_semantic_warnings": [
+          "semantic_channels_empty",
+          "dense_semantic_bev_cannot_show_object_regions_without_semantic_projection",
+          "object_summaries_missing_projected_footprints"
+        ]
+      },
+      "replay_outcome": {
+        "next_capsule_step": 43,
+        "new_object_captions_next_capsule": [],
+        "new_object_count_next_capsule": 0
+      },
+      "files": {
+        "semantic_bev_frame": "analysis/s36_bev_correction_review_20260430/step_000031/semantic_bev_frame.json",
+        "planner_decision_state": "analysis/s36_bev_correction_review_20260430/step_000031/planner_decision_state.json",
+        "planner_decision_state_fields": "analysis/s36_bev_correction_review_20260430/step_000031/planner_decision_state_fields.npz",
+        "dense_semantic_bev": "analysis/s36_bev_correction_review_20260430/step_000031/dense_semantic_bev.png",
+        "dense_semantic_bev_json": "analysis/s36_bev_correction_review_20260430/step_000031/dense_semantic_bev.json",
+        "semantic_footprint_bev": "analysis/s36_bev_correction_review_20260430/step_000031/semantic_footprint_bev.png",
+        "semantic_footprint_bev_json": "analysis/s36_bev_correction_review_20260430/step_000031/semantic_footprint_bev.json",
+        "debug_overlay_full": "analysis/s36_bev_correction_review_20260430/step_000031/debug_overlay_full.png",
+        "pseudo_semantic_support_bev": "analysis/s36_bev_correction_review_20260430/step_000031/pseudo_semantic_support_bev.png",
+        "pseudo_semantic_support_bev_json": "analysis/s36_bev_correction_review_20260430/step_000031/pseudo_semantic_support_bev.json",
+        "planner_image": "analysis/s36_bev_correction_review_20260430/step_000031/semantic_annotated_bev_planner.png",
+        "debug_image": "analysis/s36_bev_correction_review_20260430/step_000031/semantic_annotated_bev_debug.png",
+        "decision_state_image": "analysis/s36_bev_correction_review_20260430/step_000031/decision_state_bev_planner.png",
+        "semantic_field_panel": "analysis/s36_bev_correction_review_20260430/step_000031/semantic_field_panel.png",
+        "target_value_field_panel": "analysis/s36_bev_correction_review_20260430/step_000031/target_value_field_panel.png",
+        "legacy_image": "analysis/s36_bev_correction_review_20260430/step_000031/legacy_bev_annotated_branches.png"
+      },
+      "hashes": {
+        "semantic_bev_frame": "2ea2f24f0c4ecc2aab3f51ed3066d8c9d8f7081b",
+        "planner_decision_state": "8e75bd4c7fe2020851b027fbc2ba098b7ffc9fd6",
+        "planner_decision_state_fields": "9c237e8ec7321e4535f657975d18ca55bb008760",
+        "dense_semantic_bev": "a1e7107e7090782165565e0dd84758e2acb34cb3",
+        "dense_semantic_bev_json": "4f1cefb14d6455df94a24996bfde8d8c3674703e",
+        "semantic_footprint_bev": "a1e7107e7090782165565e0dd84758e2acb34cb3",
+        "semantic_footprint_bev_json": "4f1cefb14d6455df94a24996bfde8d8c3674703e",
+        "debug_overlay_full": "8ae5437debb8f3f5324c0d534fdc58839d940d98",
+        "pseudo_semantic_support_bev": "d9f371b2e632c68663a5109e2e77991e8ff647f1",
+        "pseudo_semantic_support_bev_json": "8416c794db1cf8da31a2b07d0fca85f12b45a390",
+        "planner_image": "04d7d02e08e88974732c1eebdbfb7de9cdbb3373",
+        "debug_image": "8ae5437debb8f3f5324c0d534fdc58839d940d98",
+        "decision_state_image": "4dfd7e3e97393d2944b6519ab903d11628e70566",
+        "semantic_field_panel": "9135730af98339fc25773dae5d230f6e046cb089",
+        "target_value_field_panel": "3052e8d9fc3b7b2de64aca220e3e60e8e290e349",
+        "legacy_image": "6fd0dbfcabd612e8e7c636a02808cdce2545ca0b"
+      }
+    },
+    {
+      "step_idx": 43,
+      "capsule_dir": "analysis/s22b_capsule_review_20260427/raw/run/task_frame_capsules/episode_000000_step_000043_unexplored_north",
+      "out_dir": "analysis/s36_bev_correction_review_20260430/step_000043",
+      "agent_alignment_ok": true,
+      "agent_display_repaired": true,
+      "raw_agent_to_map_current_distance": 25.0,
+      "object_count_localized": 2,
+      "target_relevant_object_count": 0,
+      "room_hypothesis_count": 1,
+      "has_semantic_channels": false,
+      "active_semantic_category_count": 0,
+      "semantic_region_count": 0,
+      "target_anchor_semantic_region_count": 0,
+      "direct_target_pixel_count": 0,
+      "has_language_query_heatmap": false,
+      "target_heatmap_source": "none",
+      "target_heatmap_positive_pixel_count": 0,
+      "target_heatmap_branch_ranking": [
+        {
+          "id": "B1",
+          "target_heatmap_score": 0.0,
+          "semantic_target_affinity": 0.25
+        },
+        {
+          "id": "B2",
+          "target_heatmap_score": 0.0,
+          "semantic_target_affinity": 0.1
+        }
+      ],
+      "target_value_branch_ranking": [
+        {
+          "id": "B1",
+          "target_value_score": 1.0,
+          "target_value_max": 1.0,
+          "target_value_mean": 0.6638,
+          "evidence_level": "geometry_only",
+          "target_visible": false
+        },
+        {
+          "id": "B2",
+          "target_value_score": 1.0,
+          "target_value_max": 1.0,
+          "target_value_mean": 0.7966,
+          "evidence_level": "geometry_only",
+          "target_visible": false
+        }
+      ],
+      "branch_evidence_counts": {
+        "direct": 0,
+        "anchor": 0,
+        "room_prior": 0,
+        "geometry_only": 2
+      },
+      "branch_count": 2,
+      "branch_semantic_hint_coverage": 2,
+      "dry_branch": "B2",
+      "mllm_branch": "B1",
+      "final_branch": "B1",
+      "planner_prior_applied": true,
+      "quality_warnings": [
+        "agent_display_coord_repaired_from_map_current_channel",
+        "raw_agent_coord_disagrees_with_map_current_channel:25.0",
+        "semantic_channels_present_but_empty",
+        "direct_target_semantic_channel_empty",
+        "target_value_geometry_only"
+      ],
+      "semantic_channel_active_count": 0,
+      "semantic_coverage_ratio": 0.0,
+      "per_category_pixel_count": {
+        "chair": 0,
+        "couch": 0,
+        "potted plant": 0,
+        "bed": 0,
+        "toilet": 0,
+        "tv": 0,
+        "dining-table": 0,
+        "oven": 0,
+        "sink": 0,
+        "refrigerator": 0,
+        "book": 0,
+        "clock": 0,
+        "vase": 0,
+        "cup": 0,
+        "bottle": 0,
+        "other": 0
+      },
+      "true_semantic_pixel_count": 0,
+      "object_footprint_pixel_count": 0,
+      "object_footprint_source": "none",
+      "object_footprint_per_category_pixel_count": {},
+      "rejected_object_footprint_count": 0,
+      "semantic_bbox_footprint_pixel_count": 0,
+      "semantic_bbox_footprint_source": "none",
+      "semantic_bbox_footprint_per_category_pixel_count": {},
+      "display_semantic_pixel_count": 0,
+      "display_semantic_coverage_ratio": 0.0,
+      "display_semantic_source": "empty_map_channels",
+      "pseudo_support_pixel_count": 550,
+      "unlocalized_rooms_drawn_count": 0,
+      "object_labels_drawn_on_dense_map_count": 0,
+      "branch_labels_drawn_on_dense_map_count": 0,
+      "semantic_source": "empty_map_channels",
+      "dense_semantic_warnings": [
+        "semantic_channels_empty",
+        "dense_semantic_bev_cannot_show_object_regions_without_semantic_projection",
+        "object_summaries_missing_projected_footprints"
+      ],
+      "semantic_footprint_metrics": {
+        "semantic_channel_active_count": 0,
+        "semantic_coverage_ratio": 0.0,
+        "per_category_pixel_count": {
+          "chair": 0,
+          "couch": 0,
+          "potted plant": 0,
+          "bed": 0,
+          "toilet": 0,
+          "tv": 0,
+          "dining-table": 0,
+          "oven": 0,
+          "sink": 0,
+          "refrigerator": 0,
+          "book": 0,
+          "clock": 0,
+          "vase": 0,
+          "cup": 0,
+          "bottle": 0,
+          "other": 0
+        },
+        "true_semantic_pixel_count": 0,
+        "object_footprint_pixel_count": 0,
+        "object_footprint_source": "none",
+        "object_footprint_per_category_pixel_count": {},
+        "rejected_object_footprint_count": 0,
+        "semantic_bbox_footprint_pixel_count": 0,
+        "semantic_bbox_footprint_source": "none",
+        "semantic_bbox_footprint_per_category_pixel_count": {},
+        "display_semantic_pixel_count": 0,
+        "display_semantic_coverage_ratio": 0.0,
+        "display_semantic_source": "empty_map_channels",
+        "pseudo_support_pixel_count": 550,
+        "unlocalized_rooms_drawn_count": 0,
+        "object_labels_drawn_on_dense_map_count": 0,
+        "branch_labels_drawn_on_dense_map_count": 0,
+        "semantic_source": "empty_map_channels",
+        "dense_semantic_warnings": [
+          "semantic_channels_empty",
+          "dense_semantic_bev_cannot_show_object_regions_without_semantic_projection",
+          "object_summaries_missing_projected_footprints"
+        ]
+      },
+      "replay_outcome": {
+        "next_capsule_step": 98,
+        "new_object_captions_next_capsule": [
+          "cabinet"
+        ],
+        "new_object_count_next_capsule": 1
+      },
+      "files": {
+        "semantic_bev_frame": "analysis/s36_bev_correction_review_20260430/step_000043/semantic_bev_frame.json",
+        "planner_decision_state": "analysis/s36_bev_correction_review_20260430/step_000043/planner_decision_state.json",
+        "planner_decision_state_fields": "analysis/s36_bev_correction_review_20260430/step_000043/planner_decision_state_fields.npz",
+        "dense_semantic_bev": "analysis/s36_bev_correction_review_20260430/step_000043/dense_semantic_bev.png",
+        "dense_semantic_bev_json": "analysis/s36_bev_correction_review_20260430/step_000043/dense_semantic_bev.json",
+        "semantic_footprint_bev": "analysis/s36_bev_correction_review_20260430/step_000043/semantic_footprint_bev.png",
+        "semantic_footprint_bev_json": "analysis/s36_bev_correction_review_20260430/step_000043/semantic_footprint_bev.json",
+        "debug_overlay_full": "analysis/s36_bev_correction_review_20260430/step_000043/debug_overlay_full.png",
+        "pseudo_semantic_support_bev": "analysis/s36_bev_correction_review_20260430/step_000043/pseudo_semantic_support_bev.png",
+        "pseudo_semantic_support_bev_json": "analysis/s36_bev_correction_review_20260430/step_000043/pseudo_semantic_support_bev.json",
+        "planner_image": "analysis/s36_bev_correction_review_20260430/step_000043/semantic_annotated_bev_planner.png",
+        "debug_image": "analysis/s36_bev_correction_review_20260430/step_000043/semantic_annotated_bev_debug.png",
+        "decision_state_image": "analysis/s36_bev_correction_review_20260430/step_000043/decision_state_bev_planner.png",
+        "semantic_field_panel": "analysis/s36_bev_correction_review_20260430/step_000043/semantic_field_panel.png",
+        "target_value_field_panel": "analysis/s36_bev_correction_review_20260430/step_000043/target_value_field_panel.png",
+        "legacy_image": "analysis/s36_bev_correction_review_20260430/step_000043/legacy_bev_annotated_branches.png"
+      },
+      "hashes": {
+        "semantic_bev_frame": "99f4e752ac561f63bfdf0671eb800169ab9e31ec",
+        "planner_decision_state": "a4d72f6a1b8bd66f9be80691d419339c3b233ece",
+        "planner_decision_state_fields": "32ce802a8105ebd7c2bb5d9ae8924b5a6f99ee16",
+        "dense_semantic_bev": "8f392a3a005397bcc664daeca8a0f1262354bd17",
+        "dense_semantic_bev_json": "4f1cefb14d6455df94a24996bfde8d8c3674703e",
+        "semantic_footprint_bev": "8f392a3a005397bcc664daeca8a0f1262354bd17",
+        "semantic_footprint_bev_json": "4f1cefb14d6455df94a24996bfde8d8c3674703e",
+        "debug_overlay_full": "3de9aa6acc0cd6f34e2bef73434a1e1a41d8e304",
+        "pseudo_semantic_support_bev": "c39853df2e74f3b4d60573d9f56af6540e4905ee",
+        "pseudo_semantic_support_bev_json": "8416c794db1cf8da31a2b07d0fca85f12b45a390",
+        "planner_image": "8c3e44d93901da7a7b1b6531c70278dc6bbbe178",
+        "debug_image": "3de9aa6acc0cd6f34e2bef73434a1e1a41d8e304",
+        "decision_state_image": "ba37167cd47d7be4d7071ddbc16b2a2bb5326d00",
+        "semantic_field_panel": "3b7656464e310eaaabb47fb24e9eb5cfc78b67a1",
+        "target_value_field_panel": "2420010cba82c6dbff0c0503a8f6919ae6e574e8",
+        "legacy_image": "c3e6ae6c7e56dfa6ef4c66a7906275e13917390c"
+      }
+    },
+    {
+      "step_idx": 98,
+      "capsule_dir": "analysis/s22b_capsule_review_20260427/raw/run/task_frame_capsules/episode_000000_step_000098_unexplored_north",
+      "out_dir": "analysis/s36_bev_correction_review_20260430/step_000098",
+      "agent_alignment_ok": true,
+      "agent_display_repaired": true,
+      "raw_agent_to_map_current_distance": 113.0,
+      "object_count_localized": 3,
+      "target_relevant_object_count": 0,
+      "room_hypothesis_count": 1,
+      "has_semantic_channels": true,
+      "active_semantic_category_count": 1,
+      "semantic_region_count": 1,
+      "target_anchor_semantic_region_count": 0,
+      "direct_target_pixel_count": 0,
+      "has_language_query_heatmap": false,
+      "target_heatmap_source": "none",
+      "target_heatmap_positive_pixel_count": 0,
+      "target_heatmap_branch_ranking": [
+        {
+          "id": "B3",
+          "target_heatmap_score": 0.0,
+          "semantic_target_affinity": 0.25
+        },
+        {
+          "id": "B2",
+          "target_heatmap_score": 0.0,
+          "semantic_target_affinity": 0.2215
+        },
+        {
+          "id": "B1",
+          "target_heatmap_score": 0.0,
+          "semantic_target_affinity": 0.093
+        }
+      ],
+      "target_value_branch_ranking": [
+        {
+          "id": "B2",
+          "target_value_score": 1.0,
+          "target_value_max": 1.0,
+          "target_value_mean": 0.796,
+          "evidence_level": "geometry_only",
+          "target_visible": false
+        },
+        {
+          "id": "B3",
+          "target_value_score": 1.0,
+          "target_value_max": 1.0,
+          "target_value_mean": 0.797,
+          "evidence_level": "geometry_only",
+          "target_visible": false
+        },
+        {
+          "id": "B1",
+          "target_value_score": 0.0489,
+          "target_value_max": 0.0489,
+          "target_value_mean": 0.0078,
+          "evidence_level": "geometry_only",
+          "target_visible": false
+        }
+      ],
+      "branch_evidence_counts": {
+        "direct": 0,
+        "anchor": 0,
+        "room_prior": 0,
+        "geometry_only": 3
+      },
+      "branch_count": 3,
+      "branch_semantic_hint_coverage": 3,
+      "dry_branch": "B1",
+      "mllm_branch": "B3",
+      "final_branch": "B3",
+      "planner_prior_applied": true,
+      "quality_warnings": [
+        "agent_display_coord_repaired_from_map_current_channel",
+        "raw_agent_coord_disagrees_with_map_current_channel:113.0",
+        "direct_target_semantic_channel_empty",
+        "target_value_geometry_only"
+      ],
+      "semantic_channel_active_count": 1,
+      "semantic_coverage_ratio": 4.436728395061728e-05,
+      "per_category_pixel_count": {
+        "chair": 0,
+        "couch": 0,
+        "potted plant": 0,
+        "bed": 0,
+        "toilet": 0,
+        "tv": 0,
+        "dining-table": 0,
+        "oven": 0,
+        "sink": 0,
+        "refrigerator": 23,
+        "book": 0,
+        "clock": 0,
+        "vase": 0,
+        "cup": 0,
+        "bottle": 0,
+        "other": 0
+      },
+      "true_semantic_pixel_count": 23,
+      "object_footprint_pixel_count": 0,
+      "object_footprint_source": "none",
+      "object_footprint_per_category_pixel_count": {},
+      "rejected_object_footprint_count": 0,
+      "semantic_bbox_footprint_pixel_count": 0,
+      "semantic_bbox_footprint_source": "none",
+      "semantic_bbox_footprint_per_category_pixel_count": {},
+      "display_semantic_pixel_count": 23,
+      "display_semantic_coverage_ratio": 4.436728395061728e-05,
+      "display_semantic_source": "map_channels",
+      "pseudo_support_pixel_count": 855,
+      "unlocalized_rooms_drawn_count": 0,
+      "object_labels_drawn_on_dense_map_count": 0,
+      "branch_labels_drawn_on_dense_map_count": 0,
+      "semantic_source": "map_channels",
+      "dense_semantic_warnings": [
+        "object_summaries_missing_projected_footprints"
+      ],
+      "semantic_footprint_metrics": {
+        "semantic_channel_active_count": 1,
+        "semantic_coverage_ratio": 4.436728395061728e-05,
+        "per_category_pixel_count": {
+          "chair": 0,
+          "couch": 0,
+          "potted plant": 0,
+          "bed": 0,
+          "toilet": 0,
+          "tv": 0,
+          "dining-table": 0,
+          "oven": 0,
+          "sink": 0,
+          "refrigerator": 23,
+          "book": 0,
+          "clock": 0,
+          "vase": 0,
+          "cup": 0,
+          "bottle": 0,
+          "other": 0
+        },
+        "true_semantic_pixel_count": 23,
+        "object_footprint_pixel_count": 0,
+        "object_footprint_source": "none",
+        "object_footprint_per_category_pixel_count": {},
+        "rejected_object_footprint_count": 0,
+        "semantic_bbox_footprint_pixel_count": 0,
+        "semantic_bbox_footprint_source": "none",
+        "semantic_bbox_footprint_per_category_pixel_count": {},
+        "display_semantic_pixel_count": 23,
+        "display_semantic_coverage_ratio": 4.436728395061728e-05,
+        "display_semantic_source": "map_channels",
+        "pseudo_support_pixel_count": 855,
+        "unlocalized_rooms_drawn_count": 0,
+        "object_labels_drawn_on_dense_map_count": 0,
+        "branch_labels_drawn_on_dense_map_count": 0,
+        "semantic_source": "map_channels",
+        "dense_semantic_warnings": [
+          "object_summaries_missing_projected_footprints"
+        ]
+      },
+      "replay_outcome": {
+        "next_capsule_step": 145,
+        "new_object_captions_next_capsule": [],
+        "new_object_count_next_capsule": 0
+      },
+      "files": {
+        "semantic_bev_frame": "analysis/s36_bev_correction_review_20260430/step_000098/semantic_bev_frame.json",
+        "planner_decision_state": "analysis/s36_bev_correction_review_20260430/step_000098/planner_decision_state.json",
+        "planner_decision_state_fields": "analysis/s36_bev_correction_review_20260430/step_000098/planner_decision_state_fields.npz",
+        "dense_semantic_bev": "analysis/s36_bev_correction_review_20260430/step_000098/dense_semantic_bev.png",
+        "dense_semantic_bev_json": "analysis/s36_bev_correction_review_20260430/step_000098/dense_semantic_bev.json",
+        "semantic_footprint_bev": "analysis/s36_bev_correction_review_20260430/step_000098/semantic_footprint_bev.png",
+        "semantic_footprint_bev_json": "analysis/s36_bev_correction_review_20260430/step_000098/semantic_footprint_bev.json",
+        "debug_overlay_full": "analysis/s36_bev_correction_review_20260430/step_000098/debug_overlay_full.png",
+        "pseudo_semantic_support_bev": "analysis/s36_bev_correction_review_20260430/step_000098/pseudo_semantic_support_bev.png",
+        "pseudo_semantic_support_bev_json": "analysis/s36_bev_correction_review_20260430/step_000098/pseudo_semantic_support_bev.json",
+        "planner_image": "analysis/s36_bev_correction_review_20260430/step_000098/semantic_annotated_bev_planner.png",
+        "debug_image": "analysis/s36_bev_correction_review_20260430/step_000098/semantic_annotated_bev_debug.png",
+        "decision_state_image": "analysis/s36_bev_correction_review_20260430/step_000098/decision_state_bev_planner.png",
+        "semantic_field_panel": "analysis/s36_bev_correction_review_20260430/step_000098/semantic_field_panel.png",
+        "target_value_field_panel": "analysis/s36_bev_correction_review_20260430/step_000098/target_value_field_panel.png",
+        "legacy_image": "analysis/s36_bev_correction_review_20260430/step_000098/legacy_bev_annotated_branches.png"
+      },
+      "hashes": {
+        "semantic_bev_frame": "50e0984a8c8665640388255b670972171b42b64c",
+        "planner_decision_state": "aa597a2d82a5298b8cd6c38fd2aba4affe035d2b",
+        "planner_decision_state_fields": "b9fa9552276ea57c532577b48103d7bd15c44c1b",
+        "dense_semantic_bev": "59efd8d86639ef9a4c2e5b736abbaff72e12bd28",
+        "dense_semantic_bev_json": "faf05d6cb7b38fa5b438859dca39e41f50861408",
+        "semantic_footprint_bev": "59efd8d86639ef9a4c2e5b736abbaff72e12bd28",
+        "semantic_footprint_bev_json": "faf05d6cb7b38fa5b438859dca39e41f50861408",
+        "debug_overlay_full": "d2f4b6ed1cdafb85ccf2352cad18ba460fa716a8",
+        "pseudo_semantic_support_bev": "09677e3be7d6912c32c452b9d89a2bff61419d26",
+        "pseudo_semantic_support_bev_json": "5cb98ce24d8c3ca72e964b35303488c985ee4f6e",
+        "planner_image": "e60cb38ea53f5e85450f9b26b1094d4a5fd939f9",
+        "debug_image": "d2f4b6ed1cdafb85ccf2352cad18ba460fa716a8",
+        "decision_state_image": "8858ebd4b077adfe87fa726c55cdfd3b8cb02685",
+        "semantic_field_panel": "b8555d1747c4557499d5dcae40fd07f702aefa47",
+        "target_value_field_panel": "9c2a23ae51ce230bfb3b2e674eb66afdf5bc50d2",
+        "legacy_image": "b68a6e060bd44e1d8f09a810c25136563990ed3c"
+      }
+    },
+    {
+      "step_idx": 145,
+      "capsule_dir": "analysis/s22b_capsule_review_20260427/raw/run/task_frame_capsules/episode_000000_step_000145_unexplored_north",
+      "out_dir": "analysis/s36_bev_correction_review_20260430/step_000145",
+      "agent_alignment_ok": true,
+      "agent_display_repaired": true,
+      "raw_agent_to_map_current_distance": 93.0,
+      "object_count_localized": 3,
+      "target_relevant_object_count": 0,
+      "room_hypothesis_count": 1,
+      "has_semantic_channels": true,
+      "active_semantic_category_count": 3,
+      "semantic_region_count": 9,
+      "target_anchor_semantic_region_count": 6,
+      "direct_target_pixel_count": 0,
+      "has_language_query_heatmap": true,
+      "target_heatmap_source": "semantic_prior_only",
+      "target_heatmap_positive_pixel_count": 19,
+      "target_heatmap_branch_ranking": [
+        {
+          "id": "B5",
+          "target_heatmap_score": 0.9,
+          "semantic_target_affinity": 0.9
+        },
+        {
+          "id": "B6",
+          "target_heatmap_score": 0.72,
+          "semantic_target_affinity": 0.8338
+        },
+        {
+          "id": "B4",
+          "target_heatmap_score": 0.72,
+          "semantic_target_affinity": 0.72
+        },
+        {
+          "id": "B3",
+          "target_heatmap_score": 0.0,
+          "semantic_target_affinity": 0.226
+        },
+        {
+          "id": "B1",
+          "target_heatmap_score": 0.0,
+          "semantic_target_affinity": 0.225
+        },
+        {
+          "id": "B2",
+          "target_heatmap_score": 0.0,
+          "semantic_target_affinity": 0.225
+        }
+      ],
+      "target_value_branch_ranking": [
+        {
+          "id": "B6",
+          "target_value_score": 1.0,
+          "target_value_max": 1.0,
+          "target_value_mean": 0.623,
+          "evidence_level": "anchor",
+          "target_visible": false
+        },
+        {
+          "id": "B4",
+          "target_value_score": 0.5388,
+          "target_value_max": 0.5388,
+          "target_value_mean": 0.3843,
+          "evidence_level": "anchor",
+          "target_visible": false
+        },
+        {
+          "id": "B3",
+          "target_value_score": 0.3807,
+          "target_value_max": 0.3807,
+          "target_value_mean": 0.303,
+          "evidence_level": "geometry_only",
+          "target_visible": false
+        },
+        {
+          "id": "B5",
+          "target_value_score": 0.3807,
+          "target_value_max": 0.3807,
+          "target_value_mean": 0.3013,
+          "evidence_level": "geometry_only",
+          "target_visible": false
+        },
+        {
+          "id": "B2",
+          "target_value_score": 0.015,
+          "target_value_max": 0.015,
+          "target_value_mean": 0.0147,
+          "evidence_level": "geometry_only",
+          "target_visible": false
+        },
+        {
+          "id": "B1",
+          "target_value_score": 0.0,
+          "target_value_max": 0.0,
+          "target_value_mean": 0.0,
+          "evidence_level": "geometry_only",
+          "target_visible": false
+        }
+      ],
+      "branch_evidence_counts": {
+        "direct": 0,
+        "anchor": 2,
+        "room_prior": 0,
+        "geometry_only": 4
+      },
+      "branch_count": 6,
+      "branch_semantic_hint_coverage": 6,
+      "dry_branch": "B4",
+      "mllm_branch": "B4",
+      "final_branch": "B4",
+      "planner_prior_applied": true,
+      "quality_warnings": [
+        "agent_display_coord_repaired_from_map_current_channel",
+        "raw_agent_coord_disagrees_with_map_current_channel:93.0",
+        "direct_target_semantic_channel_empty",
+        "target_heatmap_uses_prior_not_direct_target"
+      ],
+      "semantic_channel_active_count": 3,
+      "semantic_coverage_ratio": 9.645061728395061e-05,
+      "per_category_pixel_count": {
+        "chair": 0,
+        "couch": 4,
+        "potted plant": 0,
+        "bed": 0,
+        "toilet": 0,
+        "tv": 0,
+        "dining-table": 15,
+        "oven": 0,
+        "sink": 0,
+        "refrigerator": 31,
+        "book": 0,
+        "clock": 0,
+        "vase": 0,
+        "cup": 0,
+        "bottle": 0,
+        "other": 0
+      },
+      "true_semantic_pixel_count": 50,
+      "object_footprint_pixel_count": 0,
+      "object_footprint_source": "none",
+      "object_footprint_per_category_pixel_count": {},
+      "rejected_object_footprint_count": 0,
+      "semantic_bbox_footprint_pixel_count": 0,
+      "semantic_bbox_footprint_source": "none",
+      "semantic_bbox_footprint_per_category_pixel_count": {},
+      "display_semantic_pixel_count": 50,
+      "display_semantic_coverage_ratio": 9.645061728395061e-05,
+      "display_semantic_source": "map_channels",
+      "pseudo_support_pixel_count": 855,
+      "unlocalized_rooms_drawn_count": 0,
+      "object_labels_drawn_on_dense_map_count": 0,
+      "branch_labels_drawn_on_dense_map_count": 0,
+      "semantic_source": "map_channels",
+      "dense_semantic_warnings": [
+        "object_summaries_missing_projected_footprints"
+      ],
+      "semantic_footprint_metrics": {
+        "semantic_channel_active_count": 3,
+        "semantic_coverage_ratio": 9.645061728395061e-05,
+        "per_category_pixel_count": {
+          "chair": 0,
+          "couch": 4,
+          "potted plant": 0,
+          "bed": 0,
+          "toilet": 0,
+          "tv": 0,
+          "dining-table": 15,
+          "oven": 0,
+          "sink": 0,
+          "refrigerator": 31,
+          "book": 0,
+          "clock": 0,
+          "vase": 0,
+          "cup": 0,
+          "bottle": 0,
+          "other": 0
+        },
+        "true_semantic_pixel_count": 50,
+        "object_footprint_pixel_count": 0,
+        "object_footprint_source": "none",
+        "object_footprint_per_category_pixel_count": {},
+        "rejected_object_footprint_count": 0,
+        "semantic_bbox_footprint_pixel_count": 0,
+        "semantic_bbox_footprint_source": "none",
+        "semantic_bbox_footprint_per_category_pixel_count": {},
+        "display_semantic_pixel_count": 50,
+        "display_semantic_coverage_ratio": 9.645061728395061e-05,
+        "display_semantic_source": "map_channels",
+        "pseudo_support_pixel_count": 855,
+        "unlocalized_rooms_drawn_count": 0,
+        "object_labels_drawn_on_dense_map_count": 0,
+        "branch_labels_drawn_on_dense_map_count": 0,
+        "semantic_source": "map_channels",
+        "dense_semantic_warnings": [
+          "object_summaries_missing_projected_footprints"
+        ]
+      },
+      "replay_outcome": {
+        "next_capsule_step": null,
+        "new_object_captions_next_capsule": [],
+        "new_object_count_next_capsule": 0
+      },
+      "files": {
+        "semantic_bev_frame": "analysis/s36_bev_correction_review_20260430/step_000145/semantic_bev_frame.json",
+        "planner_decision_state": "analysis/s36_bev_correction_review_20260430/step_000145/planner_decision_state.json",
+        "planner_decision_state_fields": "analysis/s36_bev_correction_review_20260430/step_000145/planner_decision_state_fields.npz",
+        "dense_semantic_bev": "analysis/s36_bev_correction_review_20260430/step_000145/dense_semantic_bev.png",
+        "dense_semantic_bev_json": "analysis/s36_bev_correction_review_20260430/step_000145/dense_semantic_bev.json",
+        "semantic_footprint_bev": "analysis/s36_bev_correction_review_20260430/step_000145/semantic_footprint_bev.png",
+        "semantic_footprint_bev_json": "analysis/s36_bev_correction_review_20260430/step_000145/semantic_footprint_bev.json",
+        "debug_overlay_full": "analysis/s36_bev_correction_review_20260430/step_000145/debug_overlay_full.png",
+        "pseudo_semantic_support_bev": "analysis/s36_bev_correction_review_20260430/step_000145/pseudo_semantic_support_bev.png",
+        "pseudo_semantic_support_bev_json": "analysis/s36_bev_correction_review_20260430/step_000145/pseudo_semantic_support_bev.json",
+        "planner_image": "analysis/s36_bev_correction_review_20260430/step_000145/semantic_annotated_bev_planner.png",
+        "debug_image": "analysis/s36_bev_correction_review_20260430/step_000145/semantic_annotated_bev_debug.png",
+        "decision_state_image": "analysis/s36_bev_correction_review_20260430/step_000145/decision_state_bev_planner.png",
+        "semantic_field_panel": "analysis/s36_bev_correction_review_20260430/step_000145/semantic_field_panel.png",
+        "target_value_field_panel": "analysis/s36_bev_correction_review_20260430/step_000145/target_value_field_panel.png",
+        "legacy_image": "analysis/s36_bev_correction_review_20260430/step_000145/legacy_bev_annotated_branches.png"
+      },
+      "hashes": {
+        "semantic_bev_frame": "b2705df96e883c3fda1c0ba190617955075e2f7e",
+        "planner_decision_state": "75c0689d6455a7ea09f3b714e27f0886f71f7a62",
+        "planner_decision_state_fields": "8010fd39a99dea8f5861919a6dd9be69d077606c",
+        "dense_semantic_bev": "7fa6d2cb8275b2c38b53242cb196f67beeaaf5de",
+        "dense_semantic_bev_json": "c6c8b216f200a5d23f045050ade85b5dab6c71ee",
+        "semantic_footprint_bev": "7fa6d2cb8275b2c38b53242cb196f67beeaaf5de",
+        "semantic_footprint_bev_json": "c6c8b216f200a5d23f045050ade85b5dab6c71ee",
+        "debug_overlay_full": "f5b86821affe233b15bda083668eb4baf5ca7b78",
+        "pseudo_semantic_support_bev": "7e50ff43ce609e493850695c7df7023390aa3960",
+        "pseudo_semantic_support_bev_json": "5cb98ce24d8c3ca72e964b35303488c985ee4f6e",
+        "planner_image": "0a11060c24483d7e07dc8756ef2ba7526a29a465",
+        "debug_image": "f5b86821affe233b15bda083668eb4baf5ca7b78",
+        "decision_state_image": "9437706342f16fe4046958f4ca86f03e682078b5",
+        "semantic_field_panel": "9bb6106d0312e3cfb03c500b289429fb83a7a758",
+        "target_value_field_panel": "f708c99c352439d02b8113a6a9a97ce0f816a82a",
+        "legacy_image": "6b2500809fb11d61fec567a9be3f60cb6ed64c77"
+      }
+    }
+  ]
+}

@@ -1,0 +1,945 @@
+{
+  "agent": {
+    "coord_rc": [
+      406,
+      219
+    ],
+    "on_free_or_near_free": true,
+    "on_known_or_near_known": true,
+    "source": "full_map.channel_2_current_agent",
+    "within_map_bounds": true
+  },
+  "base_layers": {
+    "active_semantic_category_count": 4,
+    "current_agent_channel_pixels": 25,
+    "has_free": true,
+    "has_known": true,
+    "has_language_query_heatmap": true,
+    "has_obstacle": true,
+    "has_semantic_channels": true,
+    "past_agent_channel_pixels": 1628,
+    "semantic_channel_count": 16
+  },
+  "branch_decision_table": [
+    {
+      "candidate_count": 36,
+      "canonical_coord_rc": [
+        459,
+        162
+      ],
+      "canonical_direction": "west",
+      "dead_end_risk": 0.0,
+      "evidence_level": "anchor",
+      "id": "B5",
+      "info_gain_score": 1.0,
+      "revisit_penalty": 0.0,
+      "semantic_support": {
+        "anchor_ids": [
+          "S001",
+          "S002",
+          "S003",
+          "S004",
+          "S005",
+          "S006",
+          "S007"
+        ],
+        "direct_ids": [],
+        "room_ids": []
+      },
+      "target_value_rank": 1,
+      "target_value_score": 0.963,
+      "target_visible": false
+    },
+    {
+      "candidate_count": 48,
+      "canonical_coord_rc": [
+        466,
+        230
+      ],
+      "canonical_direction": "south",
+      "dead_end_risk": 0.0,
+      "evidence_level": "anchor",
+      "id": "B6",
+      "info_gain_score": 1.0,
+      "revisit_penalty": 0.0,
+      "semantic_support": {
+        "anchor_ids": [
+          "S001",
+          "S002",
+          "S003",
+          "S004",
+          "S005",
+          "S006",
+          "S007"
+        ],
+        "direct_ids": [],
+        "room_ids": []
+      },
+      "target_value_rank": 2,
+      "target_value_score": 0.8462,
+      "target_visible": false
+    },
+    {
+      "candidate_count": 78,
+      "canonical_coord_rc": [
+        418,
+        237
+      ],
+      "canonical_direction": "east",
+      "dead_end_risk": 0.0,
+      "evidence_level": "anchor",
+      "id": "B4",
+      "info_gain_score": 1.0,
+      "revisit_penalty": 0.0,
+      "semantic_support": {
+        "anchor_ids": [
+          "S001",
+          "S002",
+          "S003",
+          "S004",
+          "S005",
+          "S006",
+          "S007"
+        ],
+        "direct_ids": [],
+        "room_ids": []
+      },
+      "target_value_rank": 3,
+      "target_value_score": 0.7704,
+      "target_visible": false
+    },
+    {
+      "candidate_count": 54,
+      "canonical_coord_rc": [
+        385,
+        199
+      ],
+      "canonical_direction": "north",
+      "dead_end_risk": 0.0,
+      "evidence_level": "anchor",
+      "id": "B3",
+      "info_gain_score": 1.0,
+      "revisit_penalty": 0.0,
+      "semantic_support": {
+        "anchor_ids": [
+          "S001",
+          "S002",
+          "S003",
+          "S004",
+          "S005",
+          "S006",
+          "S007"
+        ],
+        "direct_ids": [],
+        "room_ids": []
+      },
+      "target_value_rank": 4,
+      "target_value_score": 0.405,
+      "target_visible": false
+    },
+    {
+      "candidate_count": 0,
+      "canonical_coord_rc": [
+        343,
+        352
+      ],
+      "canonical_direction": "east",
+      "dead_end_risk": 0.35,
+      "evidence_level": "geometry_only",
+      "id": "B2",
+      "info_gain_score": 0.4911,
+      "revisit_penalty": 0.0,
+      "semantic_support": {
+        "anchor_ids": [],
+        "direct_ids": [],
+        "room_ids": []
+      },
+      "target_value_rank": 5,
+      "target_value_score": 0.1216,
+      "target_visible": false
+    },
+    {
+      "candidate_count": 0,
+      "canonical_coord_rc": [
+        313,
+        395
+      ],
+      "canonical_direction": "east",
+      "dead_end_risk": 1.0,
+      "evidence_level": "geometry_only",
+      "id": "B1",
+      "info_gain_score": 0.7278,
+      "revisit_penalty": 1.0,
+      "semantic_support": {
+        "anchor_ids": [],
+        "direct_ids": [],
+        "room_ids": []
+      },
+      "target_value_rank": 6,
+      "target_value_score": 0.0,
+      "target_visible": false
+    }
+  ],
+  "branch_semantic_hints": [
+    {
+      "canonical_coord_rc": [
+        313,
+        395
+      ],
+      "canonical_direction": "east",
+      "decision_roles": [],
+      "evidence_level": "geometry_only",
+      "id": "B1",
+      "nearby_object_ids": [
+        "O002",
+        "O003",
+        "O001"
+      ],
+      "nearby_room_ids": [
+        "R001"
+      ],
+      "nearby_semantic_region_ids": [],
+      "nearby_semantic_region_labels": [],
+      "semantic_target_affinity": 0.0875,
+      "target_heatmap_rank": 5,
+      "target_heatmap_score": 0.0,
+      "target_value_rank": 6,
+      "target_value_score": 0.0,
+      "visit_state": "non_actionable"
+    },
+    {
+      "canonical_coord_rc": [
+        343,
+        352
+      ],
+      "canonical_direction": "east",
+      "decision_roles": [],
+      "evidence_level": "geometry_only",
+      "id": "B2",
+      "nearby_object_ids": [
+        "O001",
+        "O002",
+        "O003"
+      ],
+      "nearby_room_ids": [
+        "R001"
+      ],
+      "nearby_semantic_region_ids": [
+        "S008"
+      ],
+      "nearby_semantic_region_labels": [
+        "refrigerator"
+      ],
+      "semantic_target_affinity": 0.0875,
+      "target_heatmap_rank": 6,
+      "target_heatmap_score": 0.0,
+      "target_value_rank": 5,
+      "target_value_score": 0.1216,
+      "visit_state": "non_actionable"
+    },
+    {
+      "canonical_coord_rc": [
+        385,
+        199
+      ],
+      "canonical_direction": "north",
+      "decision_roles": [],
+      "evidence_level": "anchor",
+      "id": "B3",
+      "nearby_object_ids": [],
+      "nearby_room_ids": [],
+      "nearby_semantic_region_ids": [
+        "S009",
+        "S010",
+        "S006",
+        "S008"
+      ],
+      "nearby_semantic_region_labels": [
+        "refrigerator",
+        "refrigerator",
+        "dining-table",
+        "refrigerator"
+      ],
+      "semantic_target_affinity": 0.226,
+      "target_heatmap_rank": 4,
+      "target_heatmap_score": 0.0,
+      "target_value_rank": 4,
+      "target_value_score": 0.405,
+      "visit_state": "candidate"
+    },
+    {
+      "canonical_coord_rc": [
+        418,
+        237
+      ],
+      "canonical_direction": "east",
+      "decision_roles": [
+        "dry",
+        "mllm",
+        "final"
+      ],
+      "evidence_level": "anchor",
+      "id": "B4",
+      "nearby_object_ids": [],
+      "nearby_room_ids": [],
+      "nearby_semantic_region_ids": [
+        "S006",
+        "S010",
+        "S007",
+        "S009"
+      ],
+      "nearby_semantic_region_labels": [
+        "dining-table",
+        "refrigerator",
+        "dining-table",
+        "refrigerator"
+      ],
+      "semantic_target_affinity": 0.7324,
+      "target_heatmap_rank": 3,
+      "target_heatmap_score": 0.72,
+      "target_value_rank": 3,
+      "target_value_score": 0.7704,
+      "visit_state": "selected"
+    },
+    {
+      "canonical_coord_rc": [
+        459,
+        162
+      ],
+      "canonical_direction": "west",
+      "decision_roles": [],
+      "evidence_level": "anchor",
+      "id": "B5",
+      "nearby_object_ids": [],
+      "nearby_room_ids": [],
+      "nearby_semantic_region_ids": [
+        "S003",
+        "S005",
+        "S006",
+        "S001"
+      ],
+      "nearby_semantic_region_labels": [
+        "couch",
+        "chair",
+        "dining-table",
+        "couch"
+      ],
+      "semantic_target_affinity": 0.9,
+      "target_heatmap_rank": 1,
+      "target_heatmap_score": 0.9,
+      "target_value_rank": 1,
+      "target_value_score": 0.963,
+      "visit_state": "candidate"
+    },
+    {
+      "canonical_coord_rc": [
+        466,
+        230
+      ],
+      "canonical_direction": "south",
+      "decision_roles": [],
+      "evidence_level": "anchor",
+      "id": "B6",
+      "nearby_object_ids": [],
+      "nearby_room_ids": [],
+      "nearby_semantic_region_ids": [
+        "S005",
+        "S004",
+        "S001",
+        "S002"
+      ],
+      "nearby_semantic_region_labels": [
+        "chair",
+        "couch",
+        "couch",
+        "couch"
+      ],
+      "semantic_target_affinity": 0.8218,
+      "target_heatmap_rank": 2,
+      "target_heatmap_score": 0.72,
+      "target_value_rank": 2,
+      "target_value_score": 0.8462,
+      "visit_state": "candidate"
+    }
+  ],
+  "coordinate_contract": {
+    "agent_coord_rc": [
+      406,
+      219
+    ],
+    "branch_coord_key": "canonical_representative_coord_rc",
+    "branch_direction_key": "canonical_direction_from_agent",
+    "frame": "full_map_rc_unflipped",
+    "hidden_from_planner_prompt": [
+      "raw_coord_rc",
+      "map_current_channel_coord_rc",
+      "direction_from_agent"
+    ]
+  },
+  "coordinate_frame": {
+    "col_axis": "east_right_image_x",
+    "crop": {
+      "c0": 118,
+      "c1": 433,
+      "r0": 235,
+      "r1": 491
+    },
+    "map_shape": [
+      720,
+      720
+    ],
+    "name": "full_map_rc_unflipped",
+    "origin": "full_map[0,0]",
+    "row_axis": "south_down_image_y"
+  },
+  "decision_overlay": {
+    "allowed_branch_ids": [
+      "B4",
+      "B3",
+      "B6",
+      "B5",
+      "B2",
+      "B1"
+    ],
+    "dry_selected_branch_id": "B4",
+    "dry_selected_frontier": [
+      451,
+      284
+    ],
+    "final_selected_branch_id": "B4",
+    "final_selected_frontier": [
+      418,
+      237
+    ],
+    "mllm_reason": "",
+    "mllm_selected_branch_id": "B4",
+    "mllm_status": "valid",
+    "planner_prior_applied": true,
+    "prompt_hash": "9e9ec278873da91f4a36625ec49e83ac2cddb3a4",
+    "ranked_branch_ids": [
+      "B4",
+      "B3",
+      "B6",
+      "B5",
+      "B2",
+      "B1"
+    ]
+  },
+  "object_labels": [
+    {
+      "caption": "windows",
+      "center_rc": [
+        369,
+        378
+      ],
+      "id": "O001",
+      "num_detections": 4,
+      "target_relevance": 0.0
+    },
+    {
+      "caption": "mirror",
+      "center_rc": [
+        358,
+        386
+      ],
+      "id": "O002",
+      "num_detections": 3,
+      "target_relevance": 0.0
+    },
+    {
+      "caption": "cabinet",
+      "center_rc": [
+        274,
+        363
+      ],
+      "id": "O003",
+      "num_detections": 3,
+      "target_relevance": 0.0
+    }
+  ],
+  "quality_checks": {
+    "agent_on_free_or_near_free": true,
+    "agent_on_known_or_near_known": true,
+    "agent_within_map_bounds": true,
+    "branch_count": 6,
+    "branch_evidence_counts": {
+      "anchor": 4,
+      "direct": 0,
+      "geometry_only": 2,
+      "room_prior": 0
+    },
+    "branches_with_semantic_hints": 6,
+    "localized_object_count": 3,
+    "localized_room_hypothesis_count": 1,
+    "object_count": 3,
+    "room_count": 9,
+    "semantic_region_count": 10,
+    "target_anchor_semantic_region_count": 7,
+    "unlocalized_room_prior_count": 8,
+    "warnings": [
+      "agent_display_coord_repaired_from_map_current_channel",
+      "raw_agent_coord_disagrees_with_map_current_channel:93.0",
+      "direct_target_semantic_channel_empty",
+      "target_heatmap_uses_prior_not_direct_target"
+    ]
+  },
+  "room_hypotheses": [
+    {
+      "caption": "bedroom",
+      "center_rc": [
+        334,
+        376
+      ],
+      "confidence": "medium",
+      "geometry_type": "member_object_hypothesis",
+      "id": "R001",
+      "object_ids": [
+        "O003",
+        "O002",
+        "O001"
+      ],
+      "spatialization_status": "localized_region"
+    },
+    {
+      "caption": "living room",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R002",
+      "object_ids": [],
+      "spatialization_status": "unlocalized_prior"
+    },
+    {
+      "caption": "bathroom",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R003",
+      "object_ids": [],
+      "spatialization_status": "unlocalized_prior"
+    },
+    {
+      "caption": "kitchen",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R004",
+      "object_ids": [],
+      "spatialization_status": "unlocalized_prior"
+    },
+    {
+      "caption": "dining room",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R005",
+      "object_ids": [],
+      "spatialization_status": "unlocalized_prior"
+    },
+    {
+      "caption": "office room",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R006",
+      "object_ids": [],
+      "spatialization_status": "unlocalized_prior"
+    }
+  ],
+  "room_state": {
+    "localized_room_regions": [
+      {
+        "bbox_rc": [
+          264,
+          353,
+          379,
+          396
+        ],
+        "caption": "bedroom",
+        "center_rc": [
+          334,
+          376
+        ],
+        "confidence": "medium",
+        "id": "R001",
+        "object_ids": [
+          "O003",
+          "O002",
+          "O001"
+        ],
+        "source": "world_state.room_summary"
+      }
+    ],
+    "unlocalized_room_priors": [
+      {
+        "caption": "living room",
+        "confidence": "unlocalized",
+        "id": "R002",
+        "object_captions": [],
+        "source": "world_state.room_summary"
+      },
+      {
+        "caption": "bathroom",
+        "confidence": "unlocalized",
+        "id": "R003",
+        "object_captions": [],
+        "source": "world_state.room_summary"
+      },
+      {
+        "caption": "kitchen",
+        "confidence": "unlocalized",
+        "id": "R004",
+        "object_captions": [],
+        "source": "world_state.room_summary"
+      },
+      {
+        "caption": "dining room",
+        "confidence": "unlocalized",
+        "id": "R005",
+        "object_captions": [],
+        "source": "world_state.room_summary"
+      },
+      {
+        "caption": "office room",
+        "confidence": "unlocalized",
+        "id": "R006",
+        "object_captions": [],
+        "source": "world_state.room_summary"
+      },
+      {
+        "caption": "gym",
+        "confidence": "unlocalized",
+        "id": "R007",
+        "object_captions": [],
+        "source": "world_state.room_summary"
+      }
+    ]
+  },
+  "schema_version": "smoothnav.semantic_bev_prompt_summary.v1",
+  "semantic_layers": {
+    "active_categories": [
+      {
+        "activation_max": 0.9930751919746399,
+        "activation_sum": 33.271387243279605,
+        "category_index": 9,
+        "channel_index": 13,
+        "is_direct_target_category": false,
+        "label": "refrigerator",
+        "pixel_count": 109
+      },
+      {
+        "activation_max": 0.9181960821151733,
+        "activation_sum": 22.640137475049414,
+        "category_index": 6,
+        "channel_index": 10,
+        "is_direct_target_category": false,
+        "label": "dining-table",
+        "pixel_count": 147
+      },
+      {
+        "activation_max": 0.6818257570266724,
+        "activation_sum": 17.65454613736074,
+        "category_index": 1,
+        "channel_index": 5,
+        "is_direct_target_category": false,
+        "label": "couch",
+        "pixel_count": 157
+      },
+      {
+        "activation_max": 0.48620182275772095,
+        "activation_sum": 4.06710718155955,
+        "category_index": 0,
+        "channel_index": 4,
+        "is_direct_target_category": false,
+        "label": "chair",
+        "pixel_count": 44
+      }
+    ],
+    "active_category_count": 4,
+    "direct_target_pixel_count": 0,
+    "target_category_labels": [
+      "tv"
+    ]
+  },
+  "semantic_regions": [
+    {
+      "bbox_rc": [
+        452,
+        232,
+        461,
+        242
+      ],
+      "center_rc": [
+        456,
+        237
+      ],
+      "id": "S001",
+      "is_direct_target_category": false,
+      "is_target_anchor_category": true,
+      "label": "couch",
+      "pixel_count": 55,
+      "target_prior_weight": 0.9
+    },
+    {
+      "bbox_rc": [
+        436,
+        234,
+        450,
+        243
+      ],
+      "center_rc": [
+        444,
+        239
+      ],
+      "id": "S002",
+      "is_direct_target_category": false,
+      "is_target_anchor_category": true,
+      "label": "couch",
+      "pixel_count": 78,
+      "target_prior_weight": 0.9
+    },
+    {
+      "bbox_rc": [
+        464,
+        180,
+        466,
+        185
+      ],
+      "center_rc": [
+        465,
+        182
+      ],
+      "id": "S003",
+      "is_direct_target_category": false,
+      "is_target_anchor_category": true,
+      "label": "couch",
+      "pixel_count": 15,
+      "target_prior_weight": 0.9
+    },
+    {
+      "bbox_rc": [
+        463,
+        241,
+        465,
+        243
+      ],
+      "center_rc": [
+        464,
+        242
+      ],
+      "id": "S004",
+      "is_direct_target_category": false,
+      "is_target_anchor_category": true,
+      "label": "couch",
+      "pixel_count": 9,
+      "target_prior_weight": 0.9
+    },
+    {
+      "bbox_rc": [
+        452,
+        232,
+        461,
+        240
+      ],
+      "center_rc": [
+        456,
+        236
+      ],
+      "id": "S005",
+      "is_direct_target_category": false,
+      "is_target_anchor_category": true,
+      "label": "chair",
+      "pixel_count": 44,
+      "target_prior_weight": 0.5
+    },
+    {
+      "bbox_rc": [
+        426,
+        225,
+        441,
+        240
+      ],
+      "center_rc": [
+        433,
+        232
+      ],
+      "id": "S006",
+      "is_direct_target_category": false,
+      "is_target_anchor_category": true,
+      "label": "dining-table",
+      "pixel_count": 116,
+      "target_prior_weight": 0.35
+    },
+    {
+      "bbox_rc": [
+        436,
+        236,
+        443,
+        242
+      ],
+      "center_rc": [
+        440,
+        239
+      ],
+      "id": "S007",
+      "is_direct_target_category": false,
+      "is_target_anchor_category": true,
+      "label": "dining-table",
+      "pixel_count": 31,
+      "target_prior_weight": 0.35
+    },
+    {
+      "bbox_rc": [
+        334,
+        241,
+        346,
+        251
+      ],
+      "center_rc": [
+        339,
+        246
+      ],
+      "id": "S008",
+      "is_direct_target_category": false,
+      "is_target_anchor_category": false,
+      "label": "refrigerator",
+      "pixel_count": 67,
+      "target_prior_weight": 0.0
+    },
+    {
+      "bbox_rc": [
+        395,
+        220,
+        400,
+        225
+      ],
+      "center_rc": [
+        398,
+        222
+      ],
+      "id": "S009",
+      "is_direct_target_category": false,
+      "is_target_anchor_category": false,
+      "label": "refrigerator",
+      "pixel_count": 24,
+      "target_prior_weight": 0.0
+    },
+    {
+      "bbox_rc": [
+        403,
+        220,
+        407,
+        224
+      ],
+      "center_rc": [
+        405,
+        222
+      ],
+      "id": "S010",
+      "is_direct_target_category": false,
+      "is_target_anchor_category": false,
+      "label": "refrigerator",
+      "pixel_count": 18,
+      "target_prior_weight": 0.0
+    }
+  ],
+  "target_query_heatmap": {
+    "branch_ranking": [
+      {
+        "id": "B5",
+        "semantic_target_affinity": 0.9,
+        "target_heatmap_score": 0.9
+      },
+      {
+        "id": "B6",
+        "semantic_target_affinity": 0.8218,
+        "target_heatmap_score": 0.72
+      },
+      {
+        "id": "B4",
+        "semantic_target_affinity": 0.7324,
+        "target_heatmap_score": 0.72
+      },
+      {
+        "id": "B3",
+        "semantic_target_affinity": 0.226,
+        "target_heatmap_score": 0.0
+      },
+      {
+        "id": "B1",
+        "semantic_target_affinity": 0.0875,
+        "target_heatmap_score": 0.0
+      },
+      {
+        "id": "B2",
+        "semantic_target_affinity": 0.0875,
+        "target_heatmap_score": 0.0
+      }
+    ],
+    "direct_target_pixel_count": 0,
+    "positive_pixel_count": 289,
+    "prior_pixel_count": 348,
+    "source": "semantic_prior_only",
+    "target_category_labels": [
+      "tv"
+    ]
+  },
+  "target_value_state": {
+    "available": true,
+    "branch_ranking": [
+      {
+        "evidence_level": "anchor",
+        "id": "B5",
+        "target_value_score": 0.963,
+        "target_visible": false
+      },
+      {
+        "evidence_level": "anchor",
+        "id": "B6",
+        "target_value_score": 0.8462,
+        "target_visible": false
+      },
+      {
+        "evidence_level": "anchor",
+        "id": "B4",
+        "target_value_score": 0.7704,
+        "target_visible": false
+      },
+      {
+        "evidence_level": "anchor",
+        "id": "B3",
+        "target_value_score": 0.405,
+        "target_visible": false
+      },
+      {
+        "evidence_level": "geometry_only",
+        "id": "B2",
+        "target_value_score": 0.1216,
+        "target_visible": false
+      },
+      {
+        "evidence_level": "geometry_only",
+        "id": "B1",
+        "target_value_score": 0.0,
+        "target_visible": false
+      }
+    ],
+    "evidence_counts": {
+      "anchor": 4,
+      "direct": 0,
+      "geometry_only": 2,
+      "room_prior": 0
+    },
+    "heat_source": "semantic_prior_only",
+    "peak": 0.9629999995231628,
+    "positive_pixel_count": 6172,
+    "schema_version": "smoothnav.target_conditioned_value.v0",
+    "source": "target_conditioned_value_v0"
+  },
+  "trajectory_summary": {
+    "current_agent_pixel_count": 25,
+    "past_agent_pixel_count": 1628,
+    "sample_count": 78,
+    "source": "full_map.channel_3_past_agent"
+  }
+}

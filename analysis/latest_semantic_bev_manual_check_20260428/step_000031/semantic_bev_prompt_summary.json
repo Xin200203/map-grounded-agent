@@ -1,0 +1,273 @@
+{
+  "agent": {
+    "agent_channel_distance": 25.0,
+    "coord_rc": [
+      347,
+      371
+    ],
+    "display_coord_source": "full_map.channel_2_current_agent",
+    "display_repaired_from_map_current_channel": true,
+    "heading_deg": null,
+    "map_current_channel_coord_rc": [
+      347,
+      371
+    ],
+    "on_free_or_near_free": true,
+    "on_known_or_near_known": true,
+    "raw_coord_rc": [
+      372,
+      371
+    ],
+    "raw_on_known_or_near_known": true,
+    "source": "full_map.channel_2_current_agent",
+    "within_map_bounds": true
+  },
+  "base_layers": {
+    "active_semantic_category_count": 0,
+    "current_agent_channel_pixels": 25,
+    "has_free": true,
+    "has_known": true,
+    "has_language_query_heatmap": false,
+    "has_obstacle": true,
+    "has_semantic_channels": false,
+    "past_agent_channel_pixels": 238,
+    "semantic_channel_count": 16
+  },
+  "branch_semantic_hints": [
+    {
+      "decision_roles": [],
+      "direction_from_agent": "north",
+      "id": "B1",
+      "map_direction_from_agent": "north",
+      "nearby_object_ids": [
+        "O002",
+        "O001"
+      ],
+      "nearby_room_ids": [
+        "R001"
+      ],
+      "nearby_semantic_region_ids": [],
+      "nearby_semantic_region_labels": [],
+      "semantic_target_affinity": 0.0,
+      "target_heatmap_rank": 1,
+      "target_heatmap_score": 0.0,
+      "visit_state": "candidate"
+    },
+    {
+      "decision_roles": [
+        "dry",
+        "final"
+      ],
+      "direction_from_agent": "north",
+      "id": "B2",
+      "map_direction_from_agent": "west",
+      "nearby_object_ids": [
+        "O001",
+        "O002"
+      ],
+      "nearby_room_ids": [
+        "R001"
+      ],
+      "nearby_semantic_region_ids": [],
+      "nearby_semantic_region_labels": [],
+      "semantic_target_affinity": 0.0,
+      "target_heatmap_rank": 2,
+      "target_heatmap_score": 0.0,
+      "visit_state": "selected"
+    },
+    {
+      "decision_roles": [],
+      "direction_from_agent": "west",
+      "id": "B3",
+      "map_direction_from_agent": "west",
+      "nearby_object_ids": [],
+      "nearby_room_ids": [
+        "R001"
+      ],
+      "nearby_semantic_region_ids": [],
+      "nearby_semantic_region_labels": [],
+      "semantic_target_affinity": 0.0,
+      "target_heatmap_rank": 3,
+      "target_heatmap_score": 0.0,
+      "visit_state": "non_actionable"
+    }
+  ],
+  "coordinate_frame": {
+    "col_axis": "east_right_image_x",
+    "crop": {
+      "c0": 227,
+      "c1": 433,
+      "r0": 236,
+      "r1": 454
+    },
+    "map_shape": [
+      720,
+      720
+    ],
+    "name": "full_map_rc_unflipped",
+    "origin": "full_map[0,0]",
+    "row_axis": "south_down_image_y"
+  },
+  "decision_overlay": {
+    "allowed_branch_ids": [
+      "B2",
+      "B3",
+      "B1"
+    ],
+    "dry_selected_branch_id": "B2",
+    "dry_selected_frontier": [
+      346,
+      347
+    ],
+    "final_selected_branch_id": "B2",
+    "final_selected_frontier": [
+      346,
+      347
+    ],
+    "mllm_reason": "Expecting property name enclosed in double quotes: line 18 column 1 (char 525)",
+    "mllm_selected_branch_id": "",
+    "mllm_status": "invalid",
+    "planner_prior_applied": false,
+    "prompt_hash": "6d6f74878388a41b1b125f5e0d53a4c000398b01",
+    "ranked_branch_ids": []
+  },
+  "object_labels": [
+    {
+      "caption": "windows",
+      "center_rc": [
+        369,
+        378
+      ],
+      "id": "O001",
+      "num_detections": 4,
+      "target_relevance": 0.0
+    },
+    {
+      "caption": "mirror",
+      "center_rc": [
+        358,
+        386
+      ],
+      "id": "O002",
+      "num_detections": 3,
+      "target_relevance": 0.0
+    }
+  ],
+  "quality_checks": {
+    "agent_on_free_or_near_free": true,
+    "agent_on_known_or_near_known": true,
+    "agent_within_map_bounds": true,
+    "branch_count": 3,
+    "branches_with_semantic_hints": 3,
+    "localized_object_count": 2,
+    "localized_room_hypothesis_count": 1,
+    "object_count": 2,
+    "room_count": 9,
+    "semantic_region_count": 0,
+    "target_anchor_semantic_region_count": 0,
+    "warnings": [
+      "agent_display_coord_repaired_from_map_current_channel",
+      "raw_agent_coord_disagrees_with_map_current_channel:25.0",
+      "semantic_channels_present_but_empty",
+      "direct_target_semantic_channel_empty"
+    ]
+  },
+  "room_hypotheses": [
+    {
+      "caption": "bedroom",
+      "center_rc": [
+        364,
+        382
+      ],
+      "confidence": "medium",
+      "geometry_type": "member_object_hypothesis",
+      "id": "R001",
+      "object_ids": [
+        "O002",
+        "O001"
+      ]
+    },
+    {
+      "caption": "living room",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R002",
+      "object_ids": []
+    },
+    {
+      "caption": "bathroom",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R003",
+      "object_ids": []
+    },
+    {
+      "caption": "kitchen",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R004",
+      "object_ids": []
+    },
+    {
+      "caption": "dining room",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R005",
+      "object_ids": []
+    },
+    {
+      "caption": "office room",
+      "center_rc": null,
+      "confidence": "unlocalized",
+      "geometry_type": "unlocalized_hypothesis",
+      "id": "R006",
+      "object_ids": []
+    }
+  ],
+  "schema_version": "smoothnav.semantic_bev_prompt_summary.v1",
+  "semantic_layers": {
+    "active_categories": [],
+    "active_category_count": 0,
+    "direct_target_pixel_count": 0,
+    "target_category_labels": [
+      "tv"
+    ]
+  },
+  "semantic_regions": [],
+  "target_query_heatmap": {
+    "branch_ranking": [
+      {
+        "id": "B1",
+        "semantic_target_affinity": 0.0,
+        "target_heatmap_score": 0.0
+      },
+      {
+        "id": "B2",
+        "semantic_target_affinity": 0.0,
+        "target_heatmap_score": 0.0
+      },
+      {
+        "id": "B3",
+        "semantic_target_affinity": 0.0,
+        "target_heatmap_score": 0.0
+      }
+    ],
+    "direct_target_pixel_count": 0,
+    "positive_pixel_count": 0,
+    "prior_pixel_count": 0,
+    "source": "none",
+    "target_category_labels": [
+      "tv"
+    ]
+  },
+  "trajectory_summary": {
+    "current_agent_pixel_count": 25,
+    "past_agent_pixel_count": 238,
+    "sample_count": 80,
+    "source": "full_map.channel_3_past_agent"
+  }
+}

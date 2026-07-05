@@ -1,0 +1,43 @@
+{
+  "episodes_requested": [
+    229,
+    527,
+    859
+  ],
+  "profiles": {
+    "smoothnav-full": {
+      "SPL": 0.0,
+      "SR": 0.0,
+      "avg_high_level_calls": 6.666666666666667,
+      "avg_low_level_calls": 0.0,
+      "episodes": [
+        229,
+        527,
+        859
+      ],
+      "executor_override_ratio": 0.08925813594328563,
+      "goal_update_delay_steps": 7.65,
+      "grounding_noop_reason_counts": {
+        "out_of_local_window": 2,
+        "same_goal_as_prev": 7
+      },
+      "missing_epoch_trace_steps": 0,
+      "num_runs": 3,
+      "pending_created_count": 3.6666666666666665,
+      "pending_promoted_count": 3,
+      "run_dirs": [
+        "results/phase2_revalidation/s4_cross_scene_suite_v2/smoothnav-full/20260422/smoothnav_text_140247_b15a2d65",
+        "results/phase2_revalidation/s4_cross_scene_suite_v2/smoothnav-full/20260422/smoothnav_text_140728_438768f5",
+        "results/phase2_revalidation/s4_cross_scene_suite_v2/smoothnav-full/20260422/smoothnav_text_141933_a86199d2"
+      ],
+      "strategy_switch_count": 3.6666666666666665,
+      "terminal_outcome_counts": {
+        "FAILURE_NO_PROGRESS_TIMEOUT": 3
+      }
+    }
+  },
+  "profiles_requested": [
+    "smoothnav-full"
+  ],
+  "results_root": "results/phase2_revalidation/s4_cross_scene_suite_v2"
+}
