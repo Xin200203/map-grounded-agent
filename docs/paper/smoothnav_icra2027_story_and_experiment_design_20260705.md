@@ -187,6 +187,22 @@ backbone 共享改动（frontier 价值评分、关系裁剪、文本可见接�
 3. **monitor 无独立增益**（full≈no-monitor；rules-only 同结果多花 50% planner 调用）——论文中 monitor 降为附录/工程细节，主贡献聚焦「事件调度 + gated grounding core」。
 4. **no-prefetch 意外成为全场最佳**（SR 4/12=0.333、SPL 0.116、planner 调用近减半 5.6）：胜集 = full 胜集(661@0.853,717) ∪ baseline 胜集(717,859) + 358——锚定机制无损，而 prefetch 的 pending 晋升疑似在 frontier 到达时挤掉有效策略（`handle_frontier_reached` 的 stale-pending 保护只覆盖 specificity ≤ 当前的情形）。n=12 属 Observation；已加入 E1X 扩样（n=48 裁决）。若坐实，推荐默认 profile 改为 event+recovery+anchor 而不带 prefetch，且这本身是门控故事的又一例证：**未经证据门控的策略切换（pending 晋升）有害**。
 
+## 5.0.2 G2 判定（2026-07-06 02:40，单门消融完成；e3e 组合证伪在跑）
+
+**判定：G2（强形式）未通过——单门移除无一导致 outcome 退化；但绑定计数证明门在高强度工作，价值重定位为"churn 控制 + 纵深防御"。**
+
+| 变体（cross-12，profile=full） | SR | SPL | hi_calls | 关键绑定计数 |
+|---|---|---|---|---|
+| full（全门参照） | 0.167 | 0.087 | 10.2 | obj 选择 33、低相关 0、直接执行 66 |
+| e3a relevance off | 0.250 | 0.117 | **17.2** | obj 选择 **134**、低相关 **73**、被下层拦截 **44** |
+| e3b direct-exec ungated | 0.250 | 0.121 | 8.5 | 锚定机制被结构性旁路（anchor_steps 0） |
+| e3c target-progress off | 0.167 | 0.108 | 8.6 | 锚定活跃 814 步、价值项被置零 |
+| e3d stall-decommit off | 0.167 | 0.109 | 7.9 | （行为分歧：LLM 高温随机性放大，见方法论教训） |
+
+- **纵深防御被量化**：e3a 放开菜单门后 73 个低相关对象策略涌入，但落地层 no-match 守卫拦下 44 次直接执行，其余转为锚点被价值系统与退委机制消化——outcome 无损，代价是 planner 调用 +69%。**相关性门的可证明价值 = 计算/churn 控制，不是 SR**。
+- **单门冗余 ≠ 全体冗余**：组合变体 e3e（四门全关）作为最后强证伪在跑（default temp，与对照一致）。若 e3e 也不退化 → 正式切 **Plan B**（效率+退化鲁棒叙事，E2 分解为主表，门控降为设计原则+纵深防御分析）；若 e3e 崩溃 → 门控故事以"冗余保护、联合必要"的形式保留。
+- **方法论教训（入论文实验设置）**：默认温度下 LLM 选择的混沌放大使 n=12 的行为轨迹分歧巨大（e3d 的 obj 选择 3 vs full 的 33，仅 patience 一键之差不可能致此）；后续新条件（Sonnet 轴、复跑）统一钉 `SMOOTHNAV_LLM_TEMPERATURE=0`；已跑套件内部温度一致、结论不受影响。
+
 ## 5.1 E1 中期观察（2026-07-06 01:00，Observation，套件未全部完成）
 
 - **intact-15 已完成两 profile**（DeepSeek 通道）：baseline-periodic SR 7/15=0.467、SPL≈0.128；smoothnav-full SR 6/15=0.400、SPL≈0.122。**与 4 月 Sonnet 结果（full 0.6 > periodic 0.533）排序翻转**，且两者绝对值都大幅低于 Sonnet 时代——通道质量对全系统影响显著。SR 差距为 1 集（6 vs 7，n=15），在噪声区间内，先按"平局"解读。逐集：full 独得 291/296，periodic 独得 289/293/299。
