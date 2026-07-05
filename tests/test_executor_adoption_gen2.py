@@ -9,6 +9,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from smoothnav.executor_adoption import (
     compute_adoption_transition,
     resolve_strategy_epoch_transition,
+    should_allow_text_visible_temp_goal,
     should_suppress_stuck_override,
 )
 
@@ -35,6 +36,18 @@ class ExecutorAdoptionGen2Tests(unittest.TestCase):
 
         self.assertEqual(transition["next_strategy_epoch"], 3)
         self.assertFalse(transition["stale_temp_goal_cleared"])
+
+    def test_strategy_epoch_change_clears_stale_stuck_goal(self):
+        transition = resolve_strategy_epoch_transition(
+            current_strategy_epoch=2,
+            incoming_strategy_epoch=3,
+            has_temp_goal=False,
+            temp_goal_epoch=None,
+            has_stuck_goal=True,
+        )
+
+        self.assertEqual(transition["next_strategy_epoch"], 3)
+        self.assertTrue(transition["stale_stuck_goal_cleared"])
 
     def test_adoption_transition_tracks_before_after_and_changed(self):
         first = compute_adoption_transition(
@@ -66,6 +79,42 @@ class ExecutorAdoptionGen2Tests(unittest.TestCase):
             should_suppress_stuck_override(
                 been_stuck=False,
                 suppress_stuck_override=True,
+            )
+        )
+
+    def test_text_visible_temp_goal_is_disabled_for_text_goals(self):
+        self.assertFalse(
+            should_allow_text_visible_temp_goal(
+                goal_type="text",
+                current_target_region="unexplored north",
+                goal_name="chair",
+            )
+        )
+        self.assertFalse(
+            should_allow_text_visible_temp_goal(
+                goal_type="text",
+                current_target_region="bedroom",
+                goal_name="chair",
+            )
+        )
+        self.assertFalse(
+            should_allow_text_visible_temp_goal(
+                goal_type="text",
+                current_target_region="object: chair",
+                goal_name="chair",
+            )
+        )
+        self.assertFalse(
+            should_allow_text_visible_temp_goal(
+                goal_type="text",
+                current_target_region="object: windows",
+                goal_name="chair",
+            )
+        )
+        self.assertTrue(
+            should_allow_text_visible_temp_goal(
+                goal_type="ins-image",
+                current_target_region="unexplored north",
             )
         )
 

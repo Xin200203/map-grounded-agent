@@ -178,7 +178,7 @@ class MEPContractTests(unittest.TestCase):
         self.assertEqual(result.executor_feedback.override_reason, "temp_goal")
         self.assertEqual(result.executor_feedback.adopted_goal_source, "temp_goal")
 
-    def test_terminal_arbiter_closes_failure_outcome(self):
+    def test_terminal_arbiter_holds_strategy_when_planner_budget_is_exhausted(self):
         spec = parse_task_spec("find the chair", "text")
         ledger = EvidenceLedger()
         belief = TaskBeliefUpdater(spec, ledger).belief
@@ -193,8 +193,9 @@ class MEPContractTests(unittest.TestCase):
             controller_state=SimpleNamespace(no_progress_steps=0, consecutive_grounding_noops=0),
         )
 
-        self.assertEqual(decision.outcome, TerminalOutcome.FAILURE_BUDGET_EXHAUSTED)
-        self.assertTrue(decision.is_terminal)
+        self.assertEqual(decision.outcome, TerminalOutcome.RUNNING)
+        self.assertFalse(decision.is_terminal)
+        self.assertEqual(decision.reason, "planner_budget_exhausted_hold_strategy")
 
 
 if __name__ == "__main__":

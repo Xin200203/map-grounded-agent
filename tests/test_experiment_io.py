@@ -87,6 +87,31 @@ class ResolveApiConfigTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "mismatch"):
             resolve_api_config(args)
 
+    @mock.patch.dict(
+        os.environ,
+        {
+            "TEST_SMOOTHNAV_API_KEY": "top-secret",
+        },
+        clear=True,
+    )
+    def test_base_url_can_fall_back_to_config_value(self):
+        args = SimpleNamespace(
+            api_key_env="TEST_SMOOTHNAV_API_KEY",
+            base_url_env="TEST_SMOOTHNAV_BASE_URL",
+            api_provider="openai",
+            api_protocol="openai-chat-completions",
+            api_key="",
+            base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
+        )
+
+        resolved = resolve_api_config(args)
+
+        self.assertEqual(
+            resolved.base_url,
+            "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        )
+        self.assertEqual(resolved.api_protocol, "openai-chat-completions")
+
 
 class SetupRunEnvironmentTests(unittest.TestCase):
     def test_creates_isolated_run_bundle_and_redacts_secrets(self):

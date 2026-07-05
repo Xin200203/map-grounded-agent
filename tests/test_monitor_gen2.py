@@ -226,6 +226,48 @@ class MonitorGen2Tests(unittest.TestCase):
 
         self.assertFalse(should_evaluate)
 
+    def test_escalation_only_monitor_skips_object_strategy(self):
+        llm = MockLLM([])
+        monitor = EscalationOnlyMonitor(llm_fn=llm, prefetch_near_threshold=12.0)
+        object_strategy = SimpleNamespace(
+            target_region="object: chair",
+            reasoning="check chair",
+        )
+
+        should_evaluate = monitor.should_evaluate(
+            strategy=object_strategy,
+            graph_delta=SimpleNamespace(
+                event_types=["node_caption_changed"],
+                new_rooms=[],
+                frontier_near=False,
+                no_progress=False,
+                stuck=False,
+            ),
+            no_progress_steps=0,
+            dist_to_goal=20.0,
+        )
+
+        self.assertFalse(should_evaluate)
+
+    def test_escalation_only_monitor_skips_direction_strategy(self):
+        llm = MockLLM([])
+        monitor = EscalationOnlyMonitor(llm_fn=llm, prefetch_near_threshold=12.0)
+
+        should_evaluate = monitor.should_evaluate(
+            strategy=self.direction_strategy,
+            graph_delta=SimpleNamespace(
+                event_types=["node_caption_changed"],
+                new_rooms=[],
+                frontier_near=False,
+                no_progress=False,
+                stuck=False,
+            ),
+            no_progress_steps=0,
+            dist_to_goal=20.0,
+        )
+
+        self.assertFalse(should_evaluate)
+
     def test_escalation_only_monitor_calls_llm_for_semantic_conflict(self):
         llm = MockLLM(['{"action":"ESCALATE","reason":"new room contradicts current strategy"}'])
         monitor = EscalationOnlyMonitor(llm_fn=llm, prefetch_near_threshold=12.0)

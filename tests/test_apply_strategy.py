@@ -16,7 +16,9 @@ class MockGraph:
         self.full_map = None
         self.full_pose = None
         self.received_bias = None
+        self.local_map_boundary = None
         self.last_goal_debug = last_goal_debug or {}
+        self.nodes = []
 
     def set_full_map(self, full_map):
         self.full_map = full_map
@@ -105,6 +107,48 @@ class ApplyStrategyTests(unittest.TestCase):
         self.assertTrue(result.success)
         self.assertFalse(result.changed)
         self.assertEqual(result.noop_reason, "same_frontier_as_prev")
+
+    def test_object_strategy_anchors_frontier_by_default(self):
+        graph = MockGraph(
+            goal=(19, 30),
+            last_goal_debug={
+                "selected_frontier": [19, 30],
+                "selected_frontier_score": 3.5,
+                "topk_frontiers": [
+                    {
+                        "rank": 1,
+                        "frontier": [19, 30],
+                        "final_score": 3.5,
+                        "bias_score": 0.8,
+                        "novelty_score": 0.6,
+                        "actionability_score": 1.0,
+                    }
+                ],
+            },
+        )
+        graph.nodes = [
+            SimpleNamespace(
+                caption="plant",
+                center=[18, 29],
+                object={"num_detections": 5},
+            )
+        ]
+        strategy = SimpleNamespace(
+            bias_position=(18, 29),
+            target_region="object: plant",
+        )
+        global_goals = [0, 0]
+
+        result = apply_strategy(strategy, graph, self.bev_map, self.args, global_goals)
+
+        self.assertEqual(graph.local_map_boundary, self.bev_map.local_map_boundary)
+        self.assertEqual(graph.received_bias, (18, 29))
+        self.assertEqual(global_goals, [9, 10])
+        self.assertTrue(result.success)
+        self.assertEqual(result.projected_goal, (9, 10))
+        self.assertEqual(result.primary_goal["full_map_coord"], [19, 30])
+        self.assertEqual(result.graph_debug["object_anchor_goal"], [18, 29])
+        self.assertFalse(result.graph_debug["direct_object_goal_used"])
 
 
 if __name__ == "__main__":
