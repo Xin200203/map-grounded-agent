@@ -43,6 +43,7 @@ CURRENT STRATEGY TYPE: {strategy_type}
 STRATEGY REASONING: {reasoning}
 
 NEW OBJECTS DETECTED: {new_objects}
+TARGET-LIKE OBJECTS DETECTED: {target_candidates}
 NEW OBJECTS IN TARGET ROOM: {new_objects_in_target_room}
 NEW ROOMS: {new_rooms}
 EVENT TYPES: {event_types}
@@ -68,6 +69,7 @@ CURRENT STRATEGY TYPE: {strategy_type}
 STRATEGY REASONING: {reasoning}
 
 NEW OBJECTS DETECTED: {new_objects}
+TARGET-LIKE OBJECTS DETECTED: {target_candidates}
 NEW OBJECTS IN TARGET ROOM: {new_objects_in_target_room}
 NEW ROOMS: {new_rooms}
 EVENT TYPES: {event_types}
@@ -170,6 +172,9 @@ class LowLevelAgent:
             "event_types": event_types,
             "new_rooms": new_rooms,
             "new_objects_in_target_room": new_objects_in_target_room,
+            "target_candidate_captions": list(
+                getattr(graph_delta, "target_candidate_captions", [])
+            ),
             "frontier_near": bool(getattr(graph_delta, "frontier_near", False)),
             "no_progress_steps": int(no_progress_steps),
         }
@@ -201,6 +206,12 @@ class LowLevelAgent:
                         "new_objects_in_target_room": new_objects_in_target_room,
                         "new_rooms": new_rooms,
                         "event_types": event_types,
+                        "target_candidate_captions": list(
+                            getattr(graph_delta, "target_candidate_captions", [])
+                        ),
+                        "target_candidate_details": list(
+                            getattr(graph_delta, "target_candidate_details", [])
+                        ),
                         "dist_to_goal": int(dist_to_goal),
                         "frontier_near": bool(getattr(graph_delta, "frontier_near", False)),
                         "no_progress_steps": int(no_progress_steps),
@@ -216,6 +227,9 @@ class LowLevelAgent:
             strategy_type=strategy_type,
             reasoning=strategy.reasoning,
             new_objects=', '.join(new_captions) or "None",
+            target_candidates=', '.join(
+                getattr(graph_delta, "target_candidate_captions", [])
+            ) or "None",
             new_objects_in_target_room=', '.join(new_objects_in_target_room) or "None",
             new_rooms=', '.join(new_rooms) or "None",
             event_types=', '.join(event_types) or "none",
@@ -288,6 +302,12 @@ class LowLevelAgent:
                     "new_objects_in_target_room": new_objects_in_target_room,
                     "new_rooms": new_rooms,
                     "event_types": event_types,
+                    "target_candidate_captions": list(
+                        getattr(graph_delta, "target_candidate_captions", [])
+                    ),
+                    "target_candidate_details": list(
+                        getattr(graph_delta, "target_candidate_details", [])
+                    ),
                     "dist_to_goal": int(dist_to_goal),
                     "frontier_near": bool(getattr(graph_delta, "frontier_near", False)),
                     "no_progress_steps": int(no_progress_steps),
@@ -369,6 +389,7 @@ class RuleBasedMonitor:
         frontier_near = bool(getattr(graph_delta, "frontier_near", False))
         no_progress = bool(getattr(graph_delta, "no_progress", False))
         stuck = bool(getattr(graph_delta, "stuck", False))
+        target_candidate = "target_candidate_detected" in set(event_types)
         new_objects_in_target_room = []
         if strategy_type == "room" and strategy.target_region in (
             set(new_rooms) | set(room_increase_rooms)
@@ -378,7 +399,10 @@ class RuleBasedMonitor:
         action = LowLevelAction.CONTINUE
         reason = "rules_continue"
         adjust_anchor = ""
-        if stuck:
+        if target_candidate and strategy_type != "object":
+            action = LowLevelAction.ESCALATE
+            reason = "rules_target_candidate_escalate"
+        elif stuck:
             action = LowLevelAction.ESCALATE
             reason = "rules_stuck_escalate"
         elif no_progress and no_progress_steps >= 2:
@@ -428,6 +452,12 @@ class RuleBasedMonitor:
                     "new_objects_in_target_room": new_objects_in_target_room,
                     "new_rooms": new_rooms,
                     "event_types": event_types,
+                    "target_candidate_captions": list(
+                        getattr(graph_delta, "target_candidate_captions", [])
+                    ),
+                    "target_candidate_details": list(
+                        getattr(graph_delta, "target_candidate_details", [])
+                    ),
                     "dist_to_goal": int(dist_to_goal),
                     "frontier_near": frontier_near,
                     "no_progress_steps": int(no_progress_steps),
@@ -471,6 +501,12 @@ class EscalationOnlyMonitor:
     ) -> bool:
         if strategy is None or graph_delta is None:
             return False
+        strategy_type = _strategy_type(strategy.target_region)
+        event_types = set(getattr(graph_delta, "event_types", []))
+        if "target_candidate_detected" in event_types:
+            return True
+        if strategy_type != "room":
+            return False
         if getattr(graph_delta, "frontier_near", False):
             return False
         if dist_to_goal < self.prefetch_near_threshold:
@@ -479,7 +515,6 @@ class EscalationOnlyMonitor:
             return False
         if getattr(graph_delta, "no_progress", False) and no_progress_steps >= 2:
             return False
-        event_types = set(getattr(graph_delta, "event_types", []))
         semantic_events = {
             "new_rooms",
             "room_object_count_increase",
@@ -487,7 +522,6 @@ class EscalationOnlyMonitor:
         }
         if not (event_types & semantic_events):
             return False
-        strategy_type = _strategy_type(strategy.target_region)
         if strategy_type == "room" and strategy.target_region in set(
             getattr(graph_delta, "new_rooms", [])
         ):
@@ -521,6 +555,9 @@ class EscalationOnlyMonitor:
             "event_types": event_types,
             "new_rooms": new_rooms,
             "new_objects_in_target_room": new_objects_in_target_room,
+            "target_candidate_captions": list(
+                getattr(graph_delta, "target_candidate_captions", [])
+            ),
             "frontier_near": frontier_near,
             "no_progress_steps": int(no_progress_steps),
         }
@@ -567,6 +604,12 @@ class EscalationOnlyMonitor:
                         "new_objects_in_target_room": new_objects_in_target_room,
                         "new_rooms": new_rooms,
                         "event_types": event_types,
+                        "target_candidate_captions": list(
+                            getattr(graph_delta, "target_candidate_captions", [])
+                        ),
+                        "target_candidate_details": list(
+                            getattr(graph_delta, "target_candidate_details", [])
+                        ),
                         "dist_to_goal": int(dist_to_goal),
                         "frontier_near": frontier_near,
                         "no_progress_steps": int(no_progress_steps),
@@ -582,6 +625,9 @@ class EscalationOnlyMonitor:
             strategy_type=strategy_type,
             reasoning=strategy.reasoning,
             new_objects=", ".join(new_captions) or "None",
+            target_candidates=", ".join(
+                getattr(graph_delta, "target_candidate_captions", [])
+            ) or "None",
             new_objects_in_target_room=", ".join(new_objects_in_target_room) or "None",
             new_rooms=", ".join(new_rooms) or "None",
             event_types=", ".join(event_types) or "none",
@@ -647,6 +693,12 @@ class EscalationOnlyMonitor:
                     "new_objects_in_target_room": new_objects_in_target_room,
                     "new_rooms": new_rooms,
                     "event_types": event_types,
+                    "target_candidate_captions": list(
+                        getattr(graph_delta, "target_candidate_captions", [])
+                    ),
+                    "target_candidate_details": list(
+                        getattr(graph_delta, "target_candidate_details", [])
+                    ),
                     "dist_to_goal": int(dist_to_goal),
                     "frontier_near": frontier_near,
                     "no_progress_steps": int(no_progress_steps),

@@ -17,9 +17,10 @@ from src.agent.unigoal.agent import UniGoal_Agent
 from src.envs import construct_envs
 from src.graph.graph import Graph
 from src.map.bev_mapping import BEV_Map
-from src.utils.llm import LLM
+from src.utils.llm import LLM, VLM
 
 from smoothnav.control_metrics import compute_run_control_metrics
+from smoothnav.bev_frontier_planner import BEVFrontierMLLMPlanner
 from smoothnav.controller_config import (
     available_controller_profiles,
     controller_config_dict,
@@ -27,22 +28,34 @@ from smoothnav.controller_config import (
 )
 from smoothnav.controller_logic import (
     build_graph_delta,
+    empty_response_plan_is_more_specific,
     handle_frontier_reached,
+    handle_out_of_local_window,
     handle_grounding_failure,
     handle_stuck_replan,
+    is_target_search_anchor,
     is_room_target,
     maybe_call_monitor,
     maybe_promote_pending,
     plan_strategy,
+    strategy_specificity,
+    target_anchor_attempt_summary,
+    update_target_anchor_attempt,
     update_grounding_failure_state,
 )
 from smoothnav.controller_state import ControllerState
 from smoothnav.controller_runtime import compact_layered_payload, layered_trace_payload
 from smoothnav.budget_context import BudgetGovernor
 from smoothnav.evidence_ledger import EvidenceLedger
-from smoothnav.executor_adapter import ExecutorAdapter, null_geometric_goal
+from smoothnav.executor_adapter import (
+    ExecutorAdapter,
+    null_geometric_goal,
+    should_clear_temp_goal_for_command,
+    should_disable_recovery_for_command,
+)
 from smoothnav.experiment_io import resolve_api_config, setup_run_environment
 from smoothnav.geometric_grounder import GeometricGrounder
+from smoothnav.frontier_scoring import replay_frontier_value_snapshot
 from smoothnav.low_level_agent import (
     DisabledMonitor,
     ESCALATION_ONLY_MONITOR_SCHEMA_VERSION,
@@ -64,6 +77,23 @@ from smoothnav.terminal_arbitration import TerminalArbiter, TerminalDecision
 from smoothnav.tracing import RunTracer, strategy_to_dict
 from smoothnav.types import TacticalMode, TerminalOutcome, stage_goal_from_strategy
 from smoothnav.world_state import WorldStateBuilder
+
+
+def _attach_semantic_instances_to_infos(infos, agent):
+    """Expose detector instance boxes to BEV_Map without changing env APIs."""
+
+    try:
+        instances = list(getattr(agent, "last_semantic_instances", []) or [])
+    except Exception:
+        instances = []
+    if not instances:
+        return infos
+    try:
+        if isinstance(infos, dict):
+            infos["semantic_instances"] = instances
+    except Exception:
+        pass
+    return infos
 
 
 def get_config():
@@ -203,6 +233,48 @@ def get_config():
         default=None,
         type=int,
     )
+    parser.add_argument(
+        "--grounding-snapshot-policy",
+        dest="grounding_snapshot_policy",
+        default=os.environ.get("SMOOTHNAV_GROUNDING_SNAPSHOT_POLICY"),
+        choices=["off", "target", "failures", "all"],
+        help=(
+            "Write branch-level grounding replay snapshots under "
+            "grounding_snapshots/. Use 'target' for target-anchor checks."
+        ),
+    )
+    parser.add_argument(
+        "--task-frame-capsule-policy",
+        dest="task_frame_capsule_policy",
+        default=os.environ.get("SMOOTHNAV_TASK_FRAME_CAPSULE_POLICY"),
+        choices=["off", "target", "failures", "all"],
+        help=(
+            "Write frozen task-frame capsules under task_frame_capsules/ for "
+            "planner/frontier/grounding replay. Default is off."
+        ),
+    )
+    parser.add_argument(
+        "--mllm-frontier-planner-mode",
+        dest="mllm_frontier_planner_mode",
+        default=os.environ.get("SMOOTHNAV_MLLM_FRONTIER_PLANNER_MODE"),
+        choices=["off", "online"],
+        help=(
+            "Optional BEV/MLLM branch planner. 'online' lets a VLM choose/rank "
+            "frontier branch IDs before Graph.get_goal applies the final score."
+        ),
+    )
+    parser.add_argument(
+        "--mllm-frontier-max-branches",
+        dest="mllm_frontier_max_branches",
+        default=os.environ.get("SMOOTHNAV_MLLM_FRONTIER_MAX_BRANCHES"),
+        type=int,
+    )
+    parser.add_argument(
+        "--mllm-frontier-image-scale",
+        dest="mllm_frontier_image_scale",
+        default=os.environ.get("SMOOTHNAV_MLLM_FRONTIER_IMAGE_SCALE"),
+        type=int,
+    )
     parsed_args = parser.parse_args()
     controller_cli_overrides = {
         key
@@ -213,7 +285,14 @@ def get_config():
     with open(parsed_args.config_file, "r") as file:
         config = yaml.safe_load(file)
     args_dict = dict(config)
-    nullable_passthrough_keys = {"enable_controller_trace"}
+    nullable_passthrough_keys = {
+        "enable_controller_trace",
+        "grounding_snapshot_policy",
+        "task_frame_capsule_policy",
+        "mllm_frontier_planner_mode",
+        "mllm_frontier_max_branches",
+        "mllm_frontier_image_scale",
+    }
     for key, value in vars(parsed_args).items():
         if key == "results_root":
             if value:
@@ -229,6 +308,18 @@ def get_config():
         else:
             args_dict[key] = value
     args = SimpleNamespace(**args_dict)
+    if not getattr(args, "grounding_snapshot_policy", None):
+        args.grounding_snapshot_policy = "off"
+    if not getattr(args, "task_frame_capsule_policy", None):
+        args.task_frame_capsule_policy = "off"
+    if not getattr(args, "mllm_frontier_planner_mode", None):
+        args.mllm_frontier_planner_mode = "off"
+    args.mllm_frontier_max_branches = int(
+        getattr(args, "mllm_frontier_max_branches", 8) or 8
+    )
+    args.mllm_frontier_image_scale = int(
+        getattr(args, "mllm_frontier_image_scale", 1) or 1
+    )
     args._controller_cli_overrides = sorted(controller_cli_overrides)
 
     args.is_debugging = sys.gettrace() is not None
@@ -272,7 +363,37 @@ def _goal_description_from_infos(args, infos):
         return str(text_goal)
     if args.goal_type == "ins-image":
         return infos.get("goal_name", "")
-    return ""
+    return infos.get("goal_name", "")
+
+
+def _should_record_grounding_snapshot(policy, strategy, result, trigger) -> bool:
+    policy = str(policy or "off").strip().lower()
+    if policy == "off":
+        return False
+    if policy == "all":
+        return True
+    target_region = str(getattr(strategy, "target_region", "") or "")
+    is_target = (
+        is_target_search_anchor(target_region)
+        or str(trigger or "") == "target_candidate_detected"
+        or bool((getattr(result, "graph_debug", {}) or {}).get("target_progress_active"))
+    )
+    if policy == "target":
+        return is_target
+    if policy == "failures":
+        return bool(
+            is_target
+            and (
+                not bool(getattr(result, "success", False))
+                or bool(getattr(result, "noop_reason", None))
+                or not bool(getattr(result, "local_projection_valid", False))
+            )
+        )
+    return False
+
+
+def _should_record_task_frame_capsule(policy, strategy, result, trigger) -> bool:
+    return _should_record_grounding_snapshot(policy, strategy, result, trigger)
 
 
 def _reset_graph_goal(args, graph, infos):
@@ -350,6 +471,27 @@ def main():
         api_protocol=args.api_protocol,
     )
     high_planner = HighLevelPlanner(llm_fn=llm_sonnet)
+    mllm_frontier_planner = None
+    if str(getattr(args, "mllm_frontier_planner_mode", "off") or "off") == "online":
+        vlm_frontier = VLM(
+            args.base_url,
+            args.api_key,
+            args.vlm_model,
+            api_provider=args.api_provider,
+            api_protocol=args.api_protocol,
+        )
+        mllm_frontier_planner = BEVFrontierMLLMPlanner(
+            vlm_fn=vlm_frontier,
+            max_branches=args.mllm_frontier_max_branches,
+            image_scale=args.mllm_frontier_image_scale,
+        )
+        logging.info(
+            "BEV/MLLM frontier planner enabled: model=%s max_branches=%s image_scale=%s prior_weight=%s",
+            args.vlm_model,
+            args.mllm_frontier_max_branches,
+            args.mllm_frontier_image_scale,
+            getattr(args, "graph_mllm_frontier_prior_weight", 0.0),
+        )
     if args.controller_monitor_policy == "llm":
         llm_haiku = LLM(
             args.base_url,
@@ -392,6 +534,7 @@ def main():
 
     bev_map.init_map_and_pose()
     obs, rgbd, infos = agent.reset()
+    infos = _attach_semantic_instances_to_infos(infos, agent)
     bev_map.mapping(rgbd, infos)
 
     global_goals = [args.local_width // 2, args.local_height // 2]
@@ -449,6 +592,12 @@ def main():
             task_belief=task_belief,
             world_state=world_state,
             goal_epoch=controller_state.goal_epoch,
+            mllm_frontier_planner=mllm_frontier_planner,
+            goal_description=goal_description,
+            trigger=trigger,
+            episode_id=step_episode_id,
+            step_idx=step,
+            trace_writer=tracer,
         )
         apply_strategy_with_trace.last_result = result
         apply_strategy_with_trace.last_geometric_goal = geometric_goal
@@ -463,6 +612,18 @@ def main():
             )
         )
         update_grounding_failure_state(controller_state, result)
+        if result.local_projection_valid:
+            controller_state.grounding_deferred = False
+            controller_state.grounding_deferred_reason = ""
+            controller_state.grounding_deferred_full_goal = None
+        target_anchor_state = update_target_anchor_attempt(
+            controller_state,
+            strategy,
+            result,
+            trigger,
+            step,
+            args,
+        )
         event = result.to_dict()
         event["trigger"] = trigger
         event["strategy"] = strategy_to_dict(strategy)
@@ -473,7 +634,157 @@ def main():
         event["same_frontier_reuse_count"] = (
             controller_state.same_frontier_reuse_count
         )
+        event["target_anchor_attempt"] = target_anchor_state
         grounding_events.append(event)
+        snapshot = getattr(graph, "last_goal_replay_snapshot", None)
+        should_record_grounding_snapshot = bool(
+            snapshot
+            and _should_record_grounding_snapshot(
+                getattr(args, "grounding_snapshot_policy", "off"),
+                strategy,
+                result,
+                trigger,
+            )
+        )
+        should_record_task_frame_capsule = bool(
+            snapshot
+            and _should_record_task_frame_capsule(
+                getattr(args, "task_frame_capsule_policy", "off"),
+                strategy,
+                result,
+                trigger,
+            )
+        )
+        if (
+            snapshot
+            and (should_record_grounding_snapshot or should_record_task_frame_capsule)
+        ):
+            try:
+                replay_result = replay_frontier_value_snapshot(snapshot)
+            except Exception as exc:
+                replay_result = {
+                    "schema_version": "smoothnav.frontier_value_replay.result.v1",
+                    "status": "error",
+                    "reason": str(exc),
+                }
+            grounding_snapshot_payload = {
+                "schema_version": "smoothnav.grounding_stage_monitor.v1",
+                "step_idx": step,
+                "trigger": trigger,
+                "strategy": strategy_to_dict(strategy),
+                "grounding_result": result.to_dict(),
+                "target_anchor_attempt": target_anchor_state,
+                "snapshot": snapshot,
+                "replay_result": replay_result,
+                "stage_checks": {
+                    "phase": "grounding",
+                    "boundary": "semantic_strategy_to_geometric_goal",
+                    "target_branch_active": bool(
+                        is_target_search_anchor(
+                            str(getattr(strategy, "target_region", "") or "")
+                        )
+                    ),
+                    "local_projection_valid": bool(result.local_projection_valid),
+                    "target_progress_nonzero": bool(
+                        (
+                            replay_result.get("checks", {})
+                            if isinstance(replay_result, dict)
+                            else {}
+                        ).get("target_progress_nonzero", False)
+                    ),
+                    "semantic_term_nonzero": bool(
+                        (
+                            replay_result.get("checks", {})
+                            if isinstance(replay_result, dict)
+                            else {}
+                        ).get("semantic_term_nonzero", False)
+                    ),
+                },
+            }
+            if should_record_grounding_snapshot:
+                tracer.record_grounding_snapshot(
+                    step_episode_id,
+                    grounding_snapshot_payload,
+                )
+            if should_record_task_frame_capsule:
+                mllm_frontier_payload = (
+                    result.graph_debug.get("mllm_frontier_result", {})
+                    if isinstance(result.graph_debug, dict)
+                    else {}
+                )
+                capsule_label = (
+                    str(getattr(strategy, "target_region", "") or "grounding")
+                    .replace("unexplored target:", "target_")
+                    .replace("object:", "object_")
+                )
+                tracer.record_task_frame_capsule(
+                    step_episode_id,
+                    step_idx=step,
+                    label=capsule_label,
+                    artifacts={
+                        "manifest": {
+                            "trigger": trigger,
+                            "target_region": str(
+                                getattr(strategy, "target_region", "") or ""
+                            ),
+                            "anchor_object": str(
+                                getattr(strategy, "anchor_object", "") or ""
+                            ),
+                            "policy": str(
+                                getattr(args, "task_frame_capsule_policy", "off")
+                            ),
+                        },
+                        "world_state": (
+                            world_state.summary()
+                            if hasattr(world_state, "summary")
+                            else None
+                        ),
+                        "frontier_branches": snapshot.get("frontier_branches"),
+                        "frontier_raw": {
+                            "frontier_locations_16": snapshot.get(
+                                "frontier_locations_16"
+                            ),
+                            "candidate_indices": snapshot.get("candidate_indices"),
+                            "raw_frontier_count": (
+                                result.graph_debug or {}
+                            ).get("raw_frontier_count"),
+                            "filtered_frontier_count": (
+                                result.graph_debug or {}
+                            ).get("filtered_frontier_count"),
+                        },
+                        "planner_prompt": (
+                            {"prompt_hash": mllm_frontier_payload.get("prompt_hash")}
+                            if mllm_frontier_payload
+                            else None
+                        ),
+                        "planner_raw_response": (
+                            mllm_frontier_payload.get("raw_response")
+                            if mllm_frontier_payload
+                            else None
+                        ),
+                        "planner_contract_verdict": (
+                            mllm_frontier_payload.get("verdict")
+                            if mllm_frontier_payload
+                            else None
+                        ),
+                        "scoring_input": snapshot,
+                        "scoring_replay": replay_result,
+                        "grounding_result": result.to_dict(),
+                        "executor_followup": {
+                            "consecutive_grounding_noops": (
+                                controller_state.consecutive_grounding_noops
+                            ),
+                            "same_frontier_reuse_count": (
+                                controller_state.same_frontier_reuse_count
+                            ),
+                            "target_anchor_attempt": target_anchor_state,
+                        },
+                    },
+                    maps={
+                        "full_map": getattr(bev_map, "full_map", None),
+                        "local_map": getattr(bev_map, "local_map", None),
+                    },
+                )
         logging.info(
             "Grounding[%s]: success=%s changed=%s noop=%s frontier=%s projected=%s",
             trigger,
@@ -499,7 +810,34 @@ def main():
             planner_budget_denial_events.append(event)
             logging.warning("Planner budget denied: %s", event)
             return None if allow_none else fallback_strategy
-        return plan_strategy(**kwargs)
+        strategy = plan_strategy(**kwargs)
+        planner_meta = getattr(high_planner, "last_plan_meta", {}) or {}
+        reason_text = str(kwargs.get("escalate_reason", "") or "")
+        if planner_meta.get("error_message") == "empty_response":
+            controller_state.planner_empty_response_streak += 1
+            candidate_specificity = strategy_specificity(
+                getattr(strategy, "target_region", "") or ""
+            )
+            if reason_text.startswith("Auto-PREFETCH"):
+                if candidate_specificity > 0:
+                    return strategy
+                cooldown = int(
+                    getattr(args, "controller_planner_empty_response_cooldown_steps", 120)
+                    or 120
+                )
+                controller_state.planner_prefetch_cooldown_until_step = max(
+                    controller_state.planner_prefetch_cooldown_until_step,
+                    step + cooldown,
+                )
+                return None if allow_none else fallback_strategy
+            if fallback_strategy is not None and not empty_response_plan_is_more_specific(
+                strategy,
+                fallback_strategy,
+            ):
+                return fallback_strategy
+        else:
+            controller_state.planner_empty_response_streak = 0
+        return strategy
 
     print(f"SmoothNav [{args.mode}] starting, {args.num_episodes} episodes")
 
@@ -597,6 +935,7 @@ def main():
                 )
                 active_episode_id = completed_episode_id + 1
 
+            infos = _attach_semantic_instances_to_infos(infos, agent)
             bev_map.mapping(rgbd, infos)
 
             navigate_steps = global_step * args.num_local_steps + local_step
@@ -651,9 +990,18 @@ def main():
             pending_proposal_created = None
             pending_proposal_adopted = None
             forced_replan_due_to_direction_reuse = False
+            target_anchor_stall_replan_triggered = False
             forced_replan_due_to_grounding_failure = False
             controller_stuck_replan_triggered = False
             grounding_failure_reason = ""
+            grounding_patch_reason = ""
+            grounding_patch_mode = ""
+            grounding_patch_moved_local_map = False
+            grounding_patch_stale_local_goal_invalidated = False
+            grounding_patch_target_anchor_reprojected = False
+            grounding_patch_target_anchor_reprojection_failed = False
+            grounding_deferred = False
+            local_map_moved = False
             grounding_events = []
             apply_strategy_with_trace.last_result = None
 
@@ -671,6 +1019,7 @@ def main():
                     else:
                         bev_map.update_intrinsic_rew()
                     bev_map.move_local_map()
+                    local_map_moved = True
                     graph.set_full_map(bev_map.full_map)
                     graph.set_full_pose(bev_map.full_pose)
                     frontier_reached = near_goal
@@ -761,21 +1110,39 @@ def main():
                 if (
                     tactical_decision is not None
                     and tactical_decision.mode == TacticalMode.REPLAN_REQUIRED
-                    and tactical_decision.reason == "new_room_discovered"
+                    and tactical_decision.reason in {
+                        "new_room_discovered",
+                        "target_candidate_detected",
+                    }
                     and args.controller_replan_policy == "event"
                 ):
-                    if (
+                    should_event_replan = (
+                        tactical_decision.reason == "target_candidate_detected"
+                        or (
+                            tactical_decision.reason == "new_room_discovered"
+                            and controller_state.current_strategy
+                            and not is_room_target(controller_state.current_strategy.target_region)
+                        )
+                    )
+                    if should_event_replan and (
                         controller_state.current_strategy
-                        and not is_room_target(controller_state.current_strategy.target_region)
                         and not controller_state.needs_initial_plan
                     ):
+                        if tactical_decision.reason == "target_candidate_detected":
+                            event_replan_reason = (
+                                "Target-like object detected, decide whether to commit"
+                            )
+                            trace_trigger = "target_candidate_detected"
+                        else:
+                            event_replan_reason = "New room discovered, can make specific choice"
+                            trace_trigger = "new_room_discovered"
                         controller_state.current_strategy = plan_strategy_budgeted(
                             fallback_strategy=controller_state.current_strategy,
                             high_planner=high_planner,
                             graph=graph,
                             controller_state=controller_state,
                             goal_description=goal_description,
-                            escalate_reason="New room discovered, can make specific choice",
+                            escalate_reason=event_replan_reason,
                             agent_pos=(int(agent_map_x), int(agent_map_y)),
                             map_size=args.map_size,
                             episode_id=step_episode_id,
@@ -786,13 +1153,14 @@ def main():
                         )
                         apply_strategy_with_trace(
                             controller_state.current_strategy,
-                            "new_room_discovered",
+                            trace_trigger,
                         )
-                        planner_reasons.append("new_room_discovered")
+                        planner_reasons.append(trace_trigger)
                         is_planning = True
                         logging.info(
-                            "Step %s: New room -> %s",
+                            "Step %s: %s -> %s",
                             step,
+                            tactical_decision.reason,
                             controller_state.current_strategy.target_region,
                         )
 
@@ -923,6 +1291,15 @@ def main():
                     pending_promoted = True
                     pending_promotion_reason = pending_promotion["reason"]
 
+                target_anchor_before_frontier = bool(
+                    controller_state.current_strategy
+                    and is_target_search_anchor(
+                        controller_state.current_strategy.target_region
+                    )
+                )
+                target_anchor_stall_before_frontier = int(
+                    controller_state.target_anchor_stall_updates or 0
+                )
                 frontier_result = handle_frontier_reached(
                     controller_state=controller_state,
                     graph_delta=graph_delta,
@@ -952,11 +1329,24 @@ def main():
                     forced_replan_due_to_direction_reuse = frontier_result[
                         "forced_replan_due_to_direction_reuse"
                     ]
+                    target_anchor_stall_replan_triggered = bool(
+                        target_anchor_before_frontier
+                        and target_anchor_stall_before_frontier
+                        >= int(
+                            getattr(
+                                args,
+                                "controller_target_anchor_stall_patience_updates",
+                                4,
+                            )
+                            or 4
+                        )
+                    )
 
                 if (
                     args.controller_enable_prefetch
                     and args.controller_replan_policy == "event"
                     and controller_state.pending_strategy is None
+                    and step >= controller_state.planner_prefetch_cooldown_until_step
                     and low_level_action != LowLevelAction.PREFETCH
                     and not frontier_reached
                     and not controller_state.needs_initial_plan
@@ -1071,6 +1461,46 @@ def main():
                         getattr(args, "controller_stuck_suppression_steps", 0) or 0
                     )
 
+                grounding_patch = handle_out_of_local_window(
+                    controller_state=controller_state,
+                    last_grounding_result=(
+                        apply_strategy_with_trace.last_result
+                        if hasattr(apply_strategy_with_trace, "last_result")
+                        else None
+                    ),
+                    graph=graph,
+                    bev_map=bev_map,
+                    args=args,
+                    global_goals=global_goals,
+                    apply_strategy_fn=lambda strategy, graph, bev_map, args, global_goals: apply_strategy_with_trace(
+                        strategy,
+                        "grounding_out_of_local_window_retry",
+                    ),
+                    tactical_arbiter=tactical_arbiter,
+                )
+                if grounding_patch["handled"]:
+                    is_planning = True
+                    grounding_patch_reason = grounding_patch["grounding_patch_reason"]
+                    grounding_patch_mode = grounding_patch["grounding_patch_mode"]
+                    grounding_patch_moved_local_map = grounding_patch["moved_local_map"]
+                    grounding_patch_stale_local_goal_invalidated = bool(
+                        grounding_patch.get("stale_local_goal_invalidated", False)
+                    )
+                    grounding_patch_target_anchor_reprojected = bool(
+                        grounding_patch.get("target_anchor_reprojected", False)
+                    )
+                    grounding_patch_target_anchor_reprojection_failed = bool(
+                        grounding_patch.get(
+                            "target_anchor_reprojection_failed", False
+                        )
+                    )
+                    grounding_deferred = grounding_patch["deferred"]
+                    if grounding_patch["resolved"]:
+                        planner_reasons.append("grounding_out_of_local_window_retry")
+                    elif grounding_patch["deferred"]:
+                        planner_reasons.append("grounding_deferred")
+                        grounding_failure_reason = "out_of_local_window"
+
                 grounding_failure = handle_grounding_failure(
                     controller_state=controller_state,
                     last_grounding_result=(
@@ -1100,6 +1530,21 @@ def main():
                     is_planning = True
                     forced_replan_due_to_grounding_failure = True
                     grounding_failure_reason = grounding_failure["grounding_failure_reason"]
+
+                if (
+                    local_map_moved
+                    and not grounding_events
+                    and controller_state.current_strategy is not None
+                    and is_target_search_anchor(
+                        controller_state.current_strategy.target_region
+                    )
+                ):
+                    apply_strategy_with_trace(
+                        controller_state.current_strategy,
+                        "target_anchor_local_map_refresh",
+                    )
+                    planner_reasons.append("target_anchor_local_map_refresh")
+                    is_planning = True
 
                 smoothness.record_from_habitat(
                     x=start_x,
@@ -1302,15 +1747,37 @@ def main():
                 if apply_strategy_with_trace.last_geometric_goal is not None
                 else null_geometric_goal()
             )
+            current_target_region = (
+                controller_state.current_strategy.target_region
+                if controller_state.current_strategy is not None
+                else ""
+            )
+            clear_temp_goal = should_clear_temp_goal_for_command(
+                getattr(agent, "last_override_info", {}) or {},
+                override_duration=getattr(executor_adapter, "_override_duration", 0),
+                current_target_region=current_target_region,
+                threshold=int(
+                    getattr(args, "controller_temp_goal_clear_threshold", 8) or 8
+                ),
+            )
+            disable_recovery = should_disable_recovery_for_command(
+                getattr(agent, "last_override_info", {}) or {},
+                override_duration=getattr(executor_adapter, "_override_duration", 0),
+                current_target_region=current_target_region,
+                threshold=int(
+                    getattr(args, "controller_disable_recovery_threshold", 4) or 4
+                ),
+            )
             executor_command = executor_adapter.build_command(
                 geometric_goal=latest_geometric_goal,
                 strategy_epoch=controller_state.strategy_epoch,
                 goal_epoch=controller_state.goal_epoch,
                 allow_target_lock=True,
-                allow_recovery=not (
-                    controller_state.executor_stuck_suppression_steps > 0
+                allow_recovery=(
+                    not (controller_state.executor_stuck_suppression_steps > 0)
+                    and not disable_recovery
                 ),
-                clear_temp_goal=False,
+                clear_temp_goal=clear_temp_goal,
             )
 
             agent_input = {
@@ -1324,6 +1791,7 @@ def main():
                 "strategy_epoch": controller_state.strategy_epoch,
                 "goal_epoch": controller_state.goal_epoch,
                 "step_idx": step,
+                "current_target_region": current_target_region,
                 "suppress_stuck_override": (
                     controller_state.executor_stuck_suppression_steps > 0
                 ),
@@ -1409,6 +1877,8 @@ def main():
                     "graph_node_count": getattr(graph_delta, "graph_node_count", len(graph.nodes)),
                     "new_node_count": len(getattr(graph_delta, "new_nodes", [])),
                     "new_node_captions": getattr(graph_delta, "new_node_captions", []),
+                    "mapping_debug": dict(getattr(graph, "last_mapping_debug", {}) or {}),
+                    "relation_debug": dict(getattr(graph, "last_relation_debug", {}) or {}),
                     "graph_delta": {
                         "event_types": getattr(graph_delta, "event_types", []),
                         "current_strategy_type": getattr(
@@ -1418,6 +1888,12 @@ def main():
                         "room_object_count_changes": getattr(graph_delta, "room_object_count_changes", {}),
                         "room_object_count_increase_rooms": getattr(
                             graph_delta, "room_object_count_increase_rooms", []
+                        ),
+                        "target_candidate_captions": getattr(
+                            graph_delta, "target_candidate_captions", []
+                        ),
+                        "target_candidate_details": getattr(
+                            graph_delta, "target_candidate_details", []
                         ),
                         "node_caption_changed": getattr(graph_delta, "node_caption_changed", False),
                         "frontier_near": getattr(graph_delta, "frontier_near", False),
@@ -1483,6 +1959,21 @@ def main():
                     "pending_promotion_reason": pending_promotion_reason,
                     "grounding_events": grounding_events,
                     "grounding_attempt_count": grounding_attempt_count,
+                    "grounding_patch_reason": grounding_patch_reason,
+                    "grounding_patch_mode": grounding_patch_mode,
+                    "grounding_patch_moved_local_map": grounding_patch_moved_local_map,
+                    "grounding_patch_stale_local_goal_invalidated": (
+                        grounding_patch_stale_local_goal_invalidated
+                    ),
+                    "grounding_patch_target_anchor_reprojected": (
+                        grounding_patch_target_anchor_reprojected
+                    ),
+                    "grounding_patch_target_anchor_reprojection_failed": (
+                        grounding_patch_target_anchor_reprojection_failed
+                    ),
+                    "grounding_deferred": grounding_deferred,
+                    "grounding_deferred_reason": controller_state.grounding_deferred_reason,
+                    "grounding_deferred_full_goal": controller_state.grounding_deferred_full_goal,
                     "grounding_noop_count": grounding_noop_count,
                     "grounding_changed_count": grounding_changed_count,
                     "bias_input": latest_grounding.get("bias_input"),
@@ -1527,6 +2018,9 @@ def main():
                     ),
                     "consecutive_grounding_noops": controller_state.consecutive_grounding_noops,
                     "same_frontier_reuse_count": controller_state.same_frontier_reuse_count,
+                    "target_anchor_attempt": target_anchor_attempt_summary(
+                        controller_state
+                    ),
                     "forced_replan_due_to_grounding_failure": (
                         forced_replan_due_to_grounding_failure
                     ),
@@ -1578,6 +2072,9 @@ def main():
                         agent.last_override_info.get("stuck_override_suppressed")
                     ),
                     "controller_stuck_replan_triggered": controller_stuck_replan_triggered,
+                    "target_anchor_stall_replan_triggered": (
+                        target_anchor_stall_replan_triggered
+                    ),
                     "stuck_suppression_steps_remaining": (
                         controller_state.executor_stuck_suppression_steps
                     ),

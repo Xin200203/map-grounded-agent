@@ -7,18 +7,23 @@ def resolve_strategy_epoch_transition(
     incoming_strategy_epoch,
     has_temp_goal,
     temp_goal_epoch,
+    has_stuck_goal=False,
 ):
     incoming = int(incoming_strategy_epoch or 0)
     current = int(current_strategy_epoch or 0)
     stale_temp_goal_cleared = False
+    stale_stuck_goal_cleared = False
 
     if incoming != current and has_temp_goal and temp_goal_epoch is not None:
         if int(temp_goal_epoch) < incoming:
             stale_temp_goal_cleared = True
+    if incoming != current and has_stuck_goal:
+        stale_stuck_goal_cleared = True
 
     return {
         "next_strategy_epoch": incoming,
         "stale_temp_goal_cleared": bool(stale_temp_goal_cleared),
+        "stale_stuck_goal_cleared": bool(stale_stuck_goal_cleared),
     }
 
 
@@ -48,5 +53,24 @@ def compute_adoption_transition(last_snapshot, *, source, goal_summary, goal_epo
     }
 
 
-def should_suppress_stuck_override(*, been_stuck, suppress_stuck_override):
+def should_suppress_stuck_override(
+    *,
+    been_stuck,
+    suppress_stuck_override,
+    current_target_region: str = "",
+):
+    target = str(current_target_region or "")
+    if target.startswith("object:"):
+        return bool(been_stuck)
     return bool(been_stuck and suppress_stuck_override)
+
+
+def should_allow_text_visible_temp_goal(*, goal_type, current_target_region, goal_name=None):
+    if str(goal_type or "") != "text":
+        return True
+    # Text-goal navigation is now anchored through map/room/frontier evidence rather
+    # than opportunistic visible-target temp goals. Direct text->temp-goal takeover
+    # proved unstable in repaired cross-scene settings (e.g. ep527), even when the
+    # category matched, because the visible instance often lacked enough attribute
+    # evidence to justify commitment.
+    return False

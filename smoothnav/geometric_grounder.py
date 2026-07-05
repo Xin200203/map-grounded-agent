@@ -84,8 +84,26 @@ class GeometricGrounder:
         task_belief=None,
         world_state=None,
         goal_epoch: int = 0,
+        mllm_frontier_planner=None,
+        goal_description: str = "",
+        trigger: str = "",
+        episode_id=None,
+        step_idx=None,
+        trace_writer=None,
     ) -> Tuple[GroundingResult, GeometricGoal]:
-        result = apply_strategy(strategy, graph, bev_map, args, global_goals)
+        result = apply_strategy(
+            strategy,
+            graph,
+            bev_map,
+            args,
+            global_goals,
+            mllm_frontier_planner=mllm_frontier_planner,
+            goal_description=goal_description,
+            trigger=trigger,
+            episode_id=episode_id,
+            step_idx=step_idx,
+            trace_writer=trace_writer,
+        )
         stage_goal = stage_goal_from_strategy(
             strategy,
             task_epoch=int(getattr(task_belief, "task_epoch", 0) or 0),

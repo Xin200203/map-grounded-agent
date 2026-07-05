@@ -3,6 +3,8 @@
 from dataclasses import dataclass, field
 from typing import Any, Dict, List
 
+from smoothnav.target_matching import is_target_candidate, target_candidate_details
+
 
 @dataclass
 class GraphDelta:
@@ -11,6 +13,8 @@ class GraphDelta:
     new_rooms: List[str] = field(default_factory=list)
     room_object_count_changes: Dict[str, Dict[str, int]] = field(default_factory=dict)
     room_object_count_increase_rooms: List[str] = field(default_factory=list)
+    target_candidate_captions: List[str] = field(default_factory=list)
+    target_candidate_details: List[Dict[str, Any]] = field(default_factory=list)
     node_caption_changed: bool = False
     node_captions_snapshot: Dict[int, str] = field(default_factory=dict)
     frontier_near: bool = False
@@ -36,6 +40,10 @@ class GraphDelta:
         return len(self.room_object_count_increase_rooms) > 0
 
     @property
+    def has_target_candidates(self):
+        return len(self.target_candidate_captions) > 0
+
+    @property
     def has_caption_changes(self):
         return bool(self.node_caption_changed)
 
@@ -50,6 +58,10 @@ class GraphDelta:
             "room_object_count_increase_rooms": list(
                 self.room_object_count_increase_rooms
             ),
+            "target_candidate_captions": list(self.target_candidate_captions),
+            "target_candidate_details": [
+                dict(item) for item in self.target_candidate_details
+            ],
             "node_caption_changed": bool(self.node_caption_changed),
             "frontier_near": bool(self.frontier_near),
             "frontier_reached": bool(self.frontier_reached),
@@ -74,6 +86,10 @@ def is_object_target(target_region: str) -> bool:
     return bool(target_region and str(target_region).startswith("object:"))
 
 
+def is_target_search_anchor(target_region: str) -> bool:
+    return bool(target_region and str(target_region).startswith("unexplored target:"))
+
+
 def strategy_type(target_region: str) -> str:
     if is_object_target(target_region):
         return "object"
@@ -86,6 +102,8 @@ def strategy_type(target_region: str) -> str:
 
 def strategy_specificity(target_region: str) -> int:
     if is_object_target(target_region):
+        return 3
+    if is_target_search_anchor(target_region):
         return 2
     if is_room_target(target_region):
         return 1
@@ -123,7 +141,18 @@ def build_graph_delta(
         node.caption for node in new_nodes
         if hasattr(node, "caption") and node.caption
     ]
-
+    goal_text = (
+        getattr(graph, "text_goal", None)
+        or getattr(graph, "obj_goal", None)
+        or ""
+    )
+    target_threshold = float(
+        getattr(
+            getattr(graph, "args", None),
+            "graph_text_goal_direct_relevance_threshold",
+            0.75,
+        )
+    )
     room_counts = build_room_object_counts(graph)
     room_count_changes = {}
     room_object_count_increase_rooms = []
@@ -141,6 +170,7 @@ def build_graph_delta(
 
     node_captions_snapshot = {}
     node_caption_changed = False
+    caption_changed_target_nodes = []
     prev_node_captions = getattr(controller_state, "prev_node_captions", {})
     for idx, node in enumerate(getattr(graph, "nodes", [])):
         caption = getattr(node, "caption", "")
@@ -150,10 +180,29 @@ def build_graph_delta(
         node_captions_snapshot[key] = caption
         if key in prev_node_captions and prev_node_captions[key] != caption:
             node_caption_changed = True
+            if is_target_candidate(caption, goal_text, threshold=target_threshold):
+                caption_changed_target_nodes.append(node)
+
+    target_nodes = list(new_nodes)
+    seen_target_ids = {id(node) for node in target_nodes}
+    for node in caption_changed_target_nodes:
+        if id(node) not in seen_target_ids:
+            target_nodes.append(node)
+            seen_target_ids.add(id(node))
+    target_details = target_candidate_details(
+        target_nodes, goal_text, threshold=target_threshold
+    )
+    target_captions = [
+        str(item.get("caption", ""))
+        for item in target_details
+        if item.get("caption")
+    ]
 
     event_types = []
     if new_nodes:
         event_types.append("new_nodes")
+    if target_captions:
+        event_types.append("target_candidate_detected")
     if new_rooms:
         event_types.append("new_rooms")
     if room_object_count_increase_rooms:
@@ -176,6 +225,8 @@ def build_graph_delta(
         new_rooms=new_rooms,
         room_object_count_changes=room_count_changes,
         room_object_count_increase_rooms=room_object_count_increase_rooms,
+        target_candidate_captions=target_captions,
+        target_candidate_details=target_details,
         node_captions_snapshot=node_captions_snapshot,
         node_caption_changed=node_caption_changed,
         frontier_near=frontier_near,

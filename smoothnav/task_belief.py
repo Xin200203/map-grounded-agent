@@ -3,6 +3,7 @@
 from typing import Any, Iterable, List, Optional
 
 from smoothnav.evidence_ledger import EvidenceLedger
+from smoothnav.target_matching import score_caption_against_goal
 from smoothnav.types import (
     ConstraintType,
     PendingStageProposal,
@@ -81,13 +82,22 @@ class TaskBeliefUpdater:
                 )
                 used.append(evidence.evidence_id)
             for caption in getattr(delta, "new_node_captions", []) or []:
+                match = score_caption_against_goal(
+                    caption, self.task_spec.primary_goal or "goal"
+                )
+                confidence = max(0.20, min(0.90, 0.25 + 0.65 * match["score"]))
                 evidence = self.ledger.add_observation(
                     f"candidate_match(object_id={_normalize_entity(caption)}, target={_normalize_entity(self.task_spec.primary_goal or 'goal')})",
                     source="graph_delta.new_nodes",
                     scope="object",
-                    confidence=0.45,
+                    confidence=confidence,
                     timestamp=int(world_state.step_idx),
-                    entity_bindings={"caption": caption},
+                    entity_bindings={
+                        "caption": caption,
+                        "target_relevance": match["score"],
+                        "target_match_reason": match["reason"],
+                        "primary_categories": match["primary_categories"],
+                    },
                 )
                 used.append(evidence.evidence_id)
         if executor_feedback is not None and getattr(executor_feedback, "escalation_required", False):

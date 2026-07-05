@@ -134,3 +134,44 @@ class ExecutorAdapter:
 
 def null_geometric_goal() -> GeometricGoal:
     return GeometricGoal(goal_type=GeometricGoalType.NONE)
+
+
+def should_clear_temp_goal_for_command(
+    adoption_trace: Dict[str, Any],
+    *,
+    override_duration: int,
+    current_target_region: str,
+    threshold: int = 8,
+) -> bool:
+    if not adoption_trace.get("temp_goal_override"):
+        return False
+    target = str(current_target_region or "")
+    if target and not target.startswith("unexplored"):
+        semantic_threshold = min(int(threshold or 0), 4)
+        return override_duration >= max(semantic_threshold, 1)
+    if override_duration < int(threshold or 0):
+        return False
+    return True
+
+
+def should_disable_recovery_for_command(
+    adoption_trace: Dict[str, Any],
+    *,
+    override_duration: int,
+    current_target_region: str,
+    threshold: int = 4,
+) -> bool:
+    target = str(current_target_region or "")
+    has_override = adoption_trace.get("temp_goal_override") or adoption_trace.get("stuck_goal_override")
+    if not has_override:
+        return False
+    if target and not target.startswith("unexplored"):
+        semantic_threshold = min(int(threshold or 0), 3)
+        return override_duration >= max(semantic_threshold, 1)
+    if not target.startswith("unexplored"):
+        return False
+    if override_duration < int(threshold or 0):
+        return False
+    if has_override:
+        return True
+    return False

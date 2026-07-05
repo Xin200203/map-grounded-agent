@@ -148,6 +148,38 @@ class RunTracer:
             return
         self._write_jsonl("monitor_calls", episode_id, payload)
 
+    def record_grounding_snapshot(self, episode_id, payload):
+        if not self.enable_controller_trace:
+            return
+        self._write_jsonl("grounding_snapshots", episode_id, payload)
+
+    def record_mllm_frontier_call(self, episode_id, payload):
+        if not self.enable_controller_trace:
+            return
+        self._write_jsonl("mllm_frontier_calls", episode_id, payload)
+
+    def record_task_frame_capsule(
+        self,
+        episode_id,
+        *,
+        step_idx,
+        label,
+        artifacts,
+        maps=None,
+    ):
+        if not self.enable_controller_trace:
+            return None
+        from smoothnav.task_frame_capsule import write_task_frame_capsule
+
+        return write_task_frame_capsule(
+            self.run_dir,
+            episode_id=int(episode_id),
+            step_idx=int(step_idx),
+            label=str(label or "frame"),
+            artifacts=artifacts or {},
+            maps=maps or {},
+        )
+
     def close(self):
         for handle in self._handles.values():
             handle.close()

@@ -69,9 +69,9 @@ class TerminalArbiter:
             )
         if getattr(budget_state, "planner_budget_exhausted", False):
             return TerminalDecision(
-                outcome=TerminalOutcome.FAILURE_BUDGET_EXHAUSTED,
-                termination_confidence=0.9,
-                reason="planner_budget_exhausted",
+                outcome=TerminalOutcome.RUNNING,
+                termination_confidence=0.0,
+                reason="planner_budget_exhausted_hold_strategy",
             )
         if len(getattr(task_belief, "contradictions", []) or []) > 0:
             return TerminalDecision(

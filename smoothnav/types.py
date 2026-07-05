@@ -570,6 +570,8 @@ class WorldState:
     object_summary: List[Dict[str, Any]] = field(default_factory=list)
     visible_targets: List[Dict[str, Any]] = field(default_factory=list)
     visible_target_summary: List[Dict[str, Any]] = field(default_factory=list)
+    semantic_projection_summary: Dict[str, Any] = field(default_factory=dict)
+    semantic_instance_footprints: List[Dict[str, Any]] = field(default_factory=list)
     stuck_signal: bool = False
     no_progress_steps: int = 0
     graph_delta: Any = None
@@ -586,6 +588,8 @@ class WorldState:
             "object_summary": list(self.object_summary),
             "visible_targets": list(visible_target_summary),
             "visible_target_summary": list(visible_target_summary),
+            "semantic_projection_summary": dict(self.semantic_projection_summary or {}),
+            "semantic_instance_footprints": list(self.semantic_instance_footprints),
             "stuck_signal": bool(self.stuck_signal),
             "no_progress_steps": int(self.no_progress_steps),
             "graph_delta": (

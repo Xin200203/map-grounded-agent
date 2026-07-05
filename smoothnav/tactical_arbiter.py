@@ -89,6 +89,23 @@ class TacticalArbiter:
                 review_trigger="executor_feedback_or_recovery_timeout",
             )
 
+        if (
+            getattr(graph_delta, "has_target_candidates", False)
+            and getattr(graph_delta, "current_strategy_type", "none") != "object"
+        ):
+            return self._decision(
+                mode=TacticalMode.REPLAN_REQUIRED,
+                reason="target_candidate_detected",
+                active_stage_goal=current_stage_goal,
+                pending_stage_goal=pending_stage_goal,
+                should_call_planner=True,
+                should_call_monitor=True,
+                trigger_event_types=event_types,
+                transition_intent=TransitionIntent.REQUEST_REPLAN,
+                preemption_priority=9,
+                review_trigger="target_candidate_commit_or_reject",
+            )
+
         if pending_stage_goal is not None:
             current_specificity = strategy_specificity(
                 getattr(current_strategy, "target_region", "")
@@ -175,6 +192,15 @@ class TacticalArbiter:
                 steady_mode=SteadyMode.HOLD_AND_WAIT,
                 transition_intent=TransitionIntent.NONE,
                 review_trigger="frontiers_restored_or_hold_timeout",
+                fallback_mode=SteadyMode.FOLLOW_STAGE_GOAL,
+            )
+        if failure_code == "out_of_local_window":
+            return self._decision(
+                mode=TacticalMode.HOLD_AND_WAIT_FOR_FRONTIER,
+                reason="grounding_hold:out_of_local_window",
+                steady_mode=SteadyMode.HOLD_AND_WAIT,
+                transition_intent=TransitionIntent.NONE,
+                review_trigger="local_map_recentred_or_hold_timeout",
                 fallback_mode=SteadyMode.FOLLOW_STAGE_GOAL,
             )
         if failure_code in {"stage_not_groundable_in_principle", "no_candidate_frontiers"}:

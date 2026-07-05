@@ -82,8 +82,14 @@ def resolve_api_config(args):
     api_key_env = getattr(args, "api_key_env", "SMOOTHNAV_API_KEY")
     base_url_env = getattr(args, "base_url_env", "SMOOTHNAV_BASE_URL")
 
-    api_key = os.environ.get(api_key_env, "").strip()
-    base_url = os.environ.get(base_url_env, "").strip()
+    api_key = (
+        os.environ.get(api_key_env, "").strip()
+        or str(getattr(args, "api_key", "") or "").strip()
+    )
+    base_url = (
+        os.environ.get(base_url_env, "").strip()
+        or str(getattr(args, "base_url", "") or "").strip()
+    )
 
     if not api_key:
         raise RuntimeError(
