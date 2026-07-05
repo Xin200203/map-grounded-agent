@@ -68,23 +68,17 @@
 - 所有 profile 跑**同一 episode 集**（matched pairing），报告逐 episode win/loss/tie + 聚合 SR/SPL。
 - 统一运行配置：controller trace 开、`grounding_snapshot_policy=target`；LLM 通道见 2.0.1。
 
-### 2.0.1 LLM 通道现状（2026-07-05 实测，E1 的唯一阻塞项）
+### 2.0.1 LLM 通道（2026-07-06 已定版：官方 DeepSeek API）
 
-- Clauddy Anthropic 通道：**两侧均不可用**。远端 key → HTTP 503 “this group only allows Claude Code clients”（网关组策略收紧）；本地 key → HTTP 401 Invalid token（已失效）。
-- DashScope deepseek-v4-pro 通道：代码/配置齐备（4 月已在线验证），但 `DASHSCOPE_API_KEY` 不在服务器上。
-- 候选决策：(a) 换/修 Clauddy 组；(b) 提供 DashScope key，全套实验统一用 deepseek-v4-pro（成本低、4 月无空响应记录；故事主张与具体 LLM 无关，用可公开获取的模型反而利于复现叙事）；(c) 官方 Anthropic API key。**主表与消融必须同一通道同一模型。**
+- 排查结论：Clauddy 两侧全灭（远端 503 组策略 / 本地 401 失效）；用户提供的 key 实测为**官方 DeepSeek API key**（DashScope 拒绝、api.deepseek.com 通过）。
+- **定版通道**：`https://api.deepseek.com/v1`，模型 `deepseek-chat`，配置 `config_habitat_deepseek_official.yaml`，key 部署在 73:`.local/deepseek.env.sh`（经 clauddy.env.sh source）。
+- **已知限制**：官方 deepseek-chat 拒绝图像输入 → graph 视觉 relation 判别失败（边无 relation 标签）。影响面：planner 场景文本少一段 SPATIAL RELATIONSHIPS；**全 profile 同等受影响，matched 对照内部公平**。E3e（MLLM 分支消融）需要独立视觉通道，保持条件项——若后续找到 4 月的 DashScope key（多模态 deepseek-v4-pro）即可解锁。
+- 纪律：E1/E2/E3 全部走本通道本模型，不中途切换。
 
-### 2.0.2 E1 点火命令（通道恢复后直接执行）
+### 2.0.2 E1 执行记录
 
-```bash
-# 73 服务器，密钥就绪后（CONFIG_FILE 按通道决策替换）：
-cd /mnt/sdd/xxy/SmoothNav
-for p in baseline-explore baseline-periodic smoothnav-full; do gpu=$((i++)); \
-  CONFIG_FILE=base_UniGoal/configs/<决策后的配置>.yaml \
-  bash scripts/launch_profile_suite_background.sh "$p" \
-  results/e1_main_cross12_$(date +%Y%m%d) "228 527 661 64 159 358 486 574 717 778 859 955" "$gpu" e1_cross_$p; done
-# intact-15 同理：episodes "286 ... 300"，results/e1_main_intact15_<date>
-```
+- **2026-07-06 00:07 已点火**：cross-12 × {baseline-explore, baseline-periodic, smoothnav-full} → GPU 0/1/2，`results/e1_main_cross12_20260706/`；00:10 intact-15 × 同三 profile → GPU 4/5/6，`results/e1_main_intact15_20260706/`；E0b（ep228 真 planner 探针）→ GPU 3。服务器实有 8 卡，7 卡在用。
+- 首报健康信号：planner 空响应文件数 = 0。
 
 ### E0：决定性在线验证（阻塞 BEV 支线，第 1 优先；已拆分）
 
@@ -163,3 +157,4 @@ backbone 共享改动（frontier 价值评分、关系裁剪、文本可见接�
 ## 6. 修订记录
 
 - 2026-07-05 v1：初版（故事定版为 evidence-gated semantic authority；E0–E5 矩阵；G1/G2 gate；Plan A/B/C 分叉）。
+- 2026-07-06 v2：**E0a 判定通过**（Observation，run `results/e0_footprint_probe_20260705/`，ep228 764 步，LLM 快速失败模式）：6 个 capsule 全部在 target_tv 锚定分支触发（step 668+，与 4 月观察吻合）；`object_footprint_pixel_count=995`（30 个对象，全部 `graph_pcd_bbox_cells` 可信来源；旧 s22b capsule 恒为 0）；`true_semantic_pixel_count=218`、正阈值前 7 通道 1341 正像素（旧 capsule 0~50）；target heatmap source=`direct_plus_prior`（直接证据出现）。**4/30 悬置 P0 关闭：BEV 语义证据基座在线可用，旧 capsule 稀疏是因为先于管线存在。** 保留项（非阻塞）：检测器实例侧 `semantic_instance_footprints=0`，待查 `_project_semantic_instance_footprints` 触发条件；replay warning `target_value_final_branch_unexplained_drift` 复现（进 E5 归因）。LLM 通道定版官方 DeepSeek；E1 双套件已全部点火（见 2.0.2）。
