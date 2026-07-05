@@ -1,39 +1,42 @@
 seed: 1
-total_num_scenes: 36
+auto_gpu_config: 1
 num_processes: 1
-num_eval_episodes: 1000
-cuda: true
-sim_gpu_id: 1
-log_interval: 50
-save_interval: 1
-dump_location: "./outputs/experiments/"
-experiment_id: "experiment_0"
-results_root: "results"
-enable_controller_trace: true
-save_periodic: 50000
-visualize: 0
-environment: "habitat"
-env_frame_width: 480
-env_frame_height: 640
-frame_width: 120
-frame_height: 160
-max_episode_length: 1000
-task_config: "tasks/instance_imagenav.yaml"
-text_goal_dataset: "data/datasets/textnav/val/val_text.json.gz"
+num_eval_episodes: 1
+num_training_frames: 10000000
+num_global_steps: 20
+num_local_steps: 25
+num_sem_categories: 7
+num_training_frames: 10000000
+num_processes_on_first_gpu: 1
+num_processes_per_gpu: 1
+sim_gpu_id: 0
+sem_gpu_id: 0
+policy_gpu_id: 0
+backbone_2d: rednet
+deactivate_klmap: false
+
+env_frame_width: 640
+env_frame_height: 480
+frame_width: 160
+frame_height: 120
+max_episode_length: 500
+task_config: "tasks/instance_imagenav_hm3d.yaml"
 split: "val"
 camera_height: 0.88
-hfov: 79
+hfov: 79.0
 turn_angle: 30
-min_depth: 0.00
-max_depth: 30.0
+min_depth: 0.5
+max_depth: 5.0
 success_dist: 1.0
 floor_thr: 50
 min_d: 1.5
 max_d: 100.0
-version: "v3"
-lr: 2.5e-5
+version: "v1.1"
+
+agent: "sem_exp"
+lr: 1e-5
 global_hidden_size: 256
-eps: 1.0e-5
+eps: 1e-5
 alpha: 0.99
 gamma: 0.99
 use_gae: false
@@ -41,47 +44,47 @@ tau: 0.95
 entropy_coef: 0.001
 value_loss_coef: 0.5
 max_grad_norm: 0.5
-num_global_steps: 20
+num_global_steps_wait: 20
 ppo_epoch: 4
-num_mini_batch: 1
+num_mini_batch: 2
 clip_param: 0.2
 use_recurrent_global: 0
-num_local_steps: 40
 reward_coeff: 0.1
-intrinsic_rew_coeff: 0.02
-sem_pred_prob_thr: 0.50
-global_downscaling: 3
+intrinsic_rew_coeff: 0.0
+num_eval_episodes: 1
+eval: 1
+collision_threshold: 0.20
+seg_threshold: 0.9
+ignore_object_by_detector: 0
+
+visualize: 0
+print_images: 0
+vis_type: 1
+save_pictures: 0
+dump_location: "./outputs/experiments/"
+exp_name: "exp1"
+save_periodic: 500000
+load: "0"
+
+map_size_cm: 4800
+map_resolution: 5
+global_downscaling: 2
 vision_range: 100
+obstacle_boundary: 5
 du_scale: 1
-cat_pred_threshold: 5.0
 map_pred_threshold: 1.0
 exp_pred_threshold: 1.0
 collision_threshold: 0.20
-kernel_size: 91
-low_dense: 8
-succeed_match_points: 200
-big_enough_f: 0.16666666666666666
-big_enough_thresh: 4
-turn_angle: 15
 
-# map
-num_sem_categories: 16
-map_size_cm: 3600
-map_resolution: 5
-
-# LLM and VLM
-llm_model: "claude-sonnet-4-5-20250929"       # strong: planning, graph matching, instruction decomposition
-llm_model_fast: "claude-haiku-4-5-20251001"    # fast: captions, edges, room prediction
-vlm_model: "claude-haiku-4-5-20251001"         # vision: object captioning (frequent)
-api_provider: "anthropic"                      # anthropic -> /v1/messages, openai -> /v1/responses
-api_protocol: "anthropic-messages"             # claude via Clauddy should use anthropic-messages
-api_key: ""
-base_url: ""
+llm_model: "claude-haiku-4-5-20251001"
+llm_model_fast: "claude-haiku-4-5-20251001"
+vlm_model: "claude-haiku-4-5-20251001"
 api_key_env: "SMOOTHNAV_API_KEY"
 base_url_env: "SMOOTHNAV_BASE_URL"
+api_provider: "anthropic"
+api_protocol: "anthropic-messages"
 
-# Phase 2 controller profiles and ablations
-controller_profile: ""
+controller_profile: "smoothnav-full"
 controller_enable_monitor: true
 controller_monitor_policy: "llm_escalation"
 controller_enable_prefetch: true
@@ -108,8 +111,6 @@ graph_filter_local_actionable_frontiers: true
 graph_relax_bias_for_local_actionability: true
 graph_frontier_repeat_penalty: 2.0
 graph_frontier_recent_penalty: 1.0
-graph_target_progress_weight: 4.0
-graph_target_progress_distance_scale: 20.0
 graph_recent_frontier_window: 8
 graph_enable_direct_object_goal: false
 graph_text_goal_use_frontier_anchor: true

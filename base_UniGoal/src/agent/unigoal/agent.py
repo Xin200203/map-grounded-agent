@@ -14,6 +14,11 @@ from torchvision import transforms
 from src.utils.fmm.fmm_planner_policy import FMMPlanner
 import src.utils.fmm.pose_utils as pu
 from src.utils.visualization.semantic_prediction import SemanticPredMaskRCNN
+try:
+    from configs.categories import categories, categories_id_mapping
+except Exception:  # pragma: no cover - fallback for stripped test environments
+    categories = {}
+    categories_id_mapping = {}
 from src.utils.visualization.visualization import (
     init_vis_image,
     draw_line,
@@ -26,6 +31,7 @@ from src.utils.llm import LLM
 from smoothnav.executor_adoption import (
     compute_adoption_transition,
     resolve_strategy_epoch_transition,
+    should_allow_text_visible_temp_goal,
     should_suppress_stuck_override,
 )
 
@@ -94,6 +100,7 @@ class UniGoal_Agent():
         # define untraversible area of the goal: 0 means area can be goals, 1 means cannot be
         self.goal_map_mask = np.ones((self.global_width, self.global_height))
         self.pred_box = []
+        self.last_semantic_instances = []
         self.prompt_text2object = '"chair: 0, sofa: 1, plant: 2, bed: 3, toilet: 4, tv_monitor: 5" The above are the labels corresponding to each category. Which object is described in the following text? Only response the number of the label and not include other text.\nText: {text}'
         torch.set_grad_enabled(False)
         self.current_strategy_epoch = 0
@@ -149,7 +156,10 @@ class UniGoal_Agent():
         self.forbidden_temp_goal = []
         self.goal_map_mask = np.ones(map_shape)
         self.goal_instance_whwh = None
-        self.pred_box = []
+        # Keep the reset-frame detector boxes.  The first planner action after a
+        # reset consumes the observation produced above; clearing pred_box here
+        # silently removed both visible-target evidence and BEV footprint seeds.
+        self.pred_box = list(self.pred_box or [])
         self.been_stuck = False
         self.stuck_goal = None
         self.frontier_vis = None
@@ -270,20 +280,45 @@ class UniGoal_Agent():
         )
         return planner_inputs
 
+    def _suppress_current_temp_goal(self, gx1, gx2, gy1, gy2):
+        if self.temp_goal is None:
+            return False
+        goal_map = pu.threshold_pose_map(self.temp_goal, gx1, gx2, gy1, gy2)
+        if np.any(goal_map > 0):
+            selem = skimage.morphology.disk(3)
+            blocked_goal = skimage.morphology.dilation(goal_map, selem)
+            self.goal_map_mask[gx1:gx2, gy1:gy2][blocked_goal > 0] = 0
+        self.last_temp_goal = self.temp_goal
+        self.forbidden_temp_goal.append(self.temp_goal.copy())
+        self.temp_goal = None
+        self.temp_goal_epoch = None
+        return True
+
     def instance_discriminator(self, planner_inputs, id_lo_whwh_speci):
         incoming_strategy_epoch = int(planner_inputs.get('strategy_epoch', 0) or 0)
         suppress_stuck_override = bool(planner_inputs.get('suppress_stuck_override', False))
+        allow_recovery = bool(planner_inputs.get('allow_recovery', True))
+        clear_temp_goal = bool(planner_inputs.get('clear_temp_goal', False))
+        current_target_region = str(planner_inputs.get('current_target_region', '') or '')
         epoch_transition = resolve_strategy_epoch_transition(
             current_strategy_epoch=self.current_strategy_epoch,
             incoming_strategy_epoch=incoming_strategy_epoch,
             has_temp_goal=self.temp_goal is not None,
             temp_goal_epoch=self.temp_goal_epoch,
+            has_stuck_goal=self.stuck_goal is not None or self.been_stuck,
         )
         stale_temp_goal_cleared = epoch_transition['stale_temp_goal_cleared']
+        stale_stuck_goal_cleared = epoch_transition.get('stale_stuck_goal_cleared', False)
         self.current_strategy_epoch = epoch_transition['next_strategy_epoch']
         if stale_temp_goal_cleared:
             self.temp_goal = None
             self.temp_goal_epoch = None
+        if stale_stuck_goal_cleared:
+            self.been_stuck = False
+            self.stuck_goal = None
+        if not allow_recovery and self.been_stuck:
+            self.been_stuck = False
+            self.stuck_goal = None
 
         self.last_override_info = {
             'global_goal_override': False,
@@ -302,9 +337,12 @@ class UniGoal_Agent():
                 int(self.temp_goal_epoch) if self.temp_goal_epoch is not None else None
             ),
             'stale_temp_goal_cleared': bool(stale_temp_goal_cleared),
+            'stale_stuck_goal_cleared': bool(stale_stuck_goal_cleared),
             'temp_goal_cleared_on_strategy_switch': bool(stale_temp_goal_cleared),
             'temp_goal_suppressed_by_epoch': bool(stale_temp_goal_cleared),
             'stuck_override_suppressed': False,
+            'stuck_goal_cleared_on_strategy_switch': bool(stale_stuck_goal_cleared),
+            'stuck_goal_cleared_on_command': bool(not allow_recovery),
         }
         # Get pose prediction and global policy planning window
         start_x, start_y, start_o, gx1, gx2, gy1, gy2 = \
@@ -312,6 +350,11 @@ class UniGoal_Agent():
         map_pred = np.rint(planner_inputs['map_pred'])
         gx1, gx2, gy1, gy2 = int(gx1), int(gx2), int(gy1), int(gy2)
         planning_window = [gx1, gx2, gy1, gy2]
+        if clear_temp_goal:
+            cleared = self._suppress_current_temp_goal(gx1, gx2, gy1, gy2)
+            self.last_override_info['temp_goal_cleared_on_command'] = bool(cleared)
+        else:
+            self.last_override_info['temp_goal_cleared_on_command'] = False
 
         r, c = start_y, start_x
         start = [int(r * 100.0 / self.args.map_resolution - gx1),
@@ -345,7 +388,7 @@ class UniGoal_Agent():
                 strategy_epoch=incoming_strategy_epoch,
                 stale_temp_goal_cleared=stale_temp_goal_cleared,
             )
-        elif self.been_stuck and not suppress_stuck_override:
+        elif self.been_stuck and not suppress_stuck_override and allow_recovery:
             
             planner_inputs['found_goal'] = 0
             self.last_override_info['stuck_goal_override'] = True
@@ -452,12 +495,22 @@ class UniGoal_Agent():
                     else:
                         new_goal_map = goal_map * self.goal_map_mask[gx1:gx2, gy1:gy2]
                         if np.any(new_goal_map > 0):
-                            planner_inputs['goal'] = new_goal_map
-                            temp_goal = np.zeros((self.global_width, self.global_height))
-                            temp_goal[gx1:gx2, gy1:gy2] = new_goal_map
-                            self.temp_goal = temp_goal
-                            self.temp_goal_epoch = incoming_strategy_epoch
-                            adopted_source = 'visible_target_temp_goal'
+                            if should_allow_text_visible_temp_goal(
+                                goal_type=self.args.goal_type,
+                                current_target_region=current_target_region,
+                                goal_name=getattr(self.envs, 'goal_name', None),
+                            ):
+                                planner_inputs['goal'] = new_goal_map
+                                temp_goal = np.zeros((self.global_width, self.global_height))
+                                temp_goal[gx1:gx2, gy1:gy2] = new_goal_map
+                                self.temp_goal = temp_goal
+                                self.temp_goal_epoch = incoming_strategy_epoch
+                                adopted_source = 'visible_target_temp_goal'
+                            else:
+                                planner_inputs['goal'] = planner_inputs['exp_goal']
+                                self.temp_goal = None
+                                self.temp_goal_epoch = None
+                                adopted_source = 'exp_goal_text_visible_suppressed'
                         else:
                             planner_inputs['goal'] = planner_inputs['exp_goal']
                             self.temp_goal = None
@@ -803,6 +856,84 @@ class UniGoal_Agent():
         else:
             return None
 
+    def _semantic_category_label(self, category_index):
+        try:
+            idx = int(category_index)
+        except Exception:
+            return "other"
+        for coco_id, mapped_idx in (categories_id_mapping or {}).items():
+            try:
+                if int(mapped_idx) == idx:
+                    return str((categories or {}).get(coco_id) or f"category_{idx}")
+            except Exception:
+                continue
+        return "other" if idx >= 15 else f"category_{idx}"
+
+    def _build_semantic_instance_records(self, pred_boxes, semantic_pred, *, source_shape):
+        """Return compact per-instance metadata for BEV footprint projection.
+
+        ``pred_boxes`` are produced in the detector input frame, while
+        ``semantic_pred`` may have been downsampled to the mapping frame.  Store
+        boxes in the mapping frame so BEV_Map can recover per-instance seeds
+        without depending on Detectron objects at mapping time.
+        """
+
+        records = []
+        if semantic_pred is None:
+            return records
+        try:
+            sem = np.asarray(semantic_pred)
+        except Exception:
+            return records
+        if sem.ndim != 3:
+            return records
+        h, w = sem.shape[:2]
+        try:
+            src_h, src_w = int(source_shape[0]), int(source_shape[1])
+        except Exception:
+            src_h, src_w = h, w
+        scale_x = float(w) / float(max(1, src_w))
+        scale_y = float(h) / float(max(1, src_h))
+        for inst_idx, item in enumerate(pred_boxes or [], start=1):
+            try:
+                category_index = int(item[0])
+                confidence = float(item[1]) if len(item) > 1 else 0.0
+                bbox = np.asarray(item[2], dtype=float).reshape(-1)
+                if bbox.shape[0] < 4:
+                    continue
+                x1, y1, x2, y2 = [float(v) for v in bbox[:4]]
+            except Exception:
+                continue
+            if category_index < 0 or category_index >= sem.shape[2]:
+                continue
+            x1_i = max(0, min(w - 1, int(np.floor(x1 * scale_x))))
+            x2_i = max(0, min(w - 1, int(np.ceil(x2 * scale_x))))
+            y1_i = max(0, min(h - 1, int(np.floor(y1 * scale_y))))
+            y2_i = max(0, min(h - 1, int(np.ceil(y2 * scale_y))))
+            if x2_i < x1_i:
+                x1_i, x2_i = x2_i, x1_i
+            if y2_i < y1_i:
+                y1_i, y2_i = y2_i, y1_i
+            if x2_i <= x1_i or y2_i <= y1_i:
+                continue
+            channel = sem[:, :, category_index]
+            seed = channel[y1_i : y2_i + 1, x1_i : x2_i + 1] > 0
+            seed_pixels = int(np.count_nonzero(seed))
+            records.append(
+                {
+                    "id": f"det_{inst_idx:03d}",
+                    "category_index": int(category_index),
+                    "category_label": self._semantic_category_label(category_index),
+                    "confidence": float(confidence),
+                    "bbox_xyxy": [int(x1_i), int(y1_i), int(x2_i), int(y2_i)],
+                    "source_frame_shape": [int(h), int(w)],
+                    "source_detector_frame_shape": [int(src_h), int(src_w)],
+                    "semantic_seed_pixel_count": int(seed_pixels),
+                    "source": "mask_rcnn_bbox_semantic_channel",
+                }
+            )
+        return records
+
     def preprocess_obs(self, obs, use_seg=True):
         args = self.args
         obs = obs.transpose(1, 2, 0)
@@ -811,6 +942,7 @@ class UniGoal_Agent():
 
         sem_seg_pred, seg_predictions = self.pred_sem(
             rgb.astype(np.uint8), use_seg=use_seg)
+        semantic_source_shape = sem_seg_pred.shape[:2]
 
         if args.environment == 'habitat':
             depth = self.preprocess_depth(depth, args.min_depth, args.max_depth)
@@ -820,6 +952,11 @@ class UniGoal_Agent():
             rgb = np.asarray(self.res(rgb.astype(np.uint8)))
             depth = depth[ds // 2::ds, ds // 2::ds]
             sem_seg_pred = sem_seg_pred[ds // 2::ds, ds // 2::ds]
+        self.last_semantic_instances = self._build_semantic_instance_records(
+            self.pred_box,
+            sem_seg_pred,
+            source_shape=semantic_source_shape,
+        )
 
         depth = np.expand_dims(depth, axis=2)
         state = np.concatenate((rgb, depth, sem_seg_pred),
@@ -846,6 +983,7 @@ class UniGoal_Agent():
             semantic_pred, self.rgb_vis, self.pred_box, seg_predictions = self.sem_pred.get_prediction(rgb)
             return self.pred_box, seg_predictions
         else:
+            seg_predictions = None
             if use_seg:
                 semantic_pred, self.rgb_vis, self.pred_box, seg_predictions = self.sem_pred.get_prediction(rgb)
                 semantic_pred = semantic_pred.astype(np.float32)
@@ -855,6 +993,7 @@ class UniGoal_Agent():
             else:
                 semantic_pred = np.zeros((rgb.shape[0], rgb.shape[1], 16))
                 self.rgb_vis = rgb[:, :, ::-1]
+                self.pred_box = []
             return semantic_pred, seg_predictions
         
     def get_goal_cat_id(self):

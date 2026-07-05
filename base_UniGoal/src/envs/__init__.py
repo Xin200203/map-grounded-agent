@@ -1,16 +1,25 @@
 import os
+from pathlib import Path
 from omegaconf import OmegaConf
 from tqdm import tqdm
 import numpy as np
 from .instanceimagegoal_env import InstanceImageGoal_Env
+
+BASE_UNIGOAL_ROOT = Path(__file__).resolve().parents[2]
+CONFIG_ROOT = BASE_UNIGOAL_ROOT / "configs"
+
+
+def _resolve_task_config_path(task_config: str) -> str:
+    task_config_path = CONFIG_ROOT / task_config
+    return str(task_config_path)
 
 
 def construct_envs(args):
     if args.environment == 'habitat':
         from habitat.config.default import get_config
         from habitat import make_dataset
-        basic_config = get_config(config_path="configs/"
-                                            + args.task_config)
+        task_config_path = _resolve_task_config_path(args.task_config)
+        basic_config = get_config(config_path=task_config_path)
         OmegaConf.set_readonly(basic_config, False)
         basic_config.habitat.dataset.split = args.split
 
@@ -33,8 +42,7 @@ def construct_envs(args):
                 scene_split_sizes[i] += 1
 
         env_idx = 0
-        config_env = get_config(config_path="configs/"
-                                            + args.task_config)
+        config_env = get_config(config_path=task_config_path)
         OmegaConf.set_readonly(config_env, False)
 
         if len(scenes) > 0:
@@ -78,7 +86,12 @@ def construct_envs(args):
 
         dataset = make_dataset(config_env.habitat.dataset.type, config=config_env.habitat.dataset)
         OmegaConf.set_readonly(config_env, False)
-        config_env.habitat.simulator.scene = dataset.episodes[0].scene_id
+        initial_episode_idx = 0
+        if args.episode_id != -1:
+            initial_episode_idx = min(max(args.episode_id, 0), len(dataset.episodes) - 1)
+            dataset.episodes = [dataset.episodes[initial_episode_idx]]
+            initial_episode_idx = 0
+        config_env.habitat.simulator.scene = dataset.episodes[initial_episode_idx].scene_id
         OmegaConf.set_readonly(config_env, True)
 
         env = InstanceImageGoal_Env(args=args, config_env=config_env, dataset=dataset)

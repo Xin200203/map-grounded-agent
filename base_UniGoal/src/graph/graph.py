@@ -27,6 +27,7 @@ from .scenegraphcorrector import SceneGraphCorrector
 from .utils.slam_classes import MapObjectList
 from .utils.utils import filter_objects, gobs_to_detection_list
 from .utils.mapping import compute_spatial_similarities, merge_detections_to_objects
+from .relation_pruning import select_relation_node_pairs
 
 from ..utils.fmm.fmm_planner import FMMPlanner
 from ..utils.fmm import pose_utils as pu
@@ -34,13 +35,25 @@ from ..utils.camera import get_camera_matrix
 from ..utils.map import remove_small_frontiers
 from ..utils.llm import LLM, VLM
 from smoothnav.frontier_scoring import (
+    build_frontier_value_replay_snapshot,
     choose_frontier_locations,
+    compose_frontier_value_scores,
+    compute_frontier_repeat_penalties,
+    compute_target_progress_scores,
+    compute_frontier_unknown_novelty_scores,
+    compute_local_actionability_scores,
+    filter_candidate_indices_for_actionability,
     select_bias_candidate_indices,
     select_distance_candidate_indices,
     summarize_frontier_selection,
 )
+from smoothnav.frontier_branching import build_frontier_branches
 
-sys.path.append('third_party/Grounded-Segment-Anything/')
+BASE_UNIGOAL_ROOT = Path(__file__).resolve().parents[2]
+REPO_ROOT = BASE_UNIGOAL_ROOT.parent
+GROUNDED_SAM_ROOT = BASE_UNIGOAL_ROOT / "third_party" / "Grounded-Segment-Anything"
+
+sys.path.append(str(GROUNDED_SAM_ROOT))
 from grounded_sam_demo import load_model, get_grounding_output
 import GroundingDINO.groundingdino.datasets.transforms as T
 from segment_anything import sam_model_registry, SamPredictor
@@ -200,14 +213,25 @@ class Graph():
         self.group_nodes = []
         self.init_room_nodes()
         self.last_goal_debug = {}
+        self.last_relation_debug = {}
+        self.last_mapping_debug = {}
         self.last_selected_frontier = None
+        self.recent_selected_frontiers = []
         self.is_navigation = is_navigation
         self.set_cfg()
         
-        self.groundingdino_config_file = 'third_party/Grounded-Segment-Anything/GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py'
-        self.groundingdino_checkpoint = 'data/models/groundingdino_swint_ogc.pth'
+        self.groundingdino_config_file = str(
+            GROUNDED_SAM_ROOT
+            / 'GroundingDINO'
+            / 'groundingdino'
+            / 'config'
+            / 'GroundingDINO_SwinT_OGC.py'
+        )
+        self.groundingdino_checkpoint = str(
+            REPO_ROOT / 'data' / 'models' / 'groundingdino_swint_ogc.pth'
+        )
         self.sam_version = 'vit_h'
-        self.sam_checkpoint = 'data/models/sam_vit_h_4b8939.pth'
+        self.sam_checkpoint = str(REPO_ROOT / 'data' / 'models' / 'sam_vit_h_4b8939.pth')
         self.segment2d_results = []
         self.max_detections_per_object = 10
         self.threshold_list = {'bathtub': 3, 'bed': 3, 'cabinet': 2, 'chair': 1, 'chest_of_drawers': 3, 'clothes': 2, 'counter': 1, 'cushion': 3, 'fireplace': 3, 'gym_equipment': 2, 'picture': 3, 'plant': 3, 'seating': 0, 'shower': 2, 'sink': 2, 'sofa': 2, 'stool': 2, 'table': 1, 'toilet': 3, 'towel': 2, 'tv_monitor': 0}
@@ -279,6 +303,9 @@ Please provide the relationship you can determine from the image.
         if self.is_navigation:
             cfg.sim_threshold = 0.8
             cfg.sim_threshold_spatial = 0.01
+            cfg.relation_same_room_only = True
+            cfg.relation_topk_per_new_node = 8
+            cfg.relation_max_pairs_per_update = 32
         self.cfg = cfg
 
     def set_agent(self, agent):
@@ -475,6 +502,7 @@ Please provide the relationship you can determine from the image.
         print('    mapping3d...')
         depth_array = self.image_depth
         depth_array = depth_array[..., 0]
+        objects_pre_merge = len(self.objects)
 
         gobs = self.segment2d_results[-1]
         
@@ -499,6 +527,13 @@ Please provide the relationship you can determine from the image.
         )
         
         if len(fg_detection_list) == 0:
+            self.last_mapping_debug = {
+                "detections_count": 0,
+                "objects_pre_merge": objects_pre_merge,
+                "objects_post_merge": len(self.objects),
+                "objects_post_filter": len(self.objects_post),
+                "mapping_new_objects": 0,
+            }
             self.clear_line()
             return
             
@@ -509,6 +544,13 @@ Please provide the relationship you can determine from the image.
 
             # Skip the similarity computation 
             self.objects_post = filter_objects(self.cfg, self.objects)
+            self.last_mapping_debug = {
+                "detections_count": len(fg_detection_list),
+                "objects_pre_merge": objects_pre_merge,
+                "objects_post_merge": len(self.objects),
+                "objects_post_filter": len(self.objects_post),
+                "mapping_new_objects": len(self.objects) - objects_pre_merge,
+            }
             self.clear_line()
             return
                 
@@ -520,6 +562,13 @@ Please provide the relationship you can determine from the image.
         self.objects = merge_detections_to_objects(self.cfg, fg_detection_list, self.objects, spatial_sim)
         
         self.objects_post = filter_objects(self.cfg, self.objects)
+        self.last_mapping_debug = {
+            "detections_count": len(fg_detection_list),
+            "objects_pre_merge": objects_pre_merge,
+            "objects_post_merge": len(self.objects),
+            "objects_post_filter": len(self.objects_post),
+            "mapping_new_objects": len(self.objects) - objects_pre_merge,
+        }
         self.clear_line()
             
     def get_caption(self):
@@ -535,6 +584,8 @@ Please provide the relationship you can determine from the image.
 
     def update_node(self):
         print('    update_node...')
+        nodes_before = len(self.nodes)
+        caption_updates = 0
         # update nodes
         for i, node in enumerate(self.nodes):
             caption_ori = node.caption
@@ -542,6 +593,7 @@ Please provide the relationship you can determine from the image.
             caption_new = node.object['captions'][0]
             if caption_ori != caption_new:
                 node.set_caption(caption_new)
+                caption_updates += 1
         # add new nodes
         new_objects = list(filter(lambda object: 'node' not in object, self.objects_post))
         # for i in range(node_num_ori, node_num_new):
@@ -573,6 +625,14 @@ Please provide the relationship you can determine from the image.
                     node.room_node.nodes.discard(node)
                 node.room_node = self.room_nodes[room_label]
                 node.room_node.nodes.add(node)
+        self.last_mapping_debug.update(
+            {
+                "new_objects_without_node": len(new_objects),
+                "nodes_before_update": nodes_before,
+                "nodes_after_update": len(self.nodes),
+                "caption_updates": caption_updates,
+            }
+        )
         self.clear_line()
 
     def create_new_edge(self, new_node):
@@ -605,47 +665,57 @@ Please provide the relationship you can determine from the image.
             else:
                 old_nodes.append(node)
         if len(new_nodes) == 0:
+            self.last_relation_debug = {
+                "initial_edge_count": 0,
+                "selected_edge_count": 0,
+                "dropped_edge_count": 0,
+                "deferred_edge_count": 0,
+                "same_room_only": bool(getattr(self.cfg, 'relation_same_room_only', True)),
+                "topk_per_new_node": int(getattr(self.cfg, 'relation_topk_per_new_node', 0) or 0),
+                "max_pairs": int(getattr(self.cfg, 'relation_max_pairs_per_update', 0) or 0),
+                "graph_node_count": len(self.nodes),
+                "new_node_count": 0,
+                "old_node_count": len(old_nodes),
+            }
             self.clear_line()
             return
-        # create the edge between new_node and old_node
-        new_edges = []
-        for i, new_node in enumerate(new_nodes):
-            for j, old_node in enumerate(old_nodes):
-                new_edge = Edge(new_node, old_node)
-                # new_node.edges.add(new_edge)
-                # old_node.edges.add(new_edge)
-                new_edges.append(new_edge)
-        # create the edge between new_node
-        for i, new_node1 in enumerate(new_nodes):
-            for j, new_node2 in enumerate(new_nodes[i + 1:]):
-                new_edge = Edge(new_node1, new_node2)
-                # new_node1.edges.add(new_edge)
-                # new_node2.edges.add(new_edge)
-                new_edges.append(new_edge)
-        # get all new_edges
-        new_edges = set()
-        for i, node in enumerate(self.nodes):
-            node_new_edges = set(filter(lambda edge: edge.relation is None, node.edges))
-            new_edges = new_edges | node_new_edges
-        new_edges = list(new_edges)
+
+        selected_pairs, dropped_pairs, deferred_pairs, relation_stats = select_relation_node_pairs(
+            new_nodes=new_nodes,
+            old_nodes=old_nodes,
+            same_room_only=bool(getattr(self.cfg, 'relation_same_room_only', True)),
+            topk_per_new_node=int(getattr(self.cfg, 'relation_topk_per_new_node', 0) or 0),
+            max_pairs=int(getattr(self.cfg, 'relation_max_pairs_per_update', 0) or 0),
+        )
+        selected_edges = [Edge(node1, node2) for node1, node2 in selected_pairs]
+        deferred_edges = []
+        for node1, node2 in deferred_pairs:
+            deferred_edges.append((id(node1), id(node2)))
+        self.last_relation_debug = {
+            **relation_stats,
+            "graph_node_count": len(self.nodes),
+            "new_node_count": len(new_nodes),
+            "old_node_count": len(old_nodes),
+            "deferred_edge_pairs": deferred_edges,
+        }
         # get all relation proposals
-        if len(new_edges) > 0:
+        if len(selected_edges) > 0:
             print(f'        LLM get all relation proposals...')
             node_pairs = []
-            for new_edge in new_edges:
+            for new_edge in selected_edges:
                 node_pairs.append(new_edge.node1.caption)
                 node_pairs.append(new_edge.node2.caption)
-            prompt = self.prompt_edge_proposal + '\n({}, {})' * len(new_edges)
+            prompt = self.prompt_edge_proposal + '\n({}, {})' * len(selected_edges)
             prompt = prompt.format(*node_pairs)
             relations = self.llm(prompt=prompt)
             relations = relations.split('\n')
-            if len(relations) == len(new_edges):
+            if len(relations) == len(selected_edges):
                 for i, relation in enumerate(relations):
-                    new_edges[i].set_relation(relation)
+                    selected_edges[i].set_relation(relation)
             self.clear_line()
             # discriminate all relation proposals
-            for i, new_edge in enumerate(new_edges):
-                print(f'        discriminate_relation  {i}/{len(new_edges)}...')
+            for i, new_edge in enumerate(selected_edges):
+                print(f'        discriminate_relation  {i}/{len(selected_edges)}...')
                 if new_edge.relation == None:
                     new_edge.delete()
                 self.clear_line()
@@ -796,7 +866,8 @@ Please provide the relationship you can determine from the image.
         image = Image.fromarray(image)
         return image
 
-    def get_goal(self, goal=None):
+    def get_goal(self, goal=None, *, record_selection_history=True):
+        self.last_goal_replay_snapshot = None
         semantic_bias_weight = float(
             getattr(self.args, "graph_semantic_bias_weight", 1.0) or 1.0
         )
@@ -818,6 +889,43 @@ Please provide the relationship you can determine from the image.
         )
         allow_relaxed_distance_fallback = bool(
             getattr(self.args, "graph_allow_relaxed_distance_fallback", True)
+        )
+        frontier_novelty_weight = float(
+            getattr(self.args, "graph_frontier_novelty_weight", 1.0) or 0.0
+        )
+        frontier_unknown_radius = int(
+            getattr(self.args, "graph_frontier_unknown_radius", 6) or 6
+        )
+        local_actionability_weight = float(
+            getattr(self.args, "graph_local_actionability_weight", 2.0) or 0.0
+        )
+        filter_local_actionable = bool(
+            getattr(self.args, "graph_filter_local_actionable_frontiers", True)
+        )
+        relax_bias_to_actionable = bool(
+            getattr(self.args, "graph_relax_bias_for_local_actionability", True)
+        )
+        frontier_repeat_penalty = float(
+            getattr(self.args, "graph_frontier_repeat_penalty", 2.0) or 0.0
+        )
+        frontier_recent_penalty = float(
+            getattr(self.args, "graph_frontier_recent_penalty", 1.0) or 0.0
+        )
+        target_progress_weight = float(
+            getattr(self.args, "graph_target_progress_weight", 0.0) or 0.0
+        )
+        target_progress_distance_scale = float(
+            getattr(self.args, "graph_target_progress_distance_scale", 20.0) or 20.0
+        )
+        planner_prior_weight = float(
+            getattr(self.args, "graph_mllm_frontier_prior_weight", 0.0) or 0.0
+        )
+        recent_frontier_window = int(
+            getattr(self.args, "graph_recent_frontier_window", 8) or 8
+        )
+        active_target_region = str(getattr(self, "active_target_region", "") or "")
+        target_progress_active = bool(
+            active_target_region.startswith("unexplored target:")
         )
         bias_input = (
             goal.tolist()
@@ -899,8 +1007,21 @@ Please provide the relationship you can determine from the image.
         input_pose[6] = self.full_map.shape[-1]
         traversible, start = self.get_traversible(self.full_map.cpu().numpy()[0, 0, ::-1], input_pose)
         planner = FMMPlanner(traversible)
-        state = [start[0] + 1, start[1] + 1]
-        planner.set_goal(state)
+        agent_state = [start[0] + 1, start[1] + 1]
+        agent_frontier_coord = np.asarray(agent_state, dtype=float) - 1
+        try:
+            # ``start`` is computed in the traversible map built from
+            # ``full_map[..., ::-1]``.  Frontier coordinates and capsule BEV
+            # images are rendered in the unflipped full-map frame, so the agent
+            # row must be converted back before it is attached to replay
+            # snapshots / branch summaries.  Without this conversion the robot
+            # marker appears mirrored vertically and can even be drawn outside
+            # the known free space in BEV review images.
+            map_height = int(self.full_map.shape[-2])
+            agent_frontier_coord[0] = map_height - agent_frontier_coord[0] - 1
+        except Exception:
+            pass
+        planner.set_goal(agent_state)
         fmm_dist = planner.fmm_dist[::-1]
         frontier_locations = np.asarray(frontier_locations, dtype=int) + 1
         distances = fmm_dist[frontier_locations[:,0],frontier_locations[:,1]] / 20
@@ -952,11 +1073,41 @@ Please provide the relationship you can determine from the image.
             }
             return None
         num_16_frontiers = len(idx_16)  # candidate frontier count
-        scores = np.zeros((num_16_frontiers))
         base_scores = distances_16_inverse.copy()
-        scores += base_scores
         bias_scores = np.zeros((num_16_frontiers))
         bias_distances_16 = None
+        target_progress_scores = np.zeros((num_16_frontiers))
+        target_progress_mode = ""
+        agent_target_distance = None
+        planner_prior_scores = np.zeros((num_16_frontiers))
+        planner_prior_source = ""
+        planner_selected_branch_id = ""
+        planner_prior_payload = getattr(self, "planner_frontier_prior", None)
+        if planner_prior_payload is not None:
+            try:
+                if isinstance(planner_prior_payload, dict):
+                    raw_prior = (
+                        planner_prior_payload.get("planner_prior_scores")
+                        if planner_prior_payload.get("planner_prior_scores") is not None
+                        else planner_prior_payload.get("scores")
+                    )
+                    planner_prior_source = str(
+                        planner_prior_payload.get("source", "planner_frontier_prior")
+                    )
+                    planner_selected_branch_id = str(
+                        planner_prior_payload.get("selected_branch_id", "")
+                    )
+                else:
+                    raw_prior = planner_prior_payload
+                    planner_prior_source = "planner_frontier_prior"
+                prior_array = np.asarray(raw_prior, dtype=float)
+                if prior_array.shape[0] == num_16_frontiers:
+                    planner_prior_scores = prior_array
+                else:
+                    planner_prior_source = "invalid_length"
+            except Exception:
+                planner_prior_scores = np.zeros((num_16_frontiers))
+                planner_prior_source = "invalid_prior"
         candidate_indices = np.arange(num_16_frontiers)
         selected_from_bias_filtered_subset = False
         if isinstance(goal, (list, tuple, np.ndarray)):
@@ -967,6 +1118,12 @@ Please provide the relationship you can determine from the image.
             planner.set_goal(state)
             fmm_dist = planner.fmm_dist[::-1]
             distances = fmm_dist[frontier_locations[:,0],frontier_locations[:,1]] / 20
+            try:
+                agent_target_distance = float(
+                    fmm_dist[int(agent_state[0]), int(agent_state[1])] / 20
+                )
+            except Exception:
+                agent_target_distance = None
             
             bias_distances_16 = distances[idx_16]
             bias_scores = 1 - (np.clip(bias_distances_16, 0, 10 + distance_threshold) - distance_threshold) / 10
@@ -1001,8 +1158,6 @@ Please provide the relationship you can determine from the image.
                     "no_goal_reason": "no_bias_candidates",
                 }
                 return None
-            scores += semantic_bias_weight * bias_scores
-
             candidate_indices, selected_from_bias_filtered_subset = (
                 select_bias_candidate_indices(
                     num_16_frontiers,
@@ -1011,6 +1166,80 @@ Please provide the relationship you can determine from the image.
                     bias_candidate_radius=bias_candidate_radius,
                 )
             )
+
+        frontier_full_coords_16 = frontier_locations_16 - 1
+        unknown_map = None
+        try:
+            unknown_map = fbe_map.cpu().numpy() == 0
+        except Exception:
+            unknown_map = None
+        novelty_scores = compute_frontier_unknown_novelty_scores(
+            frontier_full_coords_16,
+            unknown_map,
+            radius=frontier_unknown_radius,
+        )
+        local_valid_mask, actionability_scores = compute_local_actionability_scores(
+            frontier_full_coords_16,
+            getattr(self, "local_map_boundary", None),
+            local_width=getattr(self.args, "local_width", self.full_width),
+            local_height=getattr(self.args, "local_height", self.full_height),
+        )
+        repeat_penalties, recent_penalties = compute_frontier_repeat_penalties(
+            frontier_full_coords_16,
+            last_selected_frontier=self.last_selected_frontier,
+            recent_selected_frontiers=self.recent_selected_frontiers,
+        )
+        if (
+            target_progress_active
+            and isinstance(goal, (list, tuple, np.ndarray))
+            and len(frontier_full_coords_16) > 0
+        ):
+            target_progress_scores, target_progress_mode = (
+                compute_target_progress_scores(
+                    frontier_full_coords_16,
+                    goal,
+                    agent_coord=agent_frontier_coord,
+                    target_distances=bias_distances_16,
+                    agent_target_distance=agent_target_distance,
+                    distance_scale=target_progress_distance_scale,
+                )
+            )
+        actionability_filter_mode = ""
+        if filter_local_actionable:
+            candidate_indices, actionability_filter_mode = (
+                filter_candidate_indices_for_actionability(
+                    candidate_indices,
+                    local_valid_mask,
+                    relax_to_any_valid=relax_bias_to_actionable,
+                )
+            )
+        planner_prior_union_count = 0
+        planner_prior_union_mode = ""
+        if planner_prior_weight > 0.0 and len(planner_prior_scores) == num_16_frontiers:
+            planner_prior_candidate_indices = np.where(planner_prior_scores > 0.0)[0]
+            if len(planner_prior_candidate_indices) > 0:
+                if filter_local_actionable:
+                    planner_prior_candidate_indices = np.asarray(
+                        [
+                            int(idx)
+                            for idx in planner_prior_candidate_indices
+                            if 0 <= int(idx) < len(local_valid_mask)
+                            and bool(local_valid_mask[int(idx)])
+                        ],
+                        dtype=int,
+                    )
+                if len(planner_prior_candidate_indices) > 0:
+                    before_union = set(np.asarray(candidate_indices, dtype=int).tolist())
+                    candidate_indices = np.asarray(
+                        sorted(
+                            before_union.union(
+                                int(idx) for idx in planner_prior_candidate_indices.tolist()
+                            )
+                        ),
+                        dtype=int,
+                    )
+                    planner_prior_union_count = len(candidate_indices) - len(before_union)
+                    planner_prior_union_mode = "planner_prior_union"
 
         candidate_count_after_bias_filter = int(len(candidate_indices))
         if candidate_count_after_bias_filter == 0:
@@ -1034,6 +1263,8 @@ Please provide the relationship you can determine from the image.
                 "top1_top2_gap": None,
                 "base_score_std": None,
                 "bias_score_std": None,
+                "local_actionable_candidate_count": int(local_valid_mask.sum()),
+                "actionability_filter_mode": actionability_filter_mode,
                 "selected_from_bias_filtered_subset": selected_from_bias_filtered_subset,
                 "used_raw_frontier_fallback": bool(
                     frontier_choice["used_raw_frontier_fallback"]
@@ -1044,6 +1275,40 @@ Please provide the relationship you can determine from the image.
                 "no_goal_reason": "empty_bias_filtered_subset",
             }
             return None
+
+        scores = compose_frontier_value_scores(
+            base_scores,
+            bias_scores,
+            semantic_bias_weight=semantic_bias_weight,
+            novelty_scores=novelty_scores,
+            actionability_scores=actionability_scores,
+            repeat_penalties=repeat_penalties,
+            recent_penalties=recent_penalties,
+            frontier_novelty_weight=frontier_novelty_weight,
+            local_actionability_weight=local_actionability_weight,
+            frontier_repeat_penalty=frontier_repeat_penalty,
+            frontier_recent_penalty=frontier_recent_penalty,
+            target_progress_scores=target_progress_scores,
+            target_progress_weight=target_progress_weight,
+            planner_prior_scores=planner_prior_scores,
+            planner_prior_weight=planner_prior_weight,
+        )
+        frontier_branches = build_frontier_branches(
+            frontier_full_coords_16,
+            candidate_indices=candidate_indices,
+            distances=distances_16,
+            base_scores=base_scores,
+            bias_scores=bias_scores,
+            novelty_scores=novelty_scores,
+            actionability_scores=actionability_scores,
+            repeat_penalties=repeat_penalties,
+            recent_penalties=recent_penalties,
+            target_progress_scores=target_progress_scores,
+            planner_prior_scores=planner_prior_scores,
+            final_scores=scores,
+            agent_coord=agent_frontier_coord,
+        )
+        local_index_to_branch_id = frontier_branches.get("local_index_to_branch_id", {})
 
         selection_summary = summarize_frontier_selection(
             frontier_locations_16,
@@ -1056,6 +1321,20 @@ Please provide the relationship you can determine from the image.
             topk_limit=topk_limit,
             semantic_bias_weight=semantic_bias_weight,
             last_selected_frontier=self.last_selected_frontier,
+            novelty_scores=novelty_scores,
+            actionability_scores=actionability_scores,
+            repeat_penalties=repeat_penalties,
+            recent_penalties=recent_penalties,
+            frontier_novelty_weight=frontier_novelty_weight,
+            local_actionability_weight=local_actionability_weight,
+            frontier_repeat_penalty=frontier_repeat_penalty,
+            frontier_recent_penalty=frontier_recent_penalty,
+            target_progress_scores=target_progress_scores,
+            target_progress_weight=target_progress_weight,
+            target_progress_mode=target_progress_mode,
+            planner_prior_scores=planner_prior_scores,
+            planner_prior_weight=planner_prior_weight,
+            local_index_to_branch_id=local_index_to_branch_id,
         )
         best_candidate_local = selection_summary["best_local_idx"]
         idx_16_max = idx_16[best_candidate_local]
@@ -1068,6 +1347,45 @@ Please provide the relationship you can determine from the image.
         selected_frontier_score_breakdown = selection_summary[
             "selected_frontier_score_breakdown"
         ]
+        try:
+            self.last_goal_replay_snapshot = build_frontier_value_replay_snapshot(
+                frontier_locations_16=frontier_locations_16,
+                distances_16=distances_16,
+                base_scores=base_scores,
+                bias_distances_16=bias_distances_16,
+                bias_scores=bias_scores,
+                novelty_scores=novelty_scores,
+                actionability_scores=actionability_scores,
+                repeat_penalties=repeat_penalties,
+                recent_penalties=recent_penalties,
+                target_progress_scores=target_progress_scores,
+                planner_prior_scores=planner_prior_scores,
+                candidate_indices=candidate_indices,
+                final_scores=scores,
+                bias_input=bias_input,
+                agent_coord=agent_frontier_coord,
+                agent_target_distance=agent_target_distance,
+                active_target_region=active_target_region,
+                active_anchor_object=getattr(self, "active_anchor_object", ""),
+                target_progress_active=target_progress_active,
+                target_progress_mode=target_progress_mode,
+                semantic_bias_weight=semantic_bias_weight,
+                frontier_novelty_weight=frontier_novelty_weight,
+                local_actionability_weight=local_actionability_weight,
+                frontier_repeat_penalty=frontier_repeat_penalty,
+                frontier_recent_penalty=frontier_recent_penalty,
+                target_progress_weight=target_progress_weight,
+                target_progress_distance_scale=target_progress_distance_scale,
+                planner_prior_weight=planner_prior_weight,
+                planner_prior_source=planner_prior_source,
+                planner_selected_branch_id=planner_selected_branch_id,
+                frontier_branches=frontier_branches,
+                actionability_filter_mode=actionability_filter_mode,
+                selected_frontier=selected_frontier,
+                selected_frontier_score_breakdown=selected_frontier_score_breakdown,
+            )
+        except Exception:
+            self.last_goal_replay_snapshot = None
         self.last_goal_debug = {
             "bias_input": bias_input,
             "semantic_bias_weight": semantic_bias_weight,
@@ -1088,6 +1406,26 @@ Please provide the relationship you can determine from the image.
             "top1_top2_gap": top1_top2_gap,
             "base_score_std": selection_summary["base_score_std"],
             "bias_score_std": selection_summary["bias_score_std"],
+            "frontier_novelty_weight": frontier_novelty_weight,
+            "frontier_unknown_radius": frontier_unknown_radius,
+            "local_actionability_weight": local_actionability_weight,
+            "frontier_repeat_penalty": frontier_repeat_penalty,
+            "frontier_recent_penalty": frontier_recent_penalty,
+            "target_progress_weight": target_progress_weight,
+            "target_progress_distance_scale": target_progress_distance_scale,
+            "target_progress_mode": target_progress_mode,
+            "target_progress_active": bool(target_progress_active),
+                "planner_prior_weight": planner_prior_weight,
+                "planner_prior_source": planner_prior_source,
+                "planner_selected_branch_id": planner_selected_branch_id,
+                "planner_prior_union_count": planner_prior_union_count,
+                "planner_prior_union_mode": planner_prior_union_mode,
+                "frontier_branches": frontier_branches,
+            "selected_frontier_branch_id": selected_frontier_score_breakdown.get(
+                "branch_id", ""
+            ),
+            "local_actionable_candidate_count": int(local_valid_mask.sum()),
+            "actionability_filter_mode": actionability_filter_mode,
             "selected_from_bias_filtered_subset": bool(selected_from_bias_filtered_subset),
             "used_raw_frontier_fallback": bool(
                 frontier_choice["used_raw_frontier_fallback"]
@@ -1097,7 +1435,13 @@ Please provide the relationship you can determine from the image.
             ),
             "no_goal_reason": "",
         }
-        self.last_selected_frontier = selected_frontier
+        if record_selection_history:
+            self.last_selected_frontier = selected_frontier
+        if record_selection_history and recent_frontier_window > 0:
+            self.recent_selected_frontiers.append(list(selected_frontier))
+            self.recent_selected_frontiers = self.recent_selected_frontiers[
+                -recent_frontier_window:
+            ]
         return goal
 
     def get_traversible(self, map_pred, pose_pred):
@@ -1172,6 +1516,7 @@ Please provide the relationship you can determine from the image.
         self.edge_list = []
         self.last_goal_debug = {}
         self.last_selected_frontier = None
+        self.recent_selected_frontiers = []
 
     def graph_corr(self, goal, graph):
         prompt = self.prompt_graph_corr_0.format(graph.center_node.caption, goal)

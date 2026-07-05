@@ -2,10 +2,13 @@ import base64
 import json
 import logging
 import os
+import socket
 import time
 import urllib.error
 import urllib.request
+from contextlib import contextmanager
 from io import BytesIO
+from urllib.parse import urlparse
 
 import httpx
 
@@ -51,6 +54,27 @@ def _int_from_env(name, default):
     return max(1, value)
 
 
+def _float_from_env(name, default, *, minimum=None):
+    raw = os.environ.get(name, "").strip()
+    if not raw:
+        return default
+    try:
+        value = float(raw)
+    except ValueError:
+        logger.warning("Invalid %s=%r; falling back to %s.", name, raw, default)
+        return default
+    if minimum is not None:
+        value = max(float(minimum), value)
+    return value
+
+
+def _bool_from_env(name, default=False):
+    raw = os.environ.get(name, "").strip().lower()
+    if not raw:
+        return bool(default)
+    return raw in {"1", "true", "yes", "on", "y"}
+
+
 def _retry_delays_from_env(name, default):
     raw = os.environ.get(name, "").strip()
     if not raw:
@@ -76,6 +100,65 @@ def _retry_delays_from_env(name, default):
 
 _MAX_RETRIES = _int_from_env("SMOOTHNAV_LLM_MAX_RETRIES", 3)
 _RETRY_DELAYS = _retry_delays_from_env("SMOOTHNAV_LLM_RETRY_DELAYS", [2, 5, 10])
+_LLM_TEMPERATURE = _float_from_env(
+    "SMOOTHNAV_LLM_TEMPERATURE",
+    None,
+    minimum=0.0,
+)
+
+
+def _pinned_dns_from_env():
+    raw = os.environ.get("SMOOTHNAV_PINNED_DNS", "").strip()
+    pinned = {}
+    if not raw:
+        return pinned
+
+    for entry in raw.split(","):
+        entry = entry.strip()
+        if not entry or "=" not in entry:
+            continue
+        host, ip_list = entry.split("=", 1)
+        host = host.strip().lower()
+        ips = [ip.strip() for ip in ip_list.split("|") if ip.strip()]
+        if host and ips:
+            pinned[host] = ips
+    return pinned
+
+
+@contextmanager
+def _dns_override_for_endpoint(endpoint):
+    hostname = urlparse(endpoint).hostname or ""
+    pinned_ips = _pinned_dns_from_env().get(hostname.lower())
+    if not pinned_ips:
+        yield
+        return
+
+    original_getaddrinfo = socket.getaddrinfo
+
+    def _patched_getaddrinfo(host, port, family=0, type=0, proto=0, flags=0):
+        if (host or "").lower() != hostname.lower():
+            return original_getaddrinfo(host, port, family, type, proto, flags)
+
+        results = []
+        socktype = type or socket.SOCK_STREAM
+        proto_value = proto or 0
+        for ip in pinned_ips:
+            ip_family = socket.AF_INET6 if ":" in ip else socket.AF_INET
+            if family not in (0, socket.AF_UNSPEC, ip_family):
+                continue
+            sockaddr = (ip, port, 0, 0) if ip_family == socket.AF_INET6 else (ip, port)
+            results.append((ip_family, socktype, proto_value, "", sockaddr))
+
+        if results:
+            return results
+        return original_getaddrinfo(host, port, family, type, proto, flags)
+
+    socket.getaddrinfo = _patched_getaddrinfo
+    try:
+        logger.info("Applying pinned DNS for %s -> %s", hostname, ",".join(pinned_ips))
+        yield
+    finally:
+        socket.getaddrinfo = original_getaddrinfo
 
 
 def resolve_provider_protocol(api_provider="", api_protocol=""):
@@ -112,7 +195,7 @@ def resolve_provider_protocol(api_provider="", api_protocol=""):
     return provider, protocol
 
 
-def _retry_api_call(fn, description="LLM call"):
+def _retry_api_call(fn, description="LLM call", on_final_error=None):
     """Retry an API call with exponential backoff. Returns empty string on failure."""
     for attempt in range(_MAX_RETRIES):
         try:
@@ -127,6 +210,8 @@ def _retry_api_call(fn, description="LLM call"):
                 time.sleep(delay)
             else:
                 logger.error(f"{description} failed after {_MAX_RETRIES} attempts: {exc}")
+                if on_final_error is not None:
+                    on_final_error(str(exc))
                 return ""
 
 
@@ -182,8 +267,9 @@ def _post_json(endpoint, payload, headers):
         method="POST",
     )
     try:
-        with urllib.request.urlopen(request, timeout=_REQUEST_TIMEOUT_SECONDS) as response:
-            body = response.read().decode("utf-8", errors="replace")
+        with _dns_override_for_endpoint(endpoint):
+            with urllib.request.urlopen(request, timeout=_REQUEST_TIMEOUT_SECONDS) as response:
+                body = response.read().decode("utf-8", errors="replace")
     except urllib.error.HTTPError as exc:
         body = exc.read().decode("utf-8", errors="replace")
         excerpt = " ".join(body.split())[:400]
@@ -201,8 +287,9 @@ def _post_json(endpoint, payload, headers):
 
 def _post_json_httpx(endpoint, payload, headers):
     try:
-        with httpx.Client(timeout=_REQUEST_TIMEOUT_SECONDS) as client:
-            response = client.post(endpoint, headers=headers, json=payload)
+        with _dns_override_for_endpoint(endpoint):
+            with httpx.Client(timeout=_REQUEST_TIMEOUT_SECONDS) as client:
+                response = client.post(endpoint, headers=headers, json=payload)
     except httpx.HTTPError as exc:
         raise RuntimeError(f"Request to {endpoint} failed: {exc}") from exc
 
@@ -219,7 +306,9 @@ def _post_json_httpx(endpoint, payload, headers):
         ) from exc
 
 
-def _build_anthropic_message_payload(prompt, model, max_tokens, image_str=None):
+def _build_anthropic_message_payload(
+    prompt, model, max_tokens, image_str=None, temperature=None
+):
     content = [{"type": "text", "text": prompt}]
     if image_str:
         content.append(
@@ -232,14 +321,58 @@ def _build_anthropic_message_payload(prompt, model, max_tokens, image_str=None):
                 },
             }
         )
-    return {
+    payload = {
         "model": model,
         "max_tokens": max_tokens,
         "messages": [{"role": "user", "content": content}],
     }
+    if temperature is not None:
+        payload["temperature"] = float(temperature)
+    return payload
 
 
-def _build_openai_responses_payload(prompt, model, max_tokens, image_str=None):
+def _create_anthropic_client(base_url, api_key):
+    if Anthropic is None:
+        raise RuntimeError("anthropic package is not installed")
+
+    client_kwargs = {
+        "base_url": (base_url or "").rstrip("/"),
+        "timeout": _REQUEST_TIMEOUT_SECONDS,
+    }
+    try:
+        return Anthropic(auth_token=api_key, **client_kwargs)
+    except TypeError:
+        return Anthropic(api_key=api_key, **client_kwargs)
+
+
+def _call_anthropic_streaming(base_url, api_key, payload):
+    client = _create_anthropic_client(base_url, api_key)
+    endpoint = _endpoint_for_protocol(base_url, "anthropic-messages")
+    try:
+        with _dns_override_for_endpoint(endpoint):
+            with client.messages.stream(
+                model=payload["model"],
+                max_tokens=payload["max_tokens"],
+                messages=payload["messages"],
+                **(
+                    {"temperature": payload["temperature"]}
+                    if payload.get("temperature") is not None
+                    else {}
+                ),
+            ) as stream:
+                text = "".join(chunk for chunk in stream.text_stream).strip()
+        if not text:
+            raise RuntimeError("Anthropic stream returned empty text")
+        return text
+    finally:
+        close = getattr(client, "close", None)
+        if callable(close):
+            close()
+
+
+def _build_openai_responses_payload(
+    prompt, model, max_tokens, image_str=None, temperature=None
+):
     content = [{"type": "input_text", "text": prompt}]
     if image_str:
         content.append(
@@ -248,14 +381,46 @@ def _build_openai_responses_payload(prompt, model, max_tokens, image_str=None):
                 "image_url": f"data:image/png;base64,{image_str}",
             }
         )
-    return {
+    payload = {
         "model": model,
         "input": [{"role": "user", "content": content}],
         "max_output_tokens": max_tokens,
     }
+    if temperature is not None:
+        payload["temperature"] = float(temperature)
+    return payload
 
 
-def _build_openai_chat_payload(prompt, model, image_str=None):
+def _openai_chat_extra_body_from_env():
+    extra = {}
+    raw = os.environ.get("SMOOTHNAV_OPENAI_CHAT_EXTRA_BODY_JSON", "").strip()
+    if raw:
+        try:
+            loaded = json.loads(raw)
+            if isinstance(loaded, dict):
+                extra.update(loaded)
+            else:
+                logger.warning(
+                    "Ignoring SMOOTHNAV_OPENAI_CHAT_EXTRA_BODY_JSON because it is not an object."
+                )
+        except json.JSONDecodeError as exc:
+            logger.warning(
+                "Ignoring invalid SMOOTHNAV_OPENAI_CHAT_EXTRA_BODY_JSON: %s",
+                exc,
+            )
+    if _bool_from_env("SMOOTHNAV_OPENAI_CHAT_ENABLE_THINKING", False):
+        extra["enable_thinking"] = True
+    return extra
+
+
+def _build_openai_chat_payload(
+    prompt,
+    model,
+    image_str=None,
+    temperature=None,
+    max_tokens=None,
+    extra_body=None,
+):
     if image_str:
         content = [
             {"type": "text", "text": prompt},
@@ -263,10 +428,18 @@ def _build_openai_chat_payload(prompt, model, image_str=None):
         ]
     else:
         content = prompt
-    return {
+    payload = {
         "model": model,
         "messages": [{"role": "user", "content": content}],
     }
+    if temperature is not None:
+        payload["temperature"] = float(temperature)
+    if max_tokens is not None:
+        payload["max_tokens"] = int(max_tokens)
+    for key, value in dict(extra_body or {}).items():
+        if key not in payload:
+            payload[key] = value
+    return payload
 
 
 def _extract_text_from_anthropic_response(response):
@@ -328,29 +501,57 @@ def _extract_text(protocol, response):
 def _anthropic_httpx_headers(api_key, base_url):
     if Anthropic is not None:
         try:
-            client = Anthropic(
-                api_key=api_key,
-                base_url=(base_url or "").rstrip("/"),
-            )
-            headers = dict(client.default_headers)
-            headers.update(client.auth_headers)
-            return headers
+            client = _create_anthropic_client(base_url, api_key)
+            try:
+                headers = dict(client.default_headers)
+                headers.update(client.auth_headers)
+                return headers
+            finally:
+                close = getattr(client, "close", None)
+                if callable(close):
+                    close()
         except Exception:
             pass
 
-    headers = _anthropic_headers(api_key, use_auth_header=False)
+    headers = _anthropic_headers(api_key, use_auth_header=True)
     headers.setdefault("User-Agent", "SmoothNav/anthropic-httpx")
     headers.setdefault("x-stainless-lang", "python")
     headers.setdefault("x-stainless-package-version", "fallback")
     return headers
 
 
-def _call_model(base_url, api_key, model, provider, protocol, prompt, max_tokens, image_str=None):
+def _call_model(
+    base_url,
+    api_key,
+    model,
+    provider,
+    protocol,
+    prompt,
+    max_tokens,
+    image_str=None,
+    temperature=None,
+):
     del provider  # provider is validated before this point and carried for observability.
 
     if protocol == "anthropic-messages":
+        payload = _build_anthropic_message_payload(
+            prompt,
+            model,
+            max_tokens,
+            image_str,
+            temperature=temperature,
+        )
+        if Anthropic is not None:
+            try:
+                return _call_anthropic_streaming(base_url, api_key, payload)
+            except Exception as exc:
+                logger.warning(
+                    "Anthropic streaming path failed for %s: %s. Falling back to non-stream request.",
+                    model,
+                    exc,
+                )
+
         endpoint = _endpoint_for_protocol(base_url, protocol)
-        payload = _build_anthropic_message_payload(prompt, model, max_tokens, image_str)
         response = _post_json_httpx(
             endpoint,
             payload,
@@ -361,12 +562,25 @@ def _call_model(base_url, api_key, model, provider, protocol, prompt, max_tokens
     endpoint = _endpoint_for_protocol(base_url, protocol)
 
     if protocol == "openai-responses":
-        payload = _build_openai_responses_payload(prompt, model, max_tokens, image_str)
+        payload = _build_openai_responses_payload(
+            prompt,
+            model,
+            max_tokens,
+            image_str,
+            temperature=temperature,
+        )
         response = _post_json(endpoint, payload, _openai_headers(api_key))
         return _extract_text(protocol, response)
 
     if protocol == "openai-chat-completions":
-        payload = _build_openai_chat_payload(prompt, model, image_str)
+        payload = _build_openai_chat_payload(
+            prompt,
+            model,
+            image_str,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            extra_body=_openai_chat_extra_body_from_env(),
+        )
         response = _post_json(endpoint, payload, _openai_headers(api_key))
         return _extract_text(protocol, response)
 
@@ -382,6 +596,7 @@ class LLM:
         api_provider="",
         api_protocol="",
         max_tokens=_DEFAULT_MAX_TOKENS,
+        temperature=_LLM_TEMPERATURE,
     ):
         self.base_url = base_url
         self.api_key = api_key
@@ -391,8 +606,12 @@ class LLM:
             api_protocol,
         )
         self.max_tokens = max_tokens
+        self.temperature = temperature
+        self.last_error = ""
 
     def __call__(self, prompt):
+        self.last_error = ""
+
         def _call():
             return _call_model(
                 self.base_url,
@@ -402,9 +621,14 @@ class LLM:
                 self.api_protocol,
                 prompt,
                 self.max_tokens,
+                temperature=self.temperature,
             )
 
-        return _retry_api_call(_call, "LLM")
+        return _retry_api_call(
+            _call,
+            "LLM",
+            on_final_error=lambda message: setattr(self, "last_error", message),
+        )
 
 
 class VLM:
@@ -416,6 +640,7 @@ class VLM:
         api_provider="",
         api_protocol="",
         max_tokens=_DEFAULT_MAX_TOKENS,
+        temperature=_LLM_TEMPERATURE,
     ):
         self.base_url = base_url
         self.api_key = api_key
@@ -425,8 +650,11 @@ class VLM:
             api_protocol,
         )
         self.max_tokens = max_tokens
+        self.temperature = temperature
+        self.last_error = ""
 
     def __call__(self, prompt, image):
+        self.last_error = ""
         buffered = BytesIO()
         image.save(buffered, format="PNG")
         image_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
@@ -441,6 +669,11 @@ class VLM:
                 prompt,
                 self.max_tokens,
                 image_str=image_str,
+                temperature=self.temperature,
             )
 
-        return _retry_api_call(_call, "VLM")
+        return _retry_api_call(
+            _call,
+            "VLM",
+            on_final_error=lambda message: setattr(self, "last_error", message),
+        )

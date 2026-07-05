@@ -72,7 +72,10 @@ class InstanceImageGoal_Env:
 
         if self.args.episode_id != -1:
             if self.args.environment == 'habitat':
-                self._env.current_episode = self._env.episodes[self.args.episode_id]
+                selected_episode_idx = self.args.episode_id
+                if selected_episode_idx >= len(self._env.episodes):
+                    selected_episode_idx = 0
+                self._env.current_episode = self._env.episodes[selected_episode_idx]
             self.episode_no = self.args.episode_id
        
         obs = self._env.reset()

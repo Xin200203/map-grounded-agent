@@ -4,6 +4,7 @@
 
 import argparse
 import time
+from pathlib import Path
 
 import torch
 import numpy as np
@@ -17,6 +18,14 @@ from detectron2.utils.visualizer import ColorMode, Visualizer
 import detectron2.data.transforms as T
 
 from configs.categories import categories_id_mapping
+
+BASE_UNIGOAL_ROOT = Path(__file__).resolve().parents[3]
+DETECTRON_CONFIG_PATH = (
+    BASE_UNIGOAL_ROOT
+    / "configs"
+    / "COCO-InstanceSegmentation"
+    / "mask_rcnn_R_50_FPN_3x.yaml"
+)
 
 
 class SemanticPredMaskRCNN():
@@ -61,12 +70,12 @@ def compress_sem_map(sem_map):
 class ImageSegmentation():
     def __init__(self, args):
         string_args = """
-            --config-file configs/COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml
+            --config-file {}
             --input input1.jpeg
             --confidence-threshold {}
             --opts MODEL.WEIGHTS
             detectron2://COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x/137849600/model_final_f10217.pkl
-            """.format(args.sem_pred_prob_thr)
+            """.format(DETECTRON_CONFIG_PATH, args.sem_pred_prob_thr)
 
 
         string_args += " MODEL.DEVICE {}".format(args.device)

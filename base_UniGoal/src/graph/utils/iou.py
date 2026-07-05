@@ -1,5 +1,8 @@
 import numpy as np
 import torch
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def expand_3d_box(bbox: torch.Tensor, eps=0.02) -> torch.Tensor:
@@ -55,7 +58,13 @@ def compute_3d_iou_accuracte_batch(bbox1, bbox2):
     bbox1 = expand_3d_box(bbox1, 0.02)
     bbox2 = expand_3d_box(bbox2, 0.02)
     
-    import pytorch3d.ops as ops
+    try:
+        import pytorch3d.ops as ops
+    except ImportError:
+        logger.warning(
+            "pytorch3d is unavailable; falling back to axis-aligned IoU for 3D overlap."
+        )
+        return compute_iou_batch(bbox1, bbox2)
 
     bbox1 = bbox1[:, [0, 2, 5, 3, 1, 7, 4, 6]]
     bbox2 = bbox2[:, [0, 2, 5, 3, 1, 7, 4, 6]]

@@ -70,15 +70,15 @@ map_size_cm: 3600
 map_resolution: 5
 
 # LLM and VLM
-llm_model: "claude-sonnet-4-5-20250929"       # strong: planning, graph matching, instruction decomposition
-llm_model_fast: "claude-haiku-4-5-20251001"    # fast: captions, edges, room prediction
-vlm_model: "claude-haiku-4-5-20251001"         # vision: object captioning (frequent)
-api_provider: "anthropic"                      # anthropic -> /v1/messages, openai -> /v1/responses
-api_protocol: "anthropic-messages"             # claude via Clauddy should use anthropic-messages
+llm_model: "deepseek-v4-pro"       # dashscope deepseek v4 planner
+llm_model_fast: "deepseek-v4-pro"    # dashscope deepseek v4 monitor/fast path
+vlm_model: "deepseek-v4-pro"         # dashscope deepseek v4 multimodal path
+api_provider: "openai"                      # DashScope OpenAI-compatible chat completions
+api_protocol: "openai-chat-completions"     # DashScope compatible-mode /chat/completions
 api_key: ""
-base_url: ""
-api_key_env: "SMOOTHNAV_API_KEY"
-base_url_env: "SMOOTHNAV_BASE_URL"
+base_url: "https://dashscope.aliyuncs.com/compatible-mode/v1"
+api_key_env: "DASHSCOPE_API_KEY"
+base_url_env: "DASHSCOPE_BASE_URL"
 
 # Phase 2 controller profiles and ablations
 controller_profile: ""
@@ -116,3 +116,9 @@ graph_text_goal_use_frontier_anchor: true
 graph_text_goal_allow_local_direct_object_goal: true
 graph_text_goal_direct_relevance_threshold: 0.75
 graph_text_goal_nonlocal_object_as_search_anchor: true
+
+# BEV/MLLM frontier-branch planner intervention for targeted s21 online probes.
+mllm_frontier_planner_mode: "online"
+mllm_frontier_max_branches: 8
+mllm_frontier_image_scale: 1
+graph_mllm_frontier_prior_weight: 4.0
