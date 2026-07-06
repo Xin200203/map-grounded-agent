@@ -260,6 +260,18 @@ backbone 共享改动（frontier 价值评分、关系裁剪、文本可见接�
 **修复 regime 中控制器 SPL 差距全程最大**：periodic 0.041 / full 0.104（2.6×）/ no-prefetch 0.126（3.1×，配对 3W/1L）@n=12 —— 与"控制器价值随世界模型质量增长"方向一致；**n=48 扩样已发射**（17:51，3 profile × 36 集），显著则为论文的建设性正结果。
 **论文弧最终形态（候选）**：null（双通道 n=48）→ 根因（图召回 6 caption）→ 一行修复（2.5× 召回）→ 瓶颈上移（转化层）+ 控制器价值随 regime 健康度显现[待 n=48 检验]。
 
+## 5.0.8 召回 regime n=48 终判 —— 三重复现的 regime-invariant null（2026-07-06，Claim，实验战役结束）
+
+**召回 regime cross-48**：periodic SR 0.146/SPL 0.043；full 0.083/0.037（**名义更差**，n.s. p=0.51）；no-prefetch 0.125/0.048（n.s.）。**n=12 的"控制器价值最大"信号未活过 n=48**——这是同一模式第三次发生（弱 SPL、强 SPL、召回 SPL 全部 n12→n48 归零）。
+
+**由此确立论文的中心 Claim（比任何"正向"版本都强）：outcome-level null 是 regime-invariant 的**——跨弱 LLM / 强 LLM / 修复感知三个正交轴、144 集 matched，**无任何控制器变体在任何 regime、任何方向上显著改变 SR/SPL**。这不是"我们没测出优势"，而是"在系统性充分功效下，控制器复杂度对该任务 outcome 的贡献可证伪地为零"。
+
+**分层瓶颈被完整刻画（建设性诊断主结果）**：召回修复（1 参数）令 never_detected 占失败 55–70% → **21–29%**，caption 6→16；但 detected_no_anchor 立即升为最大失败桶（18–23/~30）→ **瓶颈从感知层移到语义-几何转化层，SR 不变**。控制器同样不修转化层。
+
+**机制层正向结果不变（论文的正贡献所在）**：出窗 14×、override 5×、prefetch −50% 调用、门控纵深防御计价、召回修复解锁 ep159（全程不可解→首解）。这些是过程/成本/诊断层的真实效应，与 outcome null 并存不矛盾。
+
+**G5 终裁触发**：论文确定为 **rigorous negative-result + layered-bottleneck audit** 定位。正向 outcome 结果已在三 regime 下证伪，不再追。venue 决策上交用户（见对话）。
+
 ## 5.1 E1 中期观察（2026-07-06 01:00，Observation，套件未全部完成）
 
 - **intact-15 已完成两 profile**（DeepSeek 通道）：baseline-periodic SR 7/15=0.467、SPL≈0.128；smoothnav-full SR 6/15=0.400、SPL≈0.122。**与 4 月 Sonnet 结果（full 0.6 > periodic 0.533）排序翻转**，且两者绝对值都大幅低于 Sonnet 时代——通道质量对全系统影响显著。SR 差距为 1 集（6 vs 7，n=15），在噪声区间内，先按"平局"解读。逐集：full 独得 291/296，periodic 独得 289/293/299。
