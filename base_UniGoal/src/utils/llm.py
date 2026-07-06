@@ -339,6 +339,13 @@ def _create_anthropic_client(base_url, api_key):
         "base_url": (base_url or "").rstrip("/"),
         "timeout": _REQUEST_TIMEOUT_SECONDS,
     }
+    # Gateways differ on credential transport: Clauddy-style proxies accept
+    # Authorization: Bearer (auth_token), while others require x-api-key.
+    auth_mode = (
+        os.environ.get("SMOOTHNAV_ANTHROPIC_AUTH_MODE", "auth_token").strip().lower()
+    )
+    if auth_mode in {"x-api-key", "api-key", "api_key"}:
+        return Anthropic(api_key=api_key, **client_kwargs)
     try:
         return Anthropic(auth_token=api_key, **client_kwargs)
     except TypeError:
