@@ -24,15 +24,20 @@ Do not promote a conclusion based only on a single successful episode when a lar
 - If sample counts differ across profiles, mark the comparison as **partial**.
 - If data corruption or missing assets block a validation path, record that as a **dataset blocker**, not a controller failure.
 
-## Current Hard Blocker
-- Cross-scene validation is currently blocked by corrupted HM3D `val` assets on the experiment server.
-- Treat HM3D data integrity as a first-class research blocker for top-tier submission readiness.
-- Do not declare the paper submission-ready while multi-scene validation remains blocked by broken assets.
+## Current State (updated 2026-07-06)
+- HM3D `val` assets repaired long ago; the old data blocker is CLOSED.
+- Weak-channel (DeepSeek) evidence is final: outcome null at n=48 for full-vs-periodic;
+  mechanism-level large effects (out-of-window 14x, override 5x); no-prefetch is the
+  best cross-scene variant; monitor contributes nothing.
+- Strong-channel condition (Sonnet 4.5 planner via vapeur gateway) adjudicates whether
+  outcome separation appears with better semantics.
+- Statistical discipline: SR differences at n<=15 are unresolvable; use matched n=48
+  pairing plus mechanism metrics; never claim from 1-2 episode deltas.
 
 ## Document Priorities
 When updating documentation, keep these outputs current in priority order:
-1. `docs/implementation/episode296_grounding_and_graph_growth_diagnosis_20260421.md`
-2. paper-gap assessment documents under `docs/paper/`
+1. `docs/paper/smoothnav_icra2027_story_and_experiment_design_20260705.md` (living G-gate record)
+2. `docs/paper/draft_outline_20260706.md` (paper skeleton)
 3. phased execution / experiment plans under `docs/planning/`
 
 ## Non-goals For The Current Pass
