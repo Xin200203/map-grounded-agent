@@ -272,6 +272,19 @@ backbone 共享改动（frontier 价值评分、关系裁剪、文本可见接�
 
 **G5 终裁触发**：论文确定为 **rigorous negative-result + layered-bottleneck audit** 定位。正向 outcome 结果已在三 regime 下证伪，不再追。venue 决策上交用户（见对话）。
 
+## 5.0.9 C3 probe 判定：承诺粘性机制生效（2026-07-06 23:00，Observation → n=48 扩样中）
+
+**C1 诊断 → C2 机制 → C3 验证的闭环**：从 34 次被驱逐承诺的解剖导出 target-commitment persistence（stagnation/stuck/pending 三驱逐器只换路径不弃目标 + 菜单毒化免疫 + 安全阀），probe 结果：
+
+| 修复 regime cross-12 | SR | SPL |
+|---|---|---|
+| periodic / recall-full（对照） | 各 2/12=0.167 | 0.041 / 0.104 |
+| **full+persistence** | **4/12=0.333** | **0.132** |
+| **no-prefetch+persistence** | **4/12=0.333** | 0.129 |
+
+- **战役首个真正 SR 提升**（翻倍，两宿主一致，全战役跨场景最高）；翻转集 159/358 正是诊断标本；859 安全阀耗尽回退（by design）。
+- n=12 McNemar +2/−0 n.s. → **n=48 扩样已发射**（23:10，3 profile 含 periodic+persistence 对照，构成调度×粘性 2×2）。判据：若 SR 比例保持（~12-16/48 vs 6-7/48），McNemar 可达显著 → 论文获得"诊断驱动的正向主结果"，叙事升级为 audit→root-cause→repair(感知层)→repair(转化层)→outcome 增益的完整闭环。
+
 ## 5.1 E1 中期观察（2026-07-06 01:00，Observation，套件未全部完成）
 
 - **intact-15 已完成两 profile**（DeepSeek 通道）：baseline-periodic SR 7/15=0.467、SPL≈0.128；smoothnav-full SR 6/15=0.400、SPL≈0.122。**与 4 月 Sonnet 结果（full 0.6 > periodic 0.533）排序翻转**，且两者绝对值都大幅低于 Sonnet 时代——通道质量对全系统影响显著。SR 差距为 1 集（6 vs 7，n=15），在噪声区间内，先按"平局"解读。逐集：full 独得 291/296，periodic 独得 289/293/299。
