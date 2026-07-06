@@ -45,4 +45,7 @@ class ControllerState:
     target_anchor_last_value_source: str = ""
     target_anchor_last_seen_step: Optional[int] = None
     target_anchor_decommit_reason: str = ""
+    target_commit_label: str = ""
+    target_commit_approach_retries: int = 0
+    target_commit_stuck_strikes: int = 0
     needs_initial_plan: bool = True

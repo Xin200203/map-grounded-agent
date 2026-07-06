@@ -22,6 +22,67 @@ TARGET_ANCHOR_UPDATE_TRIGGERS = {
 }
 
 
+def _commitment_persistence_enabled(args) -> bool:
+    return bool(getattr(args, "controller_target_commitment_persistence", False))
+
+
+def _commit_label(target_region: str) -> str:
+    text = str(target_region or "")
+    if text.startswith("object:"):
+        return text.split("object:", 1)[1].strip()
+    if text.startswith("unexplored target:"):
+        return text.split("unexplored target:", 1)[1].strip()
+    return ""
+
+
+def _note_commit_label(controller_state, label: str) -> None:
+    if label != controller_state.target_commit_label:
+        controller_state.target_commit_label = label
+        controller_state.target_commit_approach_retries = 0
+        controller_state.target_commit_stuck_strikes = 0
+
+
+def _convert_commit_to_search_anchor(controller_state, reason: str, step_idx: int):
+    """Keep the committed target, change only the approach.
+
+    Converts an ``object: X`` commitment (or refreshes an existing anchor) into
+    the ``unexplored target:X`` search-anchor form, whose target-progress
+    frontier term plus repeat/recent penalties select a *different* approach
+    frontier on the next grounding. Diagnosis 20260706: eviction policies were
+    conflating path-level failure with target-level failure (34 evicted
+    commitments across 10 failures).
+    """
+
+    from smoothnav.planner import Strategy
+
+    current = controller_state.current_strategy
+    label = _commit_label(getattr(current, "target_region", ""))
+    if not label:
+        return None
+    _note_commit_label(controller_state, label)
+    new_strategy = Strategy(
+        target_region=f"unexplored target:{label}",
+        bias_position=getattr(current, "bias_position", None),
+        reasoning=(
+            f"commitment persistence: approach retry after {reason}; "
+            f"target '{label}' evidence stands"
+        ),
+        explored_regions=list(getattr(current, "explored_regions", []) or []),
+        anchor_object=label,
+    )
+    controller_state.current_strategy = new_strategy
+    controller_state.same_goal_hold_count = 0
+    controller_state.direction_reuse_count = 0
+    logger.info(
+        "Step %s: commitment persistence (%s) -> retry approach for '%s' (retry %s)",
+        step_idx,
+        reason,
+        label,
+        controller_state.target_commit_approach_retries,
+    )
+    return new_strategy
+
+
 def plan_strategy(high_planner, graph, controller_state, goal_description: str,
                   escalate_reason: str, agent_pos: Tuple[int, int], map_size: int,
                   episode_id: int, step_idx: int, trace_writer=None,
@@ -333,9 +394,13 @@ def handle_frontier_reached(controller_state, graph_delta, graph, bev_map, args,
         )
         current_specificity = strategy_specificity(current_target_region)
         pending_specificity = strategy_specificity(pending_target_region)
-        if is_target_search_anchor(current_target_region) and pending_specificity <= current_specificity:
+        protect_current = is_target_search_anchor(current_target_region) or (
+            _commitment_persistence_enabled(args)
+            and is_object_target(current_target_region)
+        )
+        if protect_current and pending_specificity <= current_specificity:
             logger.info(
-                "Step %s: Discard stale pending behind target anchor -> %s",
+                "Step %s: Discard stale pending behind committed target -> %s",
                 step_idx,
                 pending_target_region,
             )
@@ -372,6 +437,33 @@ def handle_frontier_reached(controller_state, graph_delta, graph, bev_map, args,
         hold_limit = int(
             getattr(args, "controller_target_anchor_stall_patience_updates", 4) or 4
         )
+        max_retries = int(
+            getattr(args, "controller_target_commit_max_approach_retries", 3) or 3
+        )
+        if (
+            controller_state.target_anchor_stall_updates >= hold_limit
+            and _commitment_persistence_enabled(args)
+            and controller_state.target_commit_approach_retries < max_retries
+        ):
+            _note_commit_label(
+                controller_state,
+                _commit_label(controller_state.current_strategy.target_region),
+            )
+            controller_state.target_commit_approach_retries += 1
+            controller_state.target_anchor_stall_updates = 0
+            _convert_commit_to_search_anchor(
+                controller_state, "anchor_stall", step_idx
+            )
+            outcome = {
+                "handled": True,
+                "pending_promoted": False,
+                "pending_promotion_reason": "",
+                "forced_replan_due_to_direction_reuse": False,
+            }
+            apply_strategy_fn(
+                controller_state.current_strategy, graph, bev_map, args, global_goals
+            )
+            return outcome
         if controller_state.target_anchor_stall_updates >= hold_limit:
             controller_state.explored_regions.append(
                 f"{controller_state.current_strategy.target_region} (stalled)"
@@ -426,6 +518,33 @@ def handle_frontier_reached(controller_state, graph_delta, graph, bev_map, args,
             or getattr(args, "controller_same_frontier_reuse_threshold", 2)
             or 3
         )
+        max_retries = int(
+            getattr(args, "controller_target_commit_max_approach_retries", 3) or 3
+        )
+        if (
+            controller_state.same_goal_hold_count >= hold_limit
+            and _commitment_persistence_enabled(args)
+            and controller_state.target_commit_approach_retries < max_retries
+        ):
+            _note_commit_label(
+                controller_state,
+                _commit_label(controller_state.current_strategy.target_region),
+            )
+            controller_state.target_commit_approach_retries += 1
+            converted = _convert_commit_to_search_anchor(
+                controller_state, "object_stagnation", step_idx
+            )
+            if converted is not None:
+                outcome = {
+                    "handled": True,
+                    "pending_promoted": False,
+                    "pending_promotion_reason": "",
+                    "forced_replan_due_to_direction_reuse": False,
+                }
+                apply_strategy_fn(
+                    controller_state.current_strategy, graph, bev_map, args, global_goals
+                )
+                return outcome
         if controller_state.same_goal_hold_count >= hold_limit:
             controller_state.explored_regions.append(
                 f"{controller_state.current_strategy.target_region} (stagnant)"
@@ -563,6 +682,40 @@ def handle_stuck_replan(controller_state, graph_delta, graph, bev_map, args,
     if controller_state.needs_initial_plan or not graph_delta.stuck:
         return False
     current_target = getattr(controller_state.current_strategy, "target_region", "")
+    max_strikes = int(
+        getattr(args, "controller_target_commit_max_stuck_strikes", 2) or 2
+    )
+    if (
+        _commitment_persistence_enabled(args)
+        and (
+            is_object_target(current_target)
+            or is_target_search_anchor(current_target)
+        )
+        and controller_state.target_commit_stuck_strikes < max_strikes
+    ):
+        # Physical stuck is a path-level failure: keep the committed target,
+        # force a different approach frontier, and let executor suppression
+        # handle the unsticking. Target abandonment needs target-level
+        # evidence, not motion evidence.
+        _note_commit_label(controller_state, _commit_label(current_target))
+        controller_state.target_commit_stuck_strikes += 1
+        controller_state.no_progress_steps = 0
+        if is_object_target(current_target):
+            _convert_commit_to_search_anchor(
+                controller_state, "stuck_recovery", step_idx
+            )
+        controller_state.pending_strategy = None
+        controller_state.direction_reuse_count = 0
+        apply_strategy_fn(
+            controller_state.current_strategy, graph, bev_map, args, global_goals
+        )
+        logger.info(
+            "Step %s: STUCK under committed target -> keep target, re-approach (strike %s/%s)",
+            step_idx,
+            controller_state.target_commit_stuck_strikes,
+            max_strikes,
+        )
+        return True
     if str(current_target).startswith("object:"):
         logger.info(
             "Step %s: object target stuck; decommit and request alternative -> %s",
