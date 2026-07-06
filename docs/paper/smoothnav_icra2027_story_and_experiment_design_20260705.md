@@ -230,6 +230,19 @@ backbone 共享改动（frontier 价值评分、关系裁剪、文本可见接�
 
 **强条件（Sonnet4.5+Haiku4.5 via vapeur）在跑**：判定 outcome 分离是否随语义质量出现（路径 α 的核心检验）。
 
+## 5.0.5 强条件裁决 + 最终论点定稿（2026-07-06，Claim 候选）
+
+**强条件（Sonnet4.5+Haiku4.5 via vapeur）cross-12**：periodic SR 2/12 / SPL 0.054 / oow **0**；full SR 2/12 / SPL **0.090** / oow **0**；配对 SPL **2W/0L/10T**（661: 0.853 vs 0.517；358: 0.226 vs 0.127）。
+
+**LLM 强度轴三结论**：
+1. SR 不随通道强度分离（双通道 null：弱 n=48、强 n=12 同集同数）——跨场景成功率为任务/感知上限；
+2. SPL 在强通道干净分离（+68%，共同成功集全胜）——控制器把好语义转化为严格更优路径；弱通道下 SPL 配对混杂（1W/2L/9T）；
+3. 出窗病理是弱语义特有（periodic：DeepSeek 43 次 → Sonnet 0 次）——恢复机制的价值形态 = 弱语义保险。
+
+**最终论点（论文 thesis）**：控制器机制买不来感知受限任务的成功率；它在强语义下买效率、在弱语义下买退化保护；monitor 无价值、投机 prefetch 为负资产。推荐精益配置：事件调度 + 恢复 + 门控锚定（无 monitor/prefetch）。
+
+**最后一波实验（2026-07-06 10:40 已发射）**：强条件 no-prefetch × cross-12（补主表对称）+ 强条件 {periodic, full, no-prefetch} × 36 扩样 → 双通道均达 n=48。收线后表 1 定稿、Abstract/Intro 按"条件化效率定理"改写。
+
 ## 5.1 E1 中期观察（2026-07-06 01:00，Observation，套件未全部完成）
 
 - **intact-15 已完成两 profile**（DeepSeek 通道）：baseline-periodic SR 7/15=0.467、SPL≈0.128；smoothnav-full SR 6/15=0.400、SPL≈0.122。**与 4 月 Sonnet 结果（full 0.6 > periodic 0.533）排序翻转**，且两者绝对值都大幅低于 Sonnet 时代——通道质量对全系统影响显著。SR 差距为 1 集（6 vs 7，n=15），在噪声区间内，先按"平局"解读。逐集：full 独得 291/296，periodic 独得 289/293/299。
