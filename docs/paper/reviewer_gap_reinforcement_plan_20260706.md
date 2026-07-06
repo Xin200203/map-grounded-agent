@@ -76,6 +76,7 @@
 
 - [x] **G1 完成**（2026-07-06）：协议**逐项同构**（TN: T=1000, r=1.0m）；发表 TN 数字 20.2/11.4（7B 模型）括住我们的区间 → 分支 (a)，直接引用，无需重跑。附赠头条佐证：7B→前沿级 LLM，SR 仍在同区间。见 `protocol_alignment_unigoal_20260706.md`。
 - [x] **G2 完成**（2026-07-06）：失败归因金字塔（weak n=48×4 profile + strong n=12×2）——**never_detected 占失败 55–70%（跨 profile、跨通道稳定）；visible_failed=0（192 集中无一"看见却失败"）**→ SR 上限感知主导坐实（论文表 4）。次级发现：smoothnav 系把失败沿金字塔上移（never_detected ↓、anchored_failed ↑）→ 控制器创造感知机会但受限于锚点转化，Future work 定向。
+- [x] **G2+ 根因剖析（2026-07-06，应用户要求加深）**：整集唯一 caption 平均仅 **5.5–7.2 个**；多个 chair 集整集零椅子进图（覆盖解释不成立）；检测器本身开火（capsule 语义通道活跃）→ **瓶颈定位为检测→图节点管线的门控吞吐**（`analyze_failure_root_cause.py`）。SR 上限精确化为"图召回受限"；解释发表 TN=20.2；未来工作靶点=图节点门控/建图帧分辨率。观测缺口记录：`distance_to_goal` 在 env 有但未入 trace（套件收线后补一行 tracer）。
 - [ ] G3：monitor/prefetch 结论双通道化（strong no-monitor / no-prefetch / 扩样在跑）
 - [ ] G4：主表显著性标注
 - [ ] G5：叙事分支决定（等 G3 收线）

@@ -43,7 +43,7 @@ Per-episode classification from step traces (priority: success > visible-failed 
 | smoothnav-no-prefetch | 8 | 0 | 5 | 12 | 23 | 0.58 |
 | strong periodic / full (cross-12) | 2 / 2 | 0 / 0 | 2 / 2 | 1 / 1 | 7 / 7 | 0.70 / 0.70 |
 
-**Finding 2.** 55–70% of failures never surface a target-like detection in the entire episode — stable across controllers and channels; zero episodes fail after a confirmed visible-target lock. The SR ceiling is perception-recall-bound. Controllers shift failures *up* the pyramid (never-detected ↓, anchored-failed ↑): better coverage creates perception opportunities that then stall at anchoring/reachability.
+**Finding 2.** 55–70% of failures never surface a target-like detection in the entire episode — stable across controllers and channels; zero episodes fail after a confirmed visible-target lock. Caption-level root-cause analysis sharpens this: the scene graph accumulates only **~6 unique object captions per 1000-step episode**, and several *chair* episodes fail with **zero chairs ever entering the graph** — implicating detection→graph-node throughput (the detector itself fires: capsules show active semantic channels), not exploration coverage. The SR ceiling is *graph-recall-bound*: controllers reason over a nearly empty world model. Controllers do shift failures up the pyramid (never-detected ↓, anchored-failed ↑): better coverage creates perception opportunities that then stall at anchoring/reachability. This also contextualizes the published upstream TN figure (20.2 with the same pipeline).
 
 ### 4.4 What the controller does buy: control quality (Table 3)
 
