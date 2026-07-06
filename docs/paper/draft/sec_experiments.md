@@ -25,7 +25,9 @@
 | baseline-periodic | 0.125 | 0.035 | — |
 | smoothnav-full | 0.104 | 0.042 | p=1.00 n.s. / +0.007 [−0.043,+0.063] n.s. |
 | smoothnav-no-prefetch | 0.167 | 0.061 | p=0.69 n.s. / +0.026 [−0.016,+0.077] n.s. |
-| [S] strong-channel rows | [S] | [S] | [S] |
+| strong: baseline-periodic | 0.167 | 0.062 | — |
+| strong: smoothnav-full | 0.167 | 0.086 | p=1.00 n.s. / +0.023 [−0.034,+0.086] n.s. |
+| strong: smoothnav-no-prefetch | 0.104 | 0.046 | p=0.45 n.s. / −0.016 [−0.058,+0.021] n.s. |
 
 intact-15: explore 0.333/0.089, periodic 0.467/0.128, full 0.400/0.122, no-prefetch 0.400/0.121 (all pairwise n.s.).
 
@@ -59,7 +61,7 @@ Mechanism ladder on cross-12 (weak channel; identical LLM budget ~10 planner cal
 
 **Finding 3 (decomposition).** Recovery machinery eliminates the out-of-window degeneracy (43→7→3); trace-level attribution shows this is *avoidance-by-construction*, not repair: the shared repair path fires 20× for periodic yet resolves once (16 deferrals never recover), while the event-driven variants generate only 3 such events at comparable grounding-attempt counts (193 vs 184). Event-driven scheduling contributes the efficiency (SPL 0.037→0.085 at equal recovery machinery). Executor override ratio drops 5× (0.0285→0.0053). The LLM monitor contributes nothing (full ≈ no-monitor); a rule monitor matches outcomes at +50% planner calls.
 
-**Finding 4 (prefetch is a net negative).** Removing speculative prefetch yields the only variant ≥ all baselines on both metrics (Table 1) at *half* the planner calls (5.6 vs 10.2/ep): its per-episode win set is the union of the wins of full and the baselines. Mechanism: pending-strategy promotion on frontier arrival displaces working target anchors.
+**Finding 4 (prefetch buys nothing; outcome sign is channel-unstable).** Removing speculative prefetch halves planner calls (5.6 vs 10.2/ep) with no significant outcome change on either channel — nominally best under the weak planner (8/48 vs 5–6/48) and nominally worst under the strong one (5/48 vs 8/48), both n.s.; episode-level analysis under the weak planner shows pending-strategy promotion displacing working target anchors. The defensible recommendation is cost-based: identical outcomes at half the planner budget.
 
 ### 4.5 Semantic gates: defense-in-depth, priced (Table 4)
 
@@ -78,9 +80,9 @@ Gate-binding event counts under gate removals (cross-12, weak):
 
 ### 4.6 Channel interaction: machinery as insurance
 
-Under the strong channel the pathologies the machinery guards against largely vanish: out-of-window 43→0 for the *baseline* (trace-confirmed), low-relevance proposals 73→≤3, gates nearly dormant. Conversely the controller's efficiency edge appears where semantics are good: [S] strong-channel SPL comparison — full vs periodic +68% aggregate, paired 2W/0L on jointly-solved episodes (0.853 vs 0.517; 0.226 vs 0.127) at n=12, [S] n=48 pending.
+Under the strong channel the pathologies the machinery guards against largely vanish: out-of-window 43→0 for the *baseline* (trace-confirmed), low-relevance proposals 73→≤3, gates nearly dormant — the machinery is insurance whose premiums scale inversely with planner quality. The controller's efficiency edge on jointly-solved episodes is consistent in direction (e.g., 0.853 vs 0.517 and 0.226 vs 0.127 SPL on the two episodes solved by both at n=12) but dilutes to non-significance over the full n=48 (+0.023, CI spans zero): with so few solvable episodes, efficiency effects cannot reach significance before recall does (§4.3).
 
-**Finding 6 (conditional value theorem).** Controller machinery cannot buy success on a perception-bound task at either semantic strength; it buys *efficiency* when semantics are strong and *degeneracy protection* when semantics are weak. The premium paid by each protective mechanism scales inversely with planner quality.
+**Finding 6 (what machinery buys, finally).** Across 96 matched episodes × 2 channels, no variant shifts SR or SPL significantly in any direction — a well-powered, twice-replicated null for *outcome-level* controller value on a graph-recall-bound task. What the machinery demonstrably buys is *process quality and cost*: elimination of degenerate control states (out-of-window 14×, overrides 5×), planner-call efficiency (prefetch −50%, rules-monitor +50% for nothing), and protection whose binding rate scales inversely with planner quality (out-of-window 43→0, junk proposals 73→≤3 as the planner strengthens). Aggregate SPL consistently favors the full controller on both channels (+0.007 / +0.023) without reaching significance.
 
 ### 4.7 Qualitative
 
