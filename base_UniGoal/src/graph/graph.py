@@ -306,6 +306,21 @@ Please provide the relationship you can determine from the image.
             cfg.relation_same_room_only = True
             cfg.relation_topk_per_new_node = 8
             cfg.relation_max_pairs_per_update = 32
+            # Node-creation recall knobs for the graph-recall repair probe.
+            # Defaults reproduce the historical gating exactly; only explicit
+            # config overrides change behavior (failure attribution showed the
+            # scene graph averages ~6 unique captions per 1000-step episode
+            # under these gates).
+            args = getattr(self, "args", None)
+            cfg.obj_min_detections = int(
+                getattr(args, "graph_obj_min_detections", cfg.obj_min_detections)
+            )
+            cfg.min_points_threshold = int(
+                getattr(args, "graph_min_points_threshold", cfg.min_points_threshold)
+            )
+            cfg.dbscan_min_points = int(
+                getattr(args, "graph_dbscan_min_points", cfg.dbscan_min_points)
+            )
         self.cfg = cfg
 
     def set_agent(self, agent):
