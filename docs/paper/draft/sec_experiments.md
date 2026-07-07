@@ -92,9 +92,9 @@ Reopening the funnel is not enough — it must be *verified*. The four-row ablat
 
 | variant | funnel state | SR (full) | SR (np) |
 |---|---|---|---|
-| C45 | severed (reference) | 8/48 | [locked] |
-| C456 | takeover reopened, unverified | 4/48 | — |
-| C4567 | + close-range keep, unverified | [pending] | [pending] |
+| C45 | severed (reference) | 8/48 | 6/48 |
+| C456 | takeover reopened, unverified | 4/48 (p=.29) | — |
+| C4567 | + close-range keep, unverified | 4/48 (p=.22) | 5/48 (p=1.0) |
 | C7v | + VLM verification at initiation | [pending] | [pending] |
 
 Unverified takeover is *net-negative* (C456 < C45): with detection-relevance as the only gate, the executor burns its step budget chasing false sightings. This is precisely the propose-verify structure reported across recent object-nav systems (SG-Nav, TriHelper, VLFM); our contribution is locating the failure *at the module junction* — the text pipeline lacked the verifier that its ins-image sibling had in the same slot — and pricing verification (Haiku crop-verdicts, ≤8 calls/episode, layered category+intrinsic criteria, fail-open).
