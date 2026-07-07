@@ -442,8 +442,20 @@ def resolve_bias_position(parsed: dict, graph, agent_pos: Tuple[int, int],
     choice_lower = choice_id.lower()
 
     if choice_type == 'object':
+        anchor_min_detections = int(
+            getattr(getattr(graph, "args", None), "graph_anchor_min_detections", 0) or 0
+        )
         candidates = []
         for node in graph.nodes:
+            node_detections = 0
+            try:
+                node_detections = int(
+                    (getattr(node, "object", {}) or {}).get("num_detections", 0) or 0
+                )
+            except Exception:
+                node_detections = 0
+            if node_detections < anchor_min_detections:
+                continue
             if (hasattr(node, 'caption') and caption_matches_label(choice_lower, node.caption)
                     and node.center is not None):
                 distance = (

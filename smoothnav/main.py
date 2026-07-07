@@ -35,6 +35,7 @@ from smoothnav.controller_logic import (
     handle_stuck_replan,
     is_target_search_anchor,
     is_room_target,
+    maybe_auto_commit_target,
     maybe_call_monitor,
     maybe_promote_pending,
     plan_strategy,
@@ -1136,21 +1137,31 @@ def main():
                         else:
                             event_replan_reason = "New room discovered, can make specific choice"
                             trace_trigger = "new_room_discovered"
-                        controller_state.current_strategy = plan_strategy_budgeted(
-                            fallback_strategy=controller_state.current_strategy,
-                            high_planner=high_planner,
-                            graph=graph,
-                            controller_state=controller_state,
-                            goal_description=goal_description,
-                            escalate_reason=event_replan_reason,
-                            agent_pos=(int(agent_map_x), int(agent_map_y)),
-                            map_size=args.map_size,
-                            episode_id=step_episode_id,
-                            step_idx=step,
-                            trace_writer=tracer,
-                            mission_state=mission_manager.state,
-                            world_state=world_state,
+                        auto_commit_strategy = (
+                            maybe_auto_commit_target(
+                                controller_state, graph_delta, args, step, graph=graph
+                            )
+                            if trace_trigger == "target_candidate_detected"
+                            else None
                         )
+                        if auto_commit_strategy is not None:
+                            controller_state.current_strategy = auto_commit_strategy
+                        else:
+                            controller_state.current_strategy = plan_strategy_budgeted(
+                                fallback_strategy=controller_state.current_strategy,
+                                high_planner=high_planner,
+                                graph=graph,
+                                controller_state=controller_state,
+                                goal_description=goal_description,
+                                escalate_reason=event_replan_reason,
+                                agent_pos=(int(agent_map_x), int(agent_map_y)),
+                                map_size=args.map_size,
+                                episode_id=step_episode_id,
+                                step_idx=step,
+                                trace_writer=tracer,
+                                mission_state=mission_manager.state,
+                                world_state=world_state,
+                            )
                         apply_strategy_with_trace(
                             controller_state.current_strategy,
                             trace_trigger,
@@ -1290,6 +1301,19 @@ def main():
                 if pending_promotion["promoted"]:
                     pending_promoted = True
                     pending_promotion_reason = pending_promotion["reason"]
+
+                standing_auto_commit = maybe_auto_commit_target(
+                    controller_state, graph_delta, args, step, graph=graph
+                )
+                if standing_auto_commit is not None:
+                    controller_state.current_strategy = standing_auto_commit
+                    controller_state.pending_strategy = None
+                    apply_strategy_with_trace(
+                        controller_state.current_strategy,
+                        "target_auto_commit",
+                    )
+                    planner_reasons.append("target_auto_commit")
+                    is_planning = True
 
                 target_anchor_before_frontier = bool(
                     controller_state.current_strategy

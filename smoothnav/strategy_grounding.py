@@ -132,6 +132,13 @@ def _resolve_direct_object_goal(strategy, graph):
     goal_text = getattr(graph, "text_goal", None) or getattr(graph, "obj_goal", "")
     has_goal_text = bool(str(goal_text or "").strip())
     bias = getattr(strategy, "bias_position", None)
+    # Anchor-grade tier: coordinates that steer navigation require more
+    # sightings than menu/candidate surfacing (recall-relaxed single-glimpse
+    # nodes have unreliable centers; C3x: 12/34 failures reached a mislocated
+    # anchor). Default 0 keeps historical behavior (no gating).
+    anchor_min_detections = int(
+        getattr(getattr(graph, "args", None), "graph_anchor_min_detections", 0) or 0
+    )
     candidates = []
     for node in getattr(graph, "nodes", []) or []:
         caption = str(getattr(node, "caption", "") or "").lower()
@@ -146,6 +153,8 @@ def _resolve_direct_object_goal(strategy, graph):
             detections = int(getattr(node, "object", {}).get("num_detections", 0) or 0)
         except Exception:
             detections = 0
+        if detections < anchor_min_detections:
+            continue
         if bias is not None:
             try:
                 distance_to_bias = math.dist(

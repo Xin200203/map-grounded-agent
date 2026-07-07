@@ -181,3 +181,67 @@ class StuckStrikeTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class AutoCommitTests(unittest.TestCase):
+    def _graph_with_tv(self, detections):
+        node = SimpleNamespace(
+            caption="tv", center=(50, 60), object={"num_detections": detections}
+        )
+        return SimpleNamespace(nodes=[node], room_nodes=[], text_goal="a black tv")
+
+    def _args(self, min_det=2):
+        args = make_args(True)
+        args.controller_target_auto_commit = True
+        args.controller_auto_commit_relevance = 0.95
+        args.graph_anchor_min_detections = min_det
+        args.graph_text_goal_direct_relevance_threshold = 0.75
+        return args
+
+    def _state(self):
+        state = ControllerState()
+        state.needs_initial_plan = False
+        state.current_strategy = Strategy(
+            target_region="bedroom", bias_position=None, reasoning="explore"
+        )
+        return state
+
+    def test_graph_scan_fallback_commits_at_anchor_tier(self):
+        from smoothnav.controller_logic import maybe_auto_commit_target
+
+        strategy = maybe_auto_commit_target(
+            self._state(), make_delta(), self._args(), 5, graph=self._graph_with_tv(2)
+        )
+        self.assertIsNotNone(strategy)
+        self.assertEqual(strategy.target_region, "unexplored target:tv")
+        self.assertEqual(strategy.bias_position, (50, 60))
+
+    def test_single_glimpse_node_below_anchor_tier_defers(self):
+        from smoothnav.controller_logic import maybe_auto_commit_target
+
+        strategy = maybe_auto_commit_target(
+            self._state(), make_delta(), self._args(), 5, graph=self._graph_with_tv(1)
+        )
+        self.assertIsNone(strategy)
+
+    def test_dedupes_existing_commitment(self):
+        from smoothnav.controller_logic import maybe_auto_commit_target
+
+        state = self._state()
+        state.current_strategy = Strategy(
+            target_region="unexplored target:tv", bias_position=(1, 1), reasoning="x"
+        )
+        strategy = maybe_auto_commit_target(
+            state, make_delta(), self._args(), 5, graph=self._graph_with_tv(3)
+        )
+        self.assertIsNone(strategy)
+
+    def test_flag_off_never_commits(self):
+        from smoothnav.controller_logic import maybe_auto_commit_target
+
+        args = self._args()
+        args.controller_target_auto_commit = False
+        strategy = maybe_auto_commit_target(
+            self._state(), make_delta(), args, 5, graph=self._graph_with_tv(3)
+        )
+        self.assertIsNone(strategy)

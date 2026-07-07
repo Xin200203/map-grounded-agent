@@ -215,5 +215,11 @@ def target_candidate_details(nodes: Sequence[Any], goal_text: Any, *, threshold:
                 item["center"] = [int(center[0]), int(center[1])]
             except Exception:
                 item["center"] = None
+        try:
+            item["num_detections"] = int(
+                (getattr(node, "object", {}) or {}).get("num_detections", 0) or 0
+            )
+        except Exception:
+            item["num_detections"] = 0
         details.append(item)
     return details

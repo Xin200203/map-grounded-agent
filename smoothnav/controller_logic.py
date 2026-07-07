@@ -367,6 +367,88 @@ def update_target_anchor_attempt(controller_state, strategy, grounding_result,
     return target_anchor_attempt_summary(controller_state)
 
 
+def maybe_auto_commit_target(controller_state, graph_delta, args, step_idx: int,
+                             graph=None):
+    """Deterministically commit to a max-evidence target candidate.
+
+    Graded-authority rationale: a candidate whose caption matches the goal's
+    primary category (relevance >= threshold) carries full semantic evidence;
+    commitment creation should not depend on a stochastic LLM menu choice.
+    Anchor-grade coordinates additionally require ``graph_anchor_min_detections``
+    sightings so that recall-relaxed single-glimpse nodes cannot place anchors
+    (C3x diagnosis: 12/34 failures reached a mislocated anchor).
+    """
+
+    if not bool(getattr(args, "controller_target_auto_commit", False)):
+        return None
+    if controller_state.needs_initial_plan:
+        return None
+    threshold = float(getattr(args, "controller_auto_commit_relevance", 0.95) or 0.95)
+    min_det = int(getattr(args, "graph_anchor_min_detections", 0) or 0)
+    details = list(getattr(graph_delta, "target_candidate_details", []) or [])
+    if not details and graph is not None:
+        # Delta-based details only cover newly added nodes; an existing node
+        # crossing the anchor-grade sighting tier never re-fires the candidate
+        # event, so fall back to a full-graph scan (cheap: graphs hold ~16
+        # nodes even in the recall-relaxed regime).
+        from smoothnav.target_matching import target_candidate_details
+
+        goal_text = (
+            getattr(graph, "text_goal", None) or getattr(graph, "obj_goal", "") or ""
+        )
+        rel_threshold = float(
+            getattr(args, "graph_text_goal_direct_relevance_threshold", 0.75) or 0.75
+        )
+        details = target_candidate_details(
+            getattr(graph, "nodes", []) or [], goal_text, threshold=rel_threshold
+        )
+    best = None
+    for item in details:
+        score = float(item.get("score") or 0.0)
+        detections = int(item.get("num_detections") or 0)
+        center = item.get("center")
+        if score < threshold or center is None or detections < min_det:
+            continue
+        if best is None or score > best[0] or (
+            score == best[0] and detections > best[1]
+        ):
+            best = (score, detections, item)
+    if best is None:
+        return None
+    item = best[2]
+    label = str(item.get("caption") or "").strip()
+    if not label:
+        return None
+    current_label = _commit_label(
+        getattr(controller_state.current_strategy, "target_region", "")
+        if controller_state.current_strategy is not None
+        else ""
+    )
+    if current_label and current_label == label:
+        return None
+    from smoothnav.planner import Strategy
+
+    _note_commit_label(controller_state, label)
+    strategy = Strategy(
+        target_region=f"unexplored target:{label}",
+        bias_position=(int(item["center"][0]), int(item["center"][1])),
+        reasoning=(
+            f"auto-commit: '{label}' matches goal at relevance {best[0]:.2f} "
+            f"with {best[1]} sightings"
+        ),
+        explored_regions=list(controller_state.explored_regions),
+        anchor_object=label,
+    )
+    logger.info(
+        "Step %s: AUTO-COMMIT -> unexplored target:%s (rel=%.2f det=%d)",
+        step_idx,
+        label,
+        best[0],
+        best[1],
+    )
+    return strategy
+
+
 def handle_frontier_reached(controller_state, graph_delta, graph, bev_map, args,
                             global_goals, high_planner, goal_description,
                             agent_pos: Tuple[int, int], apply_strategy_fn,
