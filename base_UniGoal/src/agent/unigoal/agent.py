@@ -187,12 +187,12 @@ class UniGoal_Agent():
             raw = self.takeover_verifier(prompt, crop)
             verdict, reason = parse_verify_response(raw)
         except Exception as exc:
-            print(f"Rank: {self.envs.rank}, timestep: {timestep}, "
-                  f"takeover verify failed ({exc}); treating as unsure")
+            print(f"timestep: {timestep}, takeover verify failed ({exc}); "
+                  f"treating as unsure")
         cache['calls'] = cache.get('calls', 0) + 1
         cache['last'] = {'verdict': verdict, 'step': timestep, 'reason': reason}
-        print(f"Rank: {self.envs.rank}, timestep: {timestep}, takeover verify "
-              f"#{cache['calls']}: {verdict} ({reason})")
+        print(f"timestep: {timestep}, takeover verify #{cache['calls']}: "
+              f"{verdict} ({reason})")
         return verdict
 
     def reset(self):
