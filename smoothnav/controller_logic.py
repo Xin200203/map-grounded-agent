@@ -386,11 +386,12 @@ def maybe_auto_commit_target(controller_state, graph_delta, args, step_idx: int,
     threshold = float(getattr(args, "controller_auto_commit_relevance", 0.95) or 0.95)
     min_det = int(getattr(args, "graph_anchor_min_detections", 0) or 0)
     details = list(getattr(graph_delta, "target_candidate_details", []) or [])
-    if not details and graph is not None:
-        # Delta-based details only cover newly added nodes; an existing node
-        # crossing the anchor-grade sighting tier never re-fires the candidate
-        # event, so fall back to a full-graph scan (cheap: graphs hold ~16
-        # nodes even in the recall-relaxed regime).
+    if graph is not None:
+        # Delta-based details only cover newly added nodes, which start at one
+        # sighting and therefore can never pass an anchor-grade tier >= 2; an
+        # existing node crossing the tier later never re-fires the candidate
+        # event either. Always merge in a full-graph scan (cheap: graphs hold
+        # ~16 nodes even in the recall-relaxed regime).
         from smoothnav.target_matching import target_candidate_details
 
         goal_text = (
@@ -399,7 +400,7 @@ def maybe_auto_commit_target(controller_state, graph_delta, args, step_idx: int,
         rel_threshold = float(
             getattr(args, "graph_text_goal_direct_relevance_threshold", 0.75) or 0.75
         )
-        details = target_candidate_details(
+        details = details + target_candidate_details(
             getattr(graph, "nodes", []) or [], goal_text, threshold=rel_threshold
         )
     best = None
