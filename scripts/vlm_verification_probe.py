@@ -36,13 +36,12 @@ PROMPT = (
 
 def goal_text_for(episode, attribute_data):
     key = getattr(episode, "goal_key", None) or ""
-    for item in attribute_data or []:
-        if item.get("goal_key") == key:
-            attrs = item.get("attributes") or {}
-            return (
-                str(attrs.get("intrinsic_attributes", "")) + " "
-                + str(attrs.get("extrinsic_attributes", ""))
-            ).strip()
+    item = (attribute_data or {}).get(key)
+    if isinstance(item, dict):
+        return (
+            str(item.get("intrinsic_attributes", "")) + " "
+            + str(item.get("extrinsic_attributes", ""))
+        ).strip()
     return str(getattr(episode, "object_category", ""))
 
 
@@ -62,10 +61,10 @@ def main() -> int:
 
     from src.utils.llm import VLM
 
-    attribute_data = []
+    attribute_data = {}
     try:
         with gzip.open("data/datasets/textnav/val/val_text.json.gz") as fh:
-            attribute_data = json.load(fh).get("attribute_data", [])
+            attribute_data = json.load(fh).get("attribute_data", {})
     except Exception:
         pass
 
