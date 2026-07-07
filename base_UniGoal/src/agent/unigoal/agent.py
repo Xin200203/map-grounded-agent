@@ -548,7 +548,23 @@ class UniGoal_Agent():
                             if self.args.goal_type == 'ins-image':
                                 index = self.local_feature_match_lightglue()
                                 match_points = index.shape[0]
-                            if (self.args.goal_type == 'ins-image' and match_points < 80) or self.args.goal_type == 'text':
+                            # Close-range re-verification slot. ins-image fills
+                            # it with LightGlue re-matching; text historically
+                            # had NO verifier here and unconditionally cleared
+                            # AND blacklisted the temp goal, so an approach
+                            # could never survive to the 0.75 m lock (S8 audit
+                            # 2026-07-07: takeover fires, lock never happens).
+                            # C7: under a committed controller target, keep
+                            # approaching instead of discarding the sighting.
+                            keep_text_temp_goal = bool(
+                                getattr(self.args, 'executor_close_range_keep_under_commitment', False)
+                            ) and (
+                                current_target_region.startswith('unexplored target:')
+                                or current_target_region.startswith('object:')
+                            )
+                            if (self.args.goal_type == 'ins-image' and match_points < 80) or (
+                                self.args.goal_type == 'text' and not keep_text_temp_goal
+                            ):
                                 planner_inputs['goal'] = planner_inputs['exp_goal']
                                 selem = skimage.morphology.disk(3)
                                 new_goal_map = skimage.morphology.dilation(new_goal_map, selem)
