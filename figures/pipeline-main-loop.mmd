@@ -1,0 +1,29 @@
+flowchart TD
+    obs["S0 观测<br/>RGB-D + 检测器框出物体"] --> ingest["S1 进图<br/>建图: BEV地图<br/>记账: 场景图节点(名字/坐标/次数)"]
+    ingest --> cand{"S2 候选识别<br/>新东西像目标吗?<br/>(匹配分 >= 0.75)"}
+    cand -- 是 --> evt["S3 事件: 发现疑似目标"]
+    cand -- 否 --> evt2["S3 其他事件<br/>新房间 / 到达边界 / 卡住"]
+    evt --> commit["S4-S5 承诺<br/>C4: 满分候选 -> 直接承诺<br/>否则: LLM 从菜单选"]
+    evt2 --> replan["S4-S5 常规重规划<br/>LLM 选 物体/房间/方向"]
+    commit --> ground["S6 落地<br/>近且可信 -> 直奔坐标<br/>远 -> 搜索锚点 + frontier 打分"]
+    replan --> ground
+    ground --> proj["局部窗口投影<br/>(出窗 -> 移窗重投影)"]
+    proj --> drive["S8 司机(FMM)朝目标点走"]
+    drive --> trouble{"路上出状况?"}
+    trouble -- "卡住/打转" --> keep["S7 承诺维持(C2)<br/>只换路线 不弃目标<br/>安全阀: 重试3次/卡死2次"]
+    keep --> ground
+    trouble -- 正常 --> see{"S8 看见目标?"}
+    see -- 是 --> stop["锁定 -> 贴近 -> 停"]
+    see -- 否 --> obs
+    stop --> judge{"S9 距真目标 < 1米?"}
+    judge -- 是 --> ok["成功"]
+    judge -- "否 / 超1000步" --> fail["失败"]
+
+    style obs fill:#E8F5E9,stroke:#2E7D32
+    style ingest fill:#E8F5E9,stroke:#2E7D32
+    style commit fill:#E3F2FD,stroke:#1565C0
+    style replan fill:#E3F2FD,stroke:#1565C0
+    style ground fill:#EDE7F6,stroke:#6A1B9A
+    style keep fill:#FFF3E0,stroke:#E65100
+    style ok fill:#C8E6C9,stroke:#2E7D32
+    style fail fill:#FFCDD2,stroke:#B71C1C

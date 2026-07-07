@@ -1,0 +1,21 @@
+flowchart TD
+    root["跨场景 SR 钉死在 10-17%"] --> solved["[已解决的卡点]"]
+    root --> open["[剩余卡点]"]
+    solved --> s1["图召回 (S1)<br/>6 -> 16 caption<br/>一行参数, 已验证"]
+    solved --> s2["承诺创建 (S3-5)<br/>C4 自动承诺<br/>在体 527 次触发"]
+    solved --> s3["承诺维持 (S6-7)<br/>C2 粘性<br/>病灶集 100% 翻转"]
+    solved --> s4["锚点精度<br/>C5 分层<br/>幻影锚被门控"]
+    open --> o1["最后一公里 S8 (16/40)<br/>锚定后无法完成<br/>接近 -> 看见 -> 锁定 -> 判停<br/>位于冻结 backbone 的判别器<br/>改它 = 超出控制器范畴"]
+    open --> o2["感知质量残余 (18/40)<br/>合格候选(>=2次+高相关)不出现<br/>= 检测器/融合质量问题"]
+    open --> o3["统计层教训<br/>单集特异性极强<br/>n=12 信号五次在 n=48 死亡<br/>新主张必须 n=48 配对 + 显著性"]
+
+    style root fill:#ECEFF1,stroke:#37474F,stroke-width:2px
+    style solved fill:#C8E6C9,stroke:#2E7D32
+    style open fill:#FFCDD2,stroke:#B71C1C
+    style s1 fill:#E8F5E9,stroke:#2E7D32
+    style s2 fill:#E8F5E9,stroke:#2E7D32
+    style s3 fill:#E8F5E9,stroke:#2E7D32
+    style s4 fill:#E8F5E9,stroke:#2E7D32
+    style o1 fill:#FFEBEE,stroke:#B71C1C,stroke-width:3px
+    style o2 fill:#FFEBEE,stroke:#B71C1C
+    style o3 fill:#FFF8E1,stroke:#F57F17

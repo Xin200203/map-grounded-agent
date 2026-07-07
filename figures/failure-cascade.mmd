@@ -1,0 +1,16 @@
+flowchart LR
+    subgraph before["修复前 (弱语义 n=48)"]
+        direction LR
+        a1["从未见过目标<br/>占失败 55-70%"] --> a2["见过但未承诺"] --> a3["承诺被驱逐<br/>(34次全灭)"] --> a4["极少走到锚点"]
+    end
+    subgraph after["四波修复后 (C45 n=48)"]
+        direction LR
+        b1["从未见过目标<br/>约 15%"] --> b2["见过未承诺<br/>18/40<br/>(多为低质候选)"] --> b3["承诺被驱逐<br/>约 0 (C2消灭)"] --> b4["锚定却失败<br/>16/40<br/>失败质量堆在这里"]
+    end
+    before -. "召回修复 + C2 + C4 + C5" .-> after
+
+    style a1 fill:#FFCDD2,stroke:#B71C1C
+    style b1 fill:#FFF9C4,stroke:#F57F17
+    style b2 fill:#FFCDD2,stroke:#B71C1C
+    style b3 fill:#C8E6C9,stroke:#2E7D32
+    style b4 fill:#FFCDD2,stroke:#B71C1C,stroke-width:3px
