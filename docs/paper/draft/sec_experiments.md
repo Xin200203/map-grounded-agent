@@ -95,9 +95,9 @@ Reopening the funnel is not enough — it must be *verified*. The four-row ablat
 | C45 | severed (reference) | 8/48 | 6/48 |
 | C456 | takeover reopened, unverified | 4/48 (p=.29) | — |
 | C4567 | + close-range keep, unverified | 4/48 (p=.22) | 5/48 (p=1.0) |
-| C7v | + VLM verification at initiation | [pending] | [pending] |
+| C7v | + VLM verification at initiation | 4/48 (p=.22) | 3/48 (p=.51) |
 
-Unverified takeover is *net-negative* (C456 < C45): with detection-relevance as the only gate, the executor burns its step budget chasing false sightings. This is precisely the propose-verify structure reported across recent object-nav systems (SG-Nav, TriHelper, VLFM); our contribution is locating the failure *at the module junction* — the text pipeline lacked the verifier that its ins-image sibling had in the same slot — and pricing verification (Haiku crop-verdicts, ≤8 calls/episode, layered category+intrinsic criteria, fail-open).
+The adjudication is sharper than "verification is missing": adding the verifier (C7v: Haiku crop-verdicts, ≤8 calls/episode, layered category+intrinsic criteria, fail-open) changes *nothing* (vs C4567: +2/−2, p=1.0, dSPL +0.001). All three reopened variants land at 4/48 — half the reference. Post-mortem of the five episodes the reference wins: verified takeover fired in every one, displacing an anchor-path approach that — under the benchmark's enter-radius success criterion — would have finished. The takeover goal is a single-frame depth-estimate ellipse; the committed anchor is a multi-detection node centroid. The severed interface was not a defect but a load-bearing guard: the executor cannot finish episodes the anchor cannot, it can only lose episodes the anchor would have won. This inverts the propose-verify prescription reported for object-nav (SG-Nav, TriHelper, VLFM): verification rescues a takeover funnel only if the takeover's goal estimate outperforms what it preempts. The residual failure mass therefore sits in anchor *coordinate quality* — a perception-fusion property — not in executor control.
 
 ### 4.7 Qualitative
 
