@@ -499,6 +499,13 @@ class UniGoal_Agent():
                                 goal_type=self.args.goal_type,
                                 current_target_region=current_target_region,
                                 goal_name=getattr(self.envs, 'goal_name', None),
+                                takeover_under_commitment=bool(
+                                    getattr(
+                                        self.args,
+                                        'executor_visible_takeover_under_commitment',
+                                        False,
+                                    )
+                                ),
                             ):
                                 planner_inputs['goal'] = new_goal_map
                                 temp_goal = np.zeros((self.global_width, self.global_height))

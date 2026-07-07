@@ -65,12 +65,23 @@ def should_suppress_stuck_override(
     return bool(been_stuck and suppress_stuck_override)
 
 
-def should_allow_text_visible_temp_goal(*, goal_type, current_target_region, goal_name=None):
+def should_allow_text_visible_temp_goal(*, goal_type, current_target_region,
+                                        goal_name=None,
+                                        takeover_under_commitment=False):
     if str(goal_type or "") != "text":
         return True
-    # Text-goal navigation is now anchored through map/room/frontier evidence rather
-    # than opportunistic visible-target temp goals. Direct text->temp-goal takeover
-    # proved unstable in repaired cross-scene settings (e.g. ep527), even when the
-    # category matched, because the visible instance often lacked enough attribute
-    # evidence to justify commitment.
-    return False
+    # Historical suppression (April, ep527 era): opportunistic visible-target
+    # takeover on arbitrary sightings proved unstable, so the takeover link of
+    # the executor's approach funnel (sighting -> temp goal -> close-range
+    # re-discrimination -> lock -> stop) was severed for text goals. That left
+    # stop unreachable from the anchor path (S8 junction audit, 2026-07-07:
+    # anchored_failed 16/40, visible_failed 0).
+    #
+    # C6 reopens the link under controller evidence only: takeover is allowed
+    # exactly when the controller currently vouches for a committed target
+    # (object:/search-anchor strategy). Uncommitted exploration keeps the
+    # historical suppression.
+    if not takeover_under_commitment:
+        return False
+    target = str(current_target_region or "")
+    return target.startswith("unexplored target:") or target.startswith("object:")

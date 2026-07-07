@@ -245,3 +245,33 @@ class AutoCommitTests(unittest.TestCase):
             self._state(), make_delta(), args, 5, graph=self._graph_with_tv(3)
         )
         self.assertIsNone(strategy)
+
+
+class VisibleTakeoverGateTests(unittest.TestCase):
+    def test_suppressed_by_default_even_under_commitment(self):
+        from smoothnav.executor_adoption import should_allow_text_visible_temp_goal
+
+        self.assertFalse(should_allow_text_visible_temp_goal(
+            goal_type="text", current_target_region="unexplored target:tv"))
+
+    def test_c6_allows_takeover_only_under_commitment(self):
+        from smoothnav.executor_adoption import should_allow_text_visible_temp_goal
+
+        self.assertTrue(should_allow_text_visible_temp_goal(
+            goal_type="text", current_target_region="unexplored target:tv",
+            takeover_under_commitment=True))
+        self.assertTrue(should_allow_text_visible_temp_goal(
+            goal_type="text", current_target_region="object: tv",
+            takeover_under_commitment=True))
+        self.assertFalse(should_allow_text_visible_temp_goal(
+            goal_type="text", current_target_region="bedroom",
+            takeover_under_commitment=True))
+        self.assertFalse(should_allow_text_visible_temp_goal(
+            goal_type="text", current_target_region="unexplored north",
+            takeover_under_commitment=True))
+
+    def test_non_text_goals_unaffected(self):
+        from smoothnav.executor_adoption import should_allow_text_visible_temp_goal
+
+        self.assertTrue(should_allow_text_visible_temp_goal(
+            goal_type="ins-image", current_target_region=""))
