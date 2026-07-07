@@ -48,7 +48,9 @@ def scan_run(run_dir):
             eps = json.load(open(episode_file))
             if eps:
                 success = bool(eps[0].get("success"))
-                episode_id = eps[0].get("episode_id")
+                episode_id = eps[0].get(
+                    "habitat_episode_no", eps[0].get("episode_id")
+                )
         except Exception:
             pass
     return {
