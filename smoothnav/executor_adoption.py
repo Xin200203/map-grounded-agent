@@ -65,6 +65,41 @@ def should_suppress_stuck_override(
     return bool(been_stuck and suppress_stuck_override)
 
 
+def resolve_cached_verify_verdict(cache, *, timestep, interval, max_calls):
+    """C7' throttle: return a cached verdict, or None if a fresh VLM call is due.
+
+    Within `interval` steps of the last call the last verdict sticks; after
+    `max_calls` calls in the episode the last verdict sticks permanently
+    (fail-open 'unsure' if the cap is somehow hit with no verdict recorded).
+    """
+    last = cache.get("last")
+    if last is not None and int(timestep) - int(last["step"]) < int(interval):
+        return last["verdict"]
+    if int(cache.get("calls", 0)) >= int(max_calls):
+        return last["verdict"] if last is not None else "unsure"
+    return None
+
+
+def parse_verify_response(raw):
+    """Parse the verifier VLM response into ('yes'|'no'|'unsure', reason).
+
+    Anything unparseable fails open to 'unsure' so verifier downtime can
+    never sever the approach funnel.
+    """
+    import re
+
+    text = str(raw or "")
+    verdict = "unsure"
+    reason = ""
+    matched = re.search(r'"match"\s*:\s*"?(yes|no|unsure)', text, re.I)
+    if matched:
+        verdict = matched.group(1).lower()
+    reason_match = re.search(r'"reason"\s*:\s*"([^"]*)"', text)
+    if reason_match:
+        reason = reason_match.group(1)[:60]
+    return verdict, reason
+
+
 def should_allow_text_visible_temp_goal(*, goal_type, current_target_region,
                                         goal_name=None,
                                         takeover_under_commitment=False):

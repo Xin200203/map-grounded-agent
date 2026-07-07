@@ -443,6 +443,30 @@ def main():
     graph = Graph(args)
     envs = construct_envs(args)
     agent = UniGoal_Agent(args, envs)
+    if getattr(args, "executor_takeover_vlm_verify", False):
+        # C7' verifier runs on its own multimodal channel (the main planner
+        # channel may be text-only, e.g. deepseek-chat).
+        verify_base_url = os.environ.get("VAPEUR_BASE_URL", "")
+        verify_api_key = os.environ.get("VAPEUR_API_KEY", "")
+        verify_model = getattr(
+            args, "executor_takeover_verify_model", "claude-haiku-4-5"
+        )
+        if verify_base_url and verify_api_key:
+            from src.utils.llm import VLM
+
+            agent.takeover_verifier = VLM(
+                verify_base_url,
+                verify_api_key,
+                verify_model,
+                api_provider="anthropic",
+                api_protocol="anthropic-messages",
+            )
+            print(f"takeover verifier enabled: {verify_model}")
+        else:
+            print(
+                "takeover verifier requested but VAPEUR_BASE_URL/VAPEUR_API_KEY "
+                "missing; running unverified"
+            )
     executor_adapter = ExecutorAdapter(agent)
     grounder = GeometricGrounder()
     mission_manager = MissionProgressManager()
@@ -2062,6 +2086,7 @@ def main():
                     "stuck_goal_override": bool(agent.last_override_info.get("stuck_goal_override")),
                     "global_goal_override": bool(agent.last_override_info.get("global_goal_override")),
                     "executor_adopted_goal_source": agent.last_override_info.get("adopted_goal_source"),
+                    "takeover_verify_verdict": agent.last_override_info.get("takeover_verify_verdict"),
                     "executor_feedback_trace": (
                         executor_feedback.to_dict()
                         if executor_feedback is not None

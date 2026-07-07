@@ -30,6 +30,8 @@ from src.utils.visualization.save import save_video
 from src.utils.llm import LLM
 from smoothnav.executor_adoption import (
     compute_adoption_transition,
+    parse_verify_response,
+    resolve_cached_verify_verdict,
     resolve_strategy_epoch_transition,
     should_allow_text_visible_temp_goal,
     should_suppress_stuck_override,
@@ -101,6 +103,12 @@ class UniGoal_Agent():
         self.goal_map_mask = np.ones((self.global_width, self.global_height))
         self.pred_box = []
         self.last_semantic_instances = []
+        # C7' takeover verification (filled by main.py when enabled): a
+        # multimodal VLM that confirms a sighting before the executor is
+        # allowed to chase it. verifier_cache throttles calls per label.
+        self.takeover_verifier = None
+        self.last_fullres_rgb = None
+        self._verifier_cache = {}
         self.prompt_text2object = '"chair: 0, sofa: 1, plant: 2, bed: 3, toilet: 4, tv_monitor: 5" The above are the labels corresponding to each category. Which object is described in the following text? Only response the number of the label and not include other text.\nText: {text}'
         torch.set_grad_enabled(False)
         self.current_strategy_epoch = 0
@@ -114,6 +122,78 @@ class UniGoal_Agent():
             self.vis_image_list = []
         self.last_override_info = {}
         self.last_pose_after_action = None
+
+    def _verify_takeover_sighting(self):
+        """C7' gate: confirm the current sighting crop against the goal text
+        before the executor may take over.
+
+        Returns 'yes' / 'no' / 'unsure'. Criteria are layered per the
+        verification probe (2026-07-07): only category + intrinsic attributes
+        decide; surroundings are ignored (dataset descriptions are noisy).
+        Ambiguity and verifier errors fail open ('unsure') so the approach
+        funnel is never severed by verifier downtime. Calls are throttled by
+        a step interval and a per-episode cap; after the cap the last verdict
+        sticks.
+        """
+        cache = self._verifier_cache
+        timestep = int(getattr(self.envs, 'timestep', 0) or 0)
+        cached = resolve_cached_verify_verdict(
+            cache,
+            timestep=timestep,
+            interval=getattr(self.args, 'executor_takeover_verify_interval', 10),
+            max_calls=getattr(self.args, 'executor_takeover_verify_max_calls', 8),
+        )
+        if cached is not None:
+            return cached
+
+        frame = self.last_fullres_rgb
+        bbox = getattr(self, '_last_sighting_bbox_fullres', None)
+        if frame is None or bbox is None:
+            return 'unsure'
+        x1, y1, x2, y2 = [float(v) for v in np.asarray(bbox).reshape(-1)[:4]]
+        mx, my = 0.2 * (x2 - x1), 0.2 * (y2 - y1)
+        x1 = max(int(x1 - mx), 0)
+        y1 = max(int(y1 - my), 0)
+        x2 = min(int(x2 + mx), frame.shape[1])
+        y2 = min(int(y2 + my), frame.shape[0])
+        if x2 - x1 < 10 or y2 - y1 < 10:
+            return 'unsure'
+
+        if isinstance(self.text_goal, dict):
+            description = str(self.text_goal.get('intrinsic_attributes', '') or '').strip()
+        else:
+            description = str(self.text_goal or '').strip()
+        category = str(getattr(self.envs, 'goal_name', '') or '').strip()
+
+        verdict = 'unsure'
+        reason = ''
+        try:
+            crop = Image.fromarray(frame[y1:y2, x1:x2, :3])
+            prompt = (
+                'You are verifying a navigation target sighting for a robot.\n'
+                f'Target category: "{category}". Target description: "{description[:400]}".\n'
+                "The image is a cropped detection from the robot's camera.\n"
+                'Judge ONLY the object category and its intrinsic attributes '
+                '(color/material/shape). IGNORE surroundings and nearby objects: '
+                'the crop may exclude them and descriptions of surroundings are '
+                'often noisy.\n'
+                'Answer JSON only: {"match": "yes"|"no"|"unsure", "reason": "<max 12 words>"}\n'
+                '- "yes": the object is the described category and its visible '
+                'attributes are compatible.\n'
+                '- "no": clearly a different category OR clearly contradicts the '
+                'intrinsic attributes.\n'
+                '- "unsure": too small, blurry, or ambiguous.'
+            )
+            raw = self.takeover_verifier(prompt, crop)
+            verdict, reason = parse_verify_response(raw)
+        except Exception as exc:
+            print(f"Rank: {self.envs.rank}, timestep: {timestep}, "
+                  f"takeover verify failed ({exc}); treating as unsure")
+        cache['calls'] = cache.get('calls', 0) + 1
+        cache['last'] = {'verdict': verdict, 'step': timestep, 'reason': reason}
+        print(f"Rank: {self.envs.rank}, timestep: {timestep}, takeover verify "
+              f"#{cache['calls']}: {verdict} ({reason})")
+        return verdict
 
     def reset(self):
         args = self.args
@@ -154,6 +234,8 @@ class UniGoal_Agent():
         self.temp_goal = None
         self.last_temp_goal = None
         self.forbidden_temp_goal = []
+        self._verifier_cache = {}
+        self._last_sighting_bbox_fullres = None
         self.goal_map_mask = np.ones(map_shape)
         self.goal_instance_whwh = None
         # Keep the reset-frame detector boxes.  The first planner action after a
@@ -416,8 +498,11 @@ class UniGoal_Agent():
                 stale_temp_goal_cleared=stale_temp_goal_cleared,
             )
         elif planner_inputs['found_goal'] == 1:
-            id_lo_whwh_speci = sorted(id_lo_whwh_speci, 
+            id_lo_whwh_speci = sorted(id_lo_whwh_speci,
                 key=lambda s: (s[2][2]-s[2][0])**2+(s[2][3]-s[2][1])**2, reverse=True)
+            self._last_sighting_bbox_fullres = np.asarray(
+                id_lo_whwh_speci[0][2], dtype=float
+            )
             whwh = (id_lo_whwh_speci[0][2] / 4).astype(int)
             w, h = whwh[2]-whwh[0], whwh[3]-whwh[1]
             goal_mask = np.zeros_like(goal_mask)
@@ -495,7 +580,7 @@ class UniGoal_Agent():
                     else:
                         new_goal_map = goal_map * self.goal_map_mask[gx1:gx2, gy1:gy2]
                         if np.any(new_goal_map > 0):
-                            if should_allow_text_visible_temp_goal(
+                            takeover_allowed = should_allow_text_visible_temp_goal(
                                 goal_type=self.args.goal_type,
                                 current_target_region=current_target_region,
                                 goal_name=getattr(self.envs, 'goal_name', None),
@@ -506,7 +591,17 @@ class UniGoal_Agent():
                                         False,
                                     )
                                 ),
-                            ):
+                            )
+                            # C7': verify the sighting before spending steps on
+                            # it (unverified takeover measured net-negative:
+                            # C456/C4567 vs C45). 'no' skips this frame without
+                            # blacklisting; 'yes'/'unsure' proceed.
+                            if takeover_allowed and self.takeover_verifier is not None:
+                                verdict = self._verify_takeover_sighting()
+                                self.last_override_info['takeover_verify_verdict'] = verdict
+                                if verdict == 'no':
+                                    takeover_allowed = False
+                            if takeover_allowed:
                                 planner_inputs['goal'] = new_goal_map
                                 temp_goal = np.zeros((self.global_width, self.global_height))
                                 temp_goal[gx1:gx2, gy1:gy2] = new_goal_map
@@ -966,6 +1061,9 @@ class UniGoal_Agent():
         sem_seg_pred, seg_predictions = self.pred_sem(
             rgb.astype(np.uint8), use_seg=use_seg)
         semantic_source_shape = sem_seg_pred.shape[:2]
+        # Keep the detector-resolution frame for C7' takeover verification
+        # (the mapping-resolution frame is too coarse for VLM crops).
+        self.last_fullres_rgb = rgb.astype(np.uint8)
 
         if args.environment == 'habitat':
             depth = self.preprocess_depth(depth, args.min_depth, args.max_depth)
