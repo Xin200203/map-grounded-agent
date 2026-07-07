@@ -84,6 +84,21 @@ Under the strong channel the pathologies the machinery guards against largely va
 
 **Finding 6 (what machinery buys, finally).** Across 96 matched episodes × 2 channels, no variant shifts SR or SPL significantly in any direction — a well-powered, twice-replicated null for *outcome-level* controller value on a graph-recall-bound task. What the machinery demonstrably buys is *process quality and cost*: elimination of degenerate control states (out-of-window 14×, overrides 5×), planner-call efficiency (prefetch −50%, rules-monitor +50% for nothing), and protection whose binding rate scales inversely with planner quality (out-of-window 43→0, junk proposals 73→≤3 as the planner strengthens). Aggregate SPL consistently favors the full controller on both channels (+0.007 / +0.023) without reaching significance.
 
+### 4.6b The S8 approach funnel: repair is necessary but verification is load-bearing (Table 5, 数字待 c4567/c7v 收线)
+
+Text goals inherited a severed approach funnel: the executor's native chain (sighting → temp-goal approach → close-range re-discrimination → lock) had its takeover link disabled for text goals outright, and its close-range slot — where the ins-image pipeline runs LightGlue re-verification — cleared *and blacklisted* the pursued sighting at ~5 m. Anchoring machinery (C2/C4/C5) delivered agents to committed coordinates, but no in-executor path could finish (anchored_failed 16/40; visible-lock events: 0 across all failures).
+
+Reopening the funnel is not enough — it must be *verified*. The four-row ablation (recall regime, cross-48 matched, McNemar):
+
+| variant | funnel state | SR (full) | SR (np) |
+|---|---|---|---|
+| C45 | severed (reference) | 8/48 | [locked] |
+| C456 | takeover reopened, unverified | 4/48 | — |
+| C4567 | + close-range keep, unverified | [pending] | [pending] |
+| C7v | + VLM verification at initiation | [pending] | [pending] |
+
+Unverified takeover is *net-negative* (C456 < C45): with detection-relevance as the only gate, the executor burns its step budget chasing false sightings. This is precisely the propose-verify structure reported across recent object-nav systems (SG-Nav, TriHelper, VLFM); our contribution is locating the failure *at the module junction* — the text pipeline lacked the verifier that its ins-image sibling had in the same slot — and pricing verification (Haiku crop-verdicts, ≤8 calls/episode, layered category+intrinsic criteria, fail-open).
+
 ### 4.7 Qualitative
 
 [图 4：ep228 capsule BEV 时间线——painting→tv 锚定切换帧序列 + 出窗修复对比帧；渲染器现成]

@@ -285,6 +285,23 @@ backbone 共享改动（frontier 价值评分、关系裁剪、文本可见接�
 - **战役首个真正 SR 提升**（翻倍，两宿主一致，全战役跨场景最高）；翻转集 159/358 正是诊断标本；859 安全阀耗尽回退（by design）。
 - n=12 McNemar +2/−0 n.s. → **n=48 扩样已发射**（23:10，3 profile 含 periodic+persistence 对照，构成调度×粘性 2×2）。判据：若 SR 比例保持（~12-16/48 vs 6-7/48），McNemar 可达显著 → 论文获得"诊断驱动的正向主结果"，叙事升级为 audit→root-cause→repair(感知层)→repair(转化层)→outcome 增益的完整闭环。
 
+## 5.0.10 S8 漏斗战役：C456 终判 + C4567 中期 + C7' 机制定版（2026-07-08 01:00）
+
+**成功机制勘误（Claim，run 解剖证实）**：HM3D text-nav 评测为 `end_on_success`——agent **进入目标 1 m 半径即成功结束，无需 stop 动作**（c4567 ep 解剖：末帧 `visible_target_temp_goal` 源、前进动作、无 stop/lock 即 success=1）。此前 S8 审计中"stop 被 `found_goal==1` 锁死"（截肢 2）对 SR 实际无关紧要；**真正致命的是接近链路被切**（截肢 1：接管恒禁；截肢 3：5 m 处无验证槽位直接清除+拉黑）。文档 `current_bottlenecks` 原因 2 需按此勘误解读。
+
+**C456 n=48 终判（Claim）**：full 4/48 vs C45 参照 8/48——重开接管但无验证，**净负**。C4567 probe-12 中读同向：full 2/12、np 1/12 vs C45 3/12。归因：3 个 probe 成功全部由接管驱动（机制在正确目标上有效），但**未经验证的接管把步数预算烧在假 sighting 上**。接管路径存活 20–38 步（adapter watchdog 非杀手）。
+
+**结论：漏斗缺的不是管道（C6/C7 已通），是验证器**——ins-image 在同一槽位有 LightGlue，text 是空洞。与调研报告 R3（SG-Nav/TriHelper/VLFM 等 propose-verify 模式，+3–6 SR）及 Haiku/Sonnet 验证 probe（Haiku 8/12 ≥ Sonnet 7/12，模型不是瓶颈）三方汇合。
+
+**C7' 机制定版（2026-07-08 实现，commit 4db245c）**：接管发起点（`found_goal==1` 远距分支）VLM 验证闸：
+- sighting crop（检测框 +20% margin，480×640 原帧）→ Haiku 判定 `yes/no/unsure`；
+- 分层判据（probe 教训）：**只判类目+内在属性**（颜色/材质/形状），周边一律忽略（数据集描述噪声大）；
+- `no`=本帧跳过接管、**不拉黑**（近处再看可能翻案）；`unsure`/解析失败/通道故障=放行（fail-open，验证器宕机不得切断漏斗）；
+- 节流：10 步间隔 + 每集 ≤8 次调用（超限沿用末次判定）；独立 vapeur Haiku 通道（主通道 deepseek 纯文本不受影响）；
+- flag `executor_takeover_vlm_verify` 默认关；trace 字段 `takeover_verify_verdict` 逐步落盘；纯逻辑（节流/解析）10 项单测，全套 244 绿。
+
+**c7v 套件设计**：config `_c7v`（=c4567+验证），cross-48 matched（probe12+exp36 × full/np），四行消融链 C45（无接管）→C456（接管无 keep）→C4567（接管+keep 无验证）→C7v（全漏斗+验证）。判据：C7v SR 显著回升过 C45（McNemar n=48）→ 论文获得"propose-verify 是文本目标漏斗的必要件"的正向主张；若仅回到 C45 水平 → 验证器只能中和接管毒性，级联继续。
+
 ## 5.1 E1 中期观察（2026-07-06 01:00，Observation，套件未全部完成）
 
 - **intact-15 已完成两 profile**（DeepSeek 通道）：baseline-periodic SR 7/15=0.467、SPL≈0.128；smoothnav-full SR 6/15=0.400、SPL≈0.122。**与 4 月 Sonnet 结果（full 0.6 > periodic 0.533）排序翻转**，且两者绝对值都大幅低于 Sonnet 时代——通道质量对全系统影响显著。SR 差距为 1 集（6 vs 7，n=15），在噪声区间内，先按"平局"解读。逐集：full 独得 291/296，periodic 独得 289/293/299。

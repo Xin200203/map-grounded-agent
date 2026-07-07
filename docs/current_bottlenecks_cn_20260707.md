@@ -38,7 +38,7 @@
 ### 原因 2：最后一公里（S8）——已定位为接口断裂（2026-07-07 衔接审计，C6 修复在测）
 `visible_failed = 0` 的机械成因已查明，是**两处人为断点**而非技术限制：
 1. **漏斗截肢**：执行器原生链路是"看见目标类目 → 距离远则设 temp goal 逼近 → 近距离重判别 → FMM 距离 <15 格（0.75m）→ 全局锁定 → stop"。4 月为修垃圾接管，`should_allow_text_visible_temp_goal` 对文本目标恒 False——"逼近"环节被整体切除，锁定只剩"某帧检测时恰好已在 0.75m 内"这一撞运气路径。
-2. **stop 被锁在漏斗后**：`agent.py:743` `if stop and found_goal==1: action=0`——锚点路径 found_goal 恒 0，agent 站在目标旁也永远不会 stop，只能超时。
+2. **stop 被锁在漏斗后**：`agent.py:743` `if stop and found_goal==1: action=0`——锚点路径 found_goal 恒 0。**〔2026-07-08 勘误〕**评测为 `end_on_success`：进入 1 m 半径即成功，无需 stop——此断点对 SR 实际无关紧要，致命的是断点 1/3（接近链路被切）。
 锚定机制把 agent 送到节点中心 ±1m（12 集做到），执行器却被禁止做最后逼近——anchored_failed 16 集的直接成因。**C6 修复**：按控制器承诺做证据门控地重开接管（有 `object:`/搜索锚承诺时允许 visible→temp takeover，无承诺维持历史抑制），全栈 c456 套件在测。
 
 ### 原因 3：感知质量的天花板还在
