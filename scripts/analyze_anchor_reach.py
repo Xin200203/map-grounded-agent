@@ -41,9 +41,12 @@ def analyze_run(run_dir, near_cells):
             anchored = True
             pose = rec.get("pose_before") or {}
             try:
+                # pose_before carries metric x/y; anchor coords are full-map
+                # cells at 5 cm resolution (100/5 = 20 cells per metre).
+                agent_row = float(pose["x"]) * 20.0
+                agent_col = float(pose["y"]) * 20.0
                 dist = math.dist(
-                    [float(pose.get("map_x")), float(pose.get("map_y"))],
-                    [float(coord[0]), float(coord[1])],
+                    [agent_row, agent_col], [float(coord[0]), float(coord[1])]
                 )
             except Exception:
                 continue
