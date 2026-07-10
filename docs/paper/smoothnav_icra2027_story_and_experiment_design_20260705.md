@@ -361,6 +361,20 @@ C7v vs C4567（验证的净效应）：+2/−2，p=1.0，dSPL +0.0007——**验
 
 **三条已耗尽的机制前线**：控制器（3 regime）/ S8 漏斗（C45→C7v 含 VLM 验证）/ R2 坐标融合。R1（目标文本主动 grounding）是唯一未试且被 closest-approach 数据指向的方向，同时也是"正向结果"路径的最后一次机制摆动。
 
+## 5.0.14 R1 波次发射：目标文本主动 grounding（2026-07-10，Observation）
+
+用户在 R2 双 null 后拍板：**R1 + 并行起草审计论文**（对冲——R1 中则升级故事，R1 null 则审计论文已在路上）。
+
+**R1 机制（commit 48b0d3f，flag `graph_target_text_grounding` 默认关）**：把目标特异短语（主类目规范名 + intrinsic 描述，**排除 extrinsic 周边**以免 ground 上下文物）并入 GroundingDINO 的 `node_space` prompt。攻 detected_no_anchor 18/40 的两个洞：
+1. **缺失类目**：node_space 15 词里**没有 toilet**——6 个目标类目中唯一缺的，GroundingDINO 从不被要求找马桶（chair/sofa/bed/plant/tv 都在）。
+2. **通用 caption 相关性不足**：目标实例只带通用类目 token，相关性可能过不了 0.75 候选门；并入 intrinsic 描述后 caption 带目标属性词 → 相关性升。
+- 单次 GroundingDINO 前向，仅文本 prompt 变长，无额外算力；纯短语构造 9 项单测（含 toilet 补缺、television→tv、去冠词、截断、去重、幂等），全套 260 绿；`target_grounding_phrase` 逐步落 trace。
+- 冒烟 ep661（chair 集）：`node_space += 'chair. material...wood and leather...'` 正确触发、零崩溃。
+
+**c48 判据**：cross-48 matched（probe12+exp36 × full/np）vs C45 参照，双层——(a) SR McNemar；(b) 若 SR 不动，则看 detected_no_anchor 桶是否缩小（合格候选出现率）+ 最近逼近距离谱是否左移。发射于 GPU 4/5/6/7（0-3 被外部占用）。
+
+**这是"正向结果"路径的最后一次机制摆动。** R1 中 → 论文获诊断驱动的正向主结果（audit→localize→fix）；R1 null → 四条前线全证伪，审计论文定稿（脊柱已在 §4.6c synthesis 写好）。
+
 ## 5.1 E1 中期观察（2026-07-06 01:00，Observation，套件未全部完成）
 
 - **intact-15 已完成两 profile**（DeepSeek 通道）：baseline-periodic SR 7/15=0.467、SPL≈0.128；smoothnav-full SR 6/15=0.400、SPL≈0.122。**与 4 月 Sonnet 结果（full 0.6 > periodic 0.533）排序翻转**，且两者绝对值都大幅低于 Sonnet 时代——通道质量对全系统影响显著。SR 差距为 1 集（6 vs 7，n=15），在噪声区间内，先按"平局"解读。逐集：full 独得 291/296，periodic 独得 289/293/299。
