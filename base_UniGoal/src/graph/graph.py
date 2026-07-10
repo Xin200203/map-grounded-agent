@@ -34,6 +34,7 @@ from ..utils.fmm import pose_utils as pu
 from ..utils.camera import get_camera_matrix
 from ..utils.map import remove_small_frontiers
 from ..utils.llm import LLM, VLM
+from smoothnav.graph_fusion import robust_center_from_views
 from smoothnav.frontier_scoring import (
     build_frontier_value_replay_snapshot,
     choose_frontier_locations,
@@ -621,9 +622,27 @@ Please provide the relationship you can determine from the image.
             # self.create_new_edge(new_node)
             self.nodes.append(new_node)
         # get node.center and node.room
+        robust_center_enabled = bool(
+            getattr(self.args, 'graph_robust_center', False)
+        )
+        robust_min_views = int(
+            getattr(self.args, 'graph_robust_center_min_views', 2)
+        )
+        robust_center_applied = 0
         for node in self.nodes:
             points = np.asarray(node.object['pcd'].points)
             center = points.mean(axis=0)
+            if robust_center_enabled:
+                # R2: one centroid vote per detection, component-wise median.
+                # The accumulated-cloud mean weights every point equally, so
+                # one depth-bleed frame outvotes several clean ones.
+                robust = robust_center_from_views(
+                    node.object.get('det_centroids'),
+                    min_views=robust_min_views,
+                )
+                if robust is not None:
+                    center = np.asarray(robust)
+                    robust_center_applied += 1
             x = int(center[0] * 100 / self.map_resolution)
             y = int(center[1] * 100 / self.map_resolution)
             y = self.map_size - 1 - y
@@ -646,6 +665,7 @@ Please provide the relationship you can determine from the image.
                 "nodes_before_update": nodes_before,
                 "nodes_after_update": len(self.nodes),
                 "caption_updates": caption_updates,
+                "robust_center_applied": robust_center_applied,
             }
         )
         self.clear_line()

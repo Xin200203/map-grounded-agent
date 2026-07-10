@@ -275,6 +275,11 @@ def gobs_to_detection_list(
             'xyxy': [gobs['xyxy'][mask_idx]],
             'conf': [gobs['confidence'][mask_idx]],
             'n_points': [len(global_object_pcd.points)],
+            # One centroid vote per detection (R2 robust-center fusion).
+            # Merges concatenate this list like the other per-detection keys.
+            'det_centroids': [
+                np.asarray(global_object_pcd.points).mean(axis=0).tolist()
+            ],
             'pixel_area': [mask.sum()],
             'contain_number': [None],                          # This will be computed later
             "inst_color": np.random.rand(3),                 # A random color used for this segment instance
