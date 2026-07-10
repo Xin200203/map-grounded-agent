@@ -1927,6 +1927,7 @@ def main():
                     "new_node_captions": getattr(graph_delta, "new_node_captions", []),
                     "mapping_debug": dict(getattr(graph, "last_mapping_debug", {}) or {}),
                     "relation_debug": dict(getattr(graph, "last_relation_debug", {}) or {}),
+                    "target_grounding_phrase": getattr(graph, "target_grounding_phrase", ""),
                     "graph_delta": {
                         "event_types": getattr(graph_delta, "event_types", []),
                         "current_strategy_type": getattr(

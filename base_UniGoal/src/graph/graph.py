@@ -35,6 +35,7 @@ from ..utils.camera import get_camera_matrix
 from ..utils.map import remove_small_frontiers
 from ..utils.llm import LLM, VLM
 from smoothnav.graph_fusion import robust_center_from_views
+from smoothnav.target_grounding import augment_node_space
 from smoothnav.frontier_scoring import (
     build_frontier_value_replay_snapshot,
     choose_frontier_locations,
@@ -239,6 +240,14 @@ class Graph():
         self.found_goal_times_threshold = 1
         self.N_max = 10
         self.node_space = 'table. tv. chair. cabinet. sofa. bed. windows. kitchen. bedroom. living room. mirror. plant. curtain. painting. picture'
+        # R1: base prompt is rebuilt with a target-specific phrase once the
+        # goal text is known (set_text_goal). Preserve the base so the append
+        # is idempotent across repeated set_text_goal calls.
+        self.base_node_space = self.node_space
+        self.target_grounding_phrase = ''
+        self.target_text_grounding_enabled = bool(
+            getattr(args, 'graph_target_text_grounding', False)
+        )
         self.relations = ["next to", "opposite to", "below", "behind", "in front of"]
         self.prompt_edge_proposal = '''
 Provide the most possible single spatial relationship for each of the following object pairs. Answer with only one relationship per pair, and separate each answer with a newline character.
@@ -353,6 +362,15 @@ Please provide the relationship you can determine from the image.
         self.set_text_goal(text_goal)
 
     def set_text_goal(self, text_goal):
+        # R1: build the target grounding phrase from the RAW goal (intrinsic
+        # description only) before the dict->str flattening below.
+        if self.target_text_grounding_enabled:
+            self.node_space, self.target_grounding_phrase = augment_node_space(
+                self.base_node_space, text_goal
+            )
+            if self.target_grounding_phrase:
+                print(f"    R1 target grounding: node_space += "
+                      f"'{self.target_grounding_phrase}'")
         if isinstance(text_goal, dict) and 'intrinsic_attributes' in text_goal and 'extrinsic_attributes' in text_goal:
             text_goal = text_goal['intrinsic_attributes'] + ' ' + text_goal['extrinsic_attributes']
         self.text_goal = text_goal
