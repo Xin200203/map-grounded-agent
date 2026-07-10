@@ -912,6 +912,30 @@ def main():
                     }
                 )
 
+                # GT-grounded localization forensics: dump the final scene-graph
+                # node centers (map cells), captions and detection counts so an
+                # offline pass can measure, per episode, whether the target was
+                # mapped near its true position (nav failure) or elsewhere
+                # (wrong instance / localization error).
+                try:
+                    node_dump = []
+                    for nd in getattr(graph, "nodes", []) or []:
+                        center = getattr(nd, "center", None)
+                        obj = getattr(nd, "object", {}) or {}
+                        node_dump.append({
+                            "center": list(center) if center is not None else None,
+                            "caption": getattr(nd, "caption", ""),
+                            "num_detections": obj.get("num_detections"),
+                        })
+                    tracer.record_graph_nodes(completed_episode_id, {
+                        "episode": completed_episode_id,
+                        "habitat_episode_no": int(infos.get("episode_no", completed_episode_id)),
+                        "success": bool(success),
+                        "nodes": node_dump,
+                    })
+                except Exception as exc:  # never let forensics break a run
+                    logging.warning("graph node dump failed: %s", exc)
+
                 if len(episode_success) == args.num_episodes:
                     finished = True
                     if args.visualize:

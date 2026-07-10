@@ -158,6 +158,18 @@ class RunTracer:
             return
         self._write_jsonl("mllm_frontier_calls", episode_id, payload)
 
+    def record_graph_nodes(self, episode_id, payload):
+        """One JSON per episode: final scene-graph node centers + captions +
+        detection counts, for GT-grounded localization forensics."""
+        if not self.enable_controller_trace:
+            return
+        path = os.path.join(
+            self.run_dir, "graph_nodes", f"episode_{int(episode_id):06d}.json"
+        )
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, "w") as fh:
+            json.dump(payload, fh)
+
     def record_task_frame_capsule(
         self,
         episode_id,
