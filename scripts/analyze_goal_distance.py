@@ -104,6 +104,11 @@ def main():
     parser.add_argument("--roots", nargs="+", required=True)
     parser.add_argument("--label", default="run")
     parser.add_argument("--out", default=None, help="write per-episode JSON here")
+    parser.add_argument("--transform", default=None,
+                        choices=sorted(CANDIDATE_TRANSFORMS),
+                        help="force the episodic->map transform instead of "
+                             "calibrating on successes (required when the "
+                             "run set has no successes)")
     args = parser.parse_args()
 
     get_config, make_dataset, OmegaConf = load_habitat_modules()
@@ -122,23 +127,33 @@ def main():
                 rec["goal_offsets"] = episodic_goal_offsets(episodes[rec["episode"]])
                 runs.append(rec)
 
-    # calibrate axis convention on successes
-    scores = {}
-    for name, tf in CANDIDATE_TRANSFORMS.items():
-        hit = tot = 0
-        for rec in runs:
-            if not rec["success"]:
-                continue
-            goals = [(MAP_CENTER_M + tf(r, fwd)[0], MAP_CENTER_M + tf(r, fwd)[1])
-                     for r, fwd in rec["goal_offsets"]]
-            _, final = distances(rec["poses"], goals)
-            tot += 1
-            hit += 1 if final is not None and final <= 1.5 else 0
-        scores[name] = (hit, tot)
-    best_name = max(scores, key=lambda k: scores[k][0])
-    tf = CANDIDATE_TRANSFORMS[best_name]
-    print(f"calibration: {best_name} " +
-          " ".join(f"{k}={v[0]}/{v[1]}" for k, v in sorted(scores.items())))
+    if args.transform:
+        best_name = args.transform
+        tf = CANDIDATE_TRANSFORMS[best_name]
+        print(f"calibration: forced {best_name}")
+    else:
+        # calibrate axis convention on successes
+        scores = {}
+        for name, cand in CANDIDATE_TRANSFORMS.items():
+            hit = tot = 0
+            for rec in runs:
+                if not rec["success"]:
+                    continue
+                goals = [(MAP_CENTER_M + cand(r, fwd)[0], MAP_CENTER_M + cand(r, fwd)[1])
+                         for r, fwd in rec["goal_offsets"]]
+                _, final = distances(rec["poses"], goals)
+                tot += 1
+                hit += 1 if final is not None and final <= 1.5 else 0
+            scores[name] = (hit, tot)
+        best_name = max(scores, key=lambda k: scores[k][0])
+        if scores[best_name][1] == 0:
+            raise SystemExit(
+                "no successes to calibrate on; pass --transform explicitly "
+                "(validated on c45: 'x=+fwd,y=-right')"
+            )
+        tf = CANDIDATE_TRANSFORMS[best_name]
+        print(f"calibration: {best_name} " +
+              " ".join(f"{k}={v[0]}/{v[1]}" for k, v in sorted(scores.items())))
 
     rows = []
     for rec in runs:
