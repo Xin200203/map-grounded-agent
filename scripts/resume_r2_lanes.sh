@@ -16,15 +16,18 @@ STAMP="${STAMP:-20260710}"
 PROBE12="228 527 661 64 159 358 486 574 717 778 859 955"
 EXP36="65 79 93 160 170 180 229 248 267 359 372 385 487 500 513 528 543 558 575 585 595 662 674 686 718 734 750 779 788 797 860 886 912 956 970 984"
 
-inflight_ids="$(ps -ef | grep '[m]ain.py' | grep -oE -- '--episode_id [0-9]+' | awk '{print $2}' | tr '\n' ' ')"
-echo "in-flight episode ids: ${inflight_ids:-none}"
-
 remaining_for() {
     local root="$1" profile="$2" episodes="$3"
-    local done_ids
+    local done_ids inflight_ids
     done_ids="$(find "${root}/${profile}" -name episode_results.json 2>/dev/null \
         | xargs -r grep -ho '"habitat_episode_no": [0-9]*' \
         | grep -o '[0-9]*' | sort -u | tr '\n' ' ')"
+    # In-flight exclusion must be LANE-SCOPED: an episode id running in
+    # another lane must not mask this lane's copy (learned 2026-07-10: an
+    # orphan np worker on ep64 silently dropped ep64 from the full lane).
+    inflight_ids="$(ps -ef | grep '[m]ain.py' \
+        | grep -- "--results-root ${root}/${profile}" \
+        | grep -oE -- '--episode_id [0-9]+' | awk '{print $2}' | tr '\n' ' ')"
     local out=""
     for ep in ${episodes}; do
         case " ${done_ids} ${inflight_ids} " in
