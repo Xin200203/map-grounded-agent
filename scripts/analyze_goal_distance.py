@@ -69,8 +69,8 @@ def load_trajectory(run_dir):
                 except Exception:
                     continue
                 pose = rec.get("pose_before")
-                if pose and len(pose) >= 2:
-                    poses.append((float(pose[0]), float(pose[1])))
+                if isinstance(pose, dict) and "x" in pose and "y" in pose:
+                    poses.append((float(pose["x"]), float(pose["y"])))
     return poses
 
 
