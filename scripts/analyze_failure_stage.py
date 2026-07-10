@@ -59,6 +59,7 @@ def walk_trace(run_dir, goal_text):
     committed = candidate = False
     best_caption = 0.0
     poses = []
+    goal_coords = []          # committed target geometric goals (full-map cells)
     node_count_max = 0
     captions_seen = set()
     for tf in sorted(glob.glob(os.path.join(run_dir, "step_traces", "*.jsonl"))):
@@ -70,8 +71,15 @@ def walk_trace(run_dir, goal_text):
                     continue
                 strat = rec.get("current_strategy") or {}
                 region = normalize_text(strat.get("target_region", ""))
-                if region and any(a in region for a in aliases):
+                committed_now = bool(region and any(a in region for a in aliases))
+                if committed_now:
                     committed = True
+                    # the coordinate the executor was actually sent to while
+                    # committed to the target (full-map cells -> meters /20)
+                    gg = rec.get("geometric_goal") or {}
+                    fmc = gg.get("full_map_coord")
+                    if fmc and len(fmc) >= 2:
+                        goal_coords.append((float(fmc[0]) / 20.0, float(fmc[1]) / 20.0))
                 gd = rec.get("graph_delta") or {}
                 if "target_candidate_detected" in (gd.get("event_types") or []):
                     candidate = True
@@ -87,6 +95,7 @@ def walk_trace(run_dir, goal_text):
     return {
         "committed": committed, "candidate": candidate,
         "best_caption": round(best_caption, 3), "poses": poses,
+        "goal_coords": goal_coords,
         "node_count_max": node_count_max, "unique_captions": len(captions_seen),
     }
 
@@ -98,7 +107,13 @@ def classify(rec):
     if rec["min_dist"] is not None and rec["min_dist"] <= 2.0:
         return "approached_2m"      # got close, last-meter/pose miss
     if rec["committed"]:
-        return "committed_far"      # believed it found target, never got near
+        # split the dominant bucket with GT: was the executor ever AIMED near
+        # the true goal? goal_dist = closest the committed target coordinate
+        # came to GT.
+        gd = rec.get("goal_dist")
+        if gd is not None and gd <= 2.0:
+            return "aimed_near_unreached"  # right place, agent never got there
+        return "aimed_far"                 # wrong instance / bad anchor coordinate
     if rec["candidate"] or rec["best_caption"] >= 0.75:
         return "candidate_no_commit"  # target recognized, never committed
     return "no_candidate"           # target never recognized at all
@@ -142,35 +157,50 @@ def main():
             offsets = episodic_goal_offsets(episodes[ep])
             goals = [(MAP_CENTER_M + tf(r, fwd)[0], MAP_CENTER_M + tf(r, fwd)[1]) for r, fwd in offsets]
             dmin, dfin = distances(w["poses"], goals) if w["poses"] else (None, None)
+            # closest the executor ever AIMED (committed target goal) to GT
+            gmin, _ = distances(w["goal_coords"], goals) if w["goal_coords"] else (None, None)
             row = {
                 "episode": ep, "success": bool(e.get("success")),
                 "committed": w["committed"], "candidate": w["candidate"],
                 "best_caption": w["best_caption"], "nodes": w["node_count_max"],
                 "min_dist": round(dmin, 2) if dmin is not None else None,
+                "goal_dist": round(gmin, 2) if gmin is not None else None,
                 "run": run,
             }
             row["stage"] = "success" if row["success"] else classify(row)
             rows.append(row)
 
     rows.sort(key=lambda r: (r["episode"], r["run"]))
-    print(f"{'ep':>5} {'succ':>4} {'commit':>6} {'cand':>4} {'capRel':>6} {'nodes':>5} {'minD':>6}  stage")
+    print(f"{'ep':>5} {'succ':>4} {'commit':>6} {'cand':>4} {'capRel':>6} {'nodes':>5} "
+          f"{'minD':>6} {'goalD':>6}  stage")
     for r in rows:
+        gd = ('%.2f' % r['goal_dist']) if r['goal_dist'] is not None else '-'
+        md = ('%.2f' % r['min_dist']) if r['min_dist'] is not None else '-'
         print(f"{r['episode']:>5} {str(r['success'])[0]:>4} {str(r['committed'])[0]:>6} "
               f"{str(r['candidate'])[0]:>4} {r['best_caption']:>6.2f} {r['nodes']:>5} "
-              f"{('%.2f'%r['min_dist']) if r['min_dist'] is not None else '  -  ':>6}  {r['stage']}")
+              f"{md:>6} {gd:>6}  {r['stage']}")
 
     fails = [r for r in rows if not r["success"]]
+    succ = [r for r in rows if r["success"]]
     from collections import Counter
-    order = ["approached_1m", "approached_2m", "committed_far", "candidate_no_commit", "no_candidate"]
+    order = ["approached_1m", "approached_2m", "aimed_near_unreached", "aimed_far",
+             "candidate_no_commit", "no_candidate"]
     hist = Counter(r["stage"] for r in fails)
-    print(f"\n== {args.label}: {len(rows)} episodes, {sum(r['success'] for r in rows)} success, "
+    print(f"\n== {args.label}: {len(rows)} episodes, {len(succ)} success, "
           f"{len(fails)} failures ==")
     print("where failures die (deepest measured stage):")
     for s in order:
-        print(f"  {s:>20}: {hist.get(s,0)}")
+        print(f"  {s:>22}: {hist.get(s,0)}")
     print(f"committed-ever among failures: {sum(r['committed'] for r in fails)}/{len(fails)}")
     print(f"candidate-ever among failures: {sum(r['candidate'] for r in fails)}/{len(fails)}")
     print(f"caption>=0.75 among failures:  {sum(1 for r in fails if r['best_caption']>=0.75)}/{len(fails)}")
+    # self-validation of the goal-coordinate axis: on SUCCESS episodes the
+    # committed goal coordinate should end up near GT.
+    sgd = [r["goal_dist"] for r in succ if r["goal_dist"] is not None]
+    if sgd:
+        print(f"[calib] success episodes goal_dist to GT: "
+              f"median={sorted(sgd)[len(sgd)//2]:.2f}m min={min(sgd):.2f} max={max(sgd):.2f} "
+              f"(should be small if axis correct)")
     if args.out:
         json.dump(rows, open(args.out, "w"), indent=1)
         print(f"wrote {args.out}")
