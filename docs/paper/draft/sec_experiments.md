@@ -99,10 +99,23 @@ Reopening the funnel is not enough — it must be *verified*. The four-row ablat
 
 The adjudication is sharper than "verification is missing": adding the verifier (C7v: Haiku crop-verdicts, ≤8 calls/episode, layered category+intrinsic criteria, fail-open) changes *nothing* (vs C4567: +2/−2, p=1.0, dSPL +0.001). All three reopened variants land at 4/48 — half the reference. Post-mortem of the five episodes the reference wins: verified takeover fired in every one, displacing an anchor-path approach that — under the benchmark's enter-radius success criterion — would have finished. The takeover goal is a single-frame depth-estimate ellipse; the committed anchor is a multi-detection node centroid. The severed interface was not a defect but a load-bearing guard: the executor cannot finish episodes the anchor cannot, it can only lose episodes the anchor would have won. This inverts the propose-verify prescription reported for object-nav (SG-Nav, TriHelper, VLFM): verification rescues a takeover funnel only if the takeover's goal estimate outperforms what it preempts. The residual failure mass therefore sits in anchor *coordinate quality* — a perception-fusion property — not in executor control.
 
+### 4.6c Anchor coordinate precision is not the last-mile constraint (Table 6)
+
+§4.6b localizes the residual mass to anchor *coordinate quality*. We test that directly. R2 replaces the node centroid — a mean over all accumulated point-cloud points, which lets one depth-bleed frame outvote several clean views — with a per-detection-vote component-wise median (robust to a minority of bad frames). We evaluate on **two layers**: outcome SR, and a purpose-built *mechanism metric* — the paired per-episode closest-approach distance to the GT goal, which registers coordinate improvement even below the 1 m success threshold.
+
+| variant | SR (full) | SR (np) | closest-approach Δ (full) | Δ (np) |
+|---|---|---|---|---|
+| C45 (reference) | 8/48 | 6/48 | — | — |
+| R2 robust centroid | 7/48 (p=1.0) | 7/48 (p=1.0) | −0.28 m [−0.79,+0.19] | +0.44 m [−0.11,+1.15] |
+
+Both layers are null: SR is flat, and the mechanism metric — designed to catch sub-threshold coordinate gains — crosses zero with *opposite signs across the two hosts*. The fusion fired in-vivo (median applied to 3→8 multi-view nodes per episode), so the mechanism was active; the median-vs-mean centroid difference is simply below what closest-approach can register. **Anchor coordinate precision is not the binding last-mile constraint**; the anchored_failed gap is not centroid noise. Combined with the closest-approach baseline — most failures never approach the goal at all (median 3.4–5 m; ≤2 m only 11–13/46) — the residual leverage, if any, sits one layer further back: in *target finding* (detected_no_anchor 18/40, qualified candidates that never appear), not coordinate precision and not last-mile execution.
+
+**Bottleneck localization (synthesis).** Four mechanism fronts, each attacking the layer the previous one exposed, each falsified at n=48 with matched pairing: controller machinery (§4.2–4.6, outcome-null), the S8 approach funnel incl. VLM verification (§4.6b, load-bearing severance), and anchor coordinate fusion (§4.6c, double-null). The audit does not merely report a null — it *localizes*: it rules out control, last-mile execution, and coordinate precision, and points the residual mass at perception recall / target finding, corroborated by the closest-approach distribution and by the original backbone's published ceiling (20.2 SR / 11.4 SPL, same protocol, 7B models). [R1 target-text grounding attacks exactly this residual; its verdict — capstone fix or fourth falsified front — lands here.]
+
 ### 4.7 Qualitative
 
 [图 4：ep228 capsule BEV 时间线——painting→tv 锚定切换帧序列 + 出窗修复对比帧；渲染器现成]
 
 ## Limitations（要点）
 
-Single backbone, single benchmark, simulation-only; 48-episode matched suites resolve large mechanism effects but not small SR deltas (reported n.s. accordingly); default-temperature LLM sampling amplifies trajectory divergence at small n (documented; one ablation affected); detection-recall ceiling suggests the next leverage lies in perception, not control.
+Single backbone, single benchmark, simulation-only; 48-episode matched suites resolve large mechanism effects but not small SR deltas (reported n.s. accordingly); default-temperature LLM sampling amplifies trajectory divergence at small n (documented; one ablation affected). The audit localizes the residual bottleneck to perception recall / target finding rather than control, last-mile execution, or coordinate precision — three fronts we falsified directly; whether that residual is itself addressable within a frozen backbone is the open question our final front (R1) probes.

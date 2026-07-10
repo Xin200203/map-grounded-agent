@@ -14,6 +14,9 @@ cd "${ROOT_DIR}"
 
 CONFIG=base_UniGoal/configs/config_habitat_deepseek_recall_r1.yaml
 STAMP="${STAMP:-20260710}"
+# GPU ids per lane (probe-full, probe-np, exp-full, exp-np). Override via env
+# when the default set is occupied, e.g. GPU_PF=4 GPU_PN=5 GPU_EF=6 GPU_EN=7.
+GPU_PF="${GPU_PF:-1}"; GPU_PN="${GPU_PN:-2}"; GPU_EF="${GPU_EF:-4}"; GPU_EN="${GPU_EN:-5}"
 PROBE12="228 527 661 64 159 358 486 574 717 778 859 955"
 EXP36="65 79 93 160 170 180 229 248 267 359 372 385 487 500 513 528 543 558 575 585 595 662 674 686 718 734 750 779 788 797 860 886 912 956 970 984"
 
@@ -31,9 +34,9 @@ launch_lane() {
     echo "lane gpu=${gpu} profile=${profile} root=${root} pid=$!"
 }
 
-launch_lane 1 "${PROBE12}" "results/r1_probe12_${STAMP}" smoothnav-full        "results/r1_probe12_${STAMP}/driver_full.log"
-launch_lane 2 "${PROBE12}" "results/r1_probe12_${STAMP}" smoothnav-no-prefetch "results/r1_probe12_${STAMP}/driver_np.log"
-launch_lane 4 "${EXP36}"   "results/r1_exp36_${STAMP}"   smoothnav-full        "results/r1_exp36_${STAMP}/driver_full.log"
-launch_lane 5 "${EXP36}"   "results/r1_exp36_${STAMP}"   smoothnav-no-prefetch "results/r1_exp36_${STAMP}/driver_np.log"
+launch_lane "${GPU_PF}" "${PROBE12}" "results/r1_probe12_${STAMP}" smoothnav-full        "results/r1_probe12_${STAMP}/driver_full.log"
+launch_lane "${GPU_PN}" "${PROBE12}" "results/r1_probe12_${STAMP}" smoothnav-no-prefetch "results/r1_probe12_${STAMP}/driver_np.log"
+launch_lane "${GPU_EF}" "${EXP36}"   "results/r1_exp36_${STAMP}"   smoothnav-full        "results/r1_exp36_${STAMP}/driver_full.log"
+launch_lane "${GPU_EN}" "${EXP36}"   "results/r1_exp36_${STAMP}"   smoothnav-no-prefetch "results/r1_exp36_${STAMP}/driver_np.log"
 
 echo "all lanes launched"
