@@ -109,6 +109,7 @@ class UniGoal_Agent():
         self.takeover_verifier = None
         self.last_fullres_rgb = None
         self._verifier_cache = {}
+        self._d1_cache = {}
         self.prompt_text2object = '"chair: 0, sofa: 1, plant: 2, bed: 3, toilet: 4, tv_monitor: 5" The above are the labels corresponding to each category. Which object is described in the following text? Only response the number of the label and not include other text.\nText: {text}'
         torch.set_grad_enabled(False)
         self.current_strategy_epoch = 0
@@ -195,6 +196,87 @@ class UniGoal_Agent():
               f"{verdict} ({reason})")
         return verdict
 
+    def _instance_stop_allowed(self):
+        """D1 gate: at the found_goal stop decision, confirm the detected
+        goal-CATEGORY object is the SPECIFIC described instance before locking
+        and stopping.
+
+        Root cause (2026-07-11 forensic): found_goal is category-level
+        (gt_goal_idx is a category index), so the agent stops at the first
+        reachable category instance without instance verification; 69/75
+        failures stop >2 m from the true goal and never explore further. This
+        gate rejects a stop ONLY on a confident instance mismatch (using the
+        full description incl. surroundings); anything unsure/erroring is
+        allowed to stop (fail-open, never worse than baseline). A rejected
+        stop routes to the existing exp_goal fallback, which blacklists the
+        instance and resumes exploration.
+
+        Returns True to allow the stop, False to reject it.
+        """
+        cache = self._d1_cache
+        timestep = int(getattr(self.envs, 'timestep', 0) or 0)
+        cached = resolve_cached_verify_verdict(
+            cache,
+            timestep=timestep,
+            interval=getattr(self.args, 'executor_instance_verify_interval', 3),
+            max_calls=getattr(self.args, 'executor_instance_verify_max_calls', 12),
+        )
+        if cached is not None:
+            self.last_override_info['d1_instance_verdict'] = cached
+            return cached != 'no'
+
+        frame = self.last_fullres_rgb
+        bbox = getattr(self, '_last_sighting_bbox_fullres', None)
+        if frame is None or bbox is None:
+            return True  # fail-open: allow stop
+        x1, y1, x2, y2 = [float(v) for v in np.asarray(bbox).reshape(-1)[:4]]
+        mx, my = 0.2 * (x2 - x1), 0.2 * (y2 - y1)
+        x1 = max(int(x1 - mx), 0)
+        y1 = max(int(y1 - my), 0)
+        x2 = min(int(x2 + mx), frame.shape[1])
+        y2 = min(int(y2 + my), frame.shape[0])
+        if x2 - x1 < 10 or y2 - y1 < 10:
+            return True
+
+        if isinstance(self.text_goal, dict):
+            intrinsic = str(self.text_goal.get('intrinsic_attributes', '') or '').strip()
+            extrinsic = str(self.text_goal.get('extrinsic_attributes', '') or '').strip()
+            description = (intrinsic + ' ' + extrinsic).strip()
+        else:
+            description = str(self.text_goal or '').strip()
+        category = str(getattr(self.envs, 'goal_name', '') or '').strip()
+
+        verdict, reason = 'unsure', ''
+        try:
+            crop = Image.fromarray(frame[y1:y2, x1:x2, :3])
+            prompt = (
+                'A robot is about to STOP because it thinks it reached its '
+                'text-specified goal object.\n'
+                f'Target category: "{category}". Full target description '
+                f'(attributes AND surroundings): "{description[:500]}".\n'
+                'The image is the object the robot is about to stop at.\n'
+                'The scene may contain several objects of this category; the '
+                'goal is the SPECIFIC one the description picks out.\n'
+                'Answer JSON only: {"match": "yes"|"no"|"unsure", "reason": "<max 12 words>"}\n'
+                '- "no": ONLY if this clearly does NOT match the described '
+                'instance (wrong category, or attributes clearly contradict).\n'
+                '- "yes": it matches, or is a plausible match.\n'
+                '- "unsure": cannot tell. Prefer "yes"/"unsure" over "no" '
+                'unless the mismatch is obvious.'
+            )
+            raw = self.takeover_verifier(prompt, crop)
+            verdict, reason = parse_verify_response(raw)
+        except Exception as exc:
+            print(f"timestep: {timestep}, D1 instance verify failed ({exc}); "
+                  f"allowing stop")
+            verdict = 'unsure'
+        cache['calls'] = cache.get('calls', 0) + 1
+        cache['last'] = {'verdict': verdict, 'step': timestep, 'reason': reason}
+        self.last_override_info['d1_instance_verdict'] = verdict
+        print(f"timestep: {timestep}, D1 instance verify #{cache['calls']}: "
+              f"{verdict} ({reason})")
+        return verdict != 'no'
+
     def reset(self):
         args = self.args
 
@@ -235,6 +317,7 @@ class UniGoal_Agent():
         self.last_temp_goal = None
         self.forbidden_temp_goal = []
         self._verifier_cache = {}
+        self._d1_cache = {}
         self._last_sighting_bbox_fullres = None
         self.goal_map_mask = np.ones(map_shape)
         self.goal_instance_whwh = None
@@ -558,7 +641,20 @@ class UniGoal_Agent():
                     adopted_source = 'visible_target_global_goal'
                 else:
                     if (self.args.goal_type == 'ins-image' and goal_dis < 50) or (self.args.goal_type == 'text' and goal_dis < 15):
-                        if (self.args.goal_type == 'ins-image' and match_points > 90) or self.args.goal_type == 'text':
+                        # D1: category-level found_goal makes the agent lock and
+                        # stop at the first reachable goal-CATEGORY instance
+                        # (root cause 2026-07-11). Gate the text lock on an
+                        # instance-identity check against the full description;
+                        # a confident mismatch routes to the exp_goal fallback
+                        # below (blacklist + keep exploring) instead of stopping.
+                        d1_allow_stop = True
+                        if (
+                            self.args.goal_type == 'text'
+                            and bool(getattr(self.args, 'executor_instance_gated_stop', False))
+                            and self.takeover_verifier is not None
+                        ):
+                            d1_allow_stop = self._instance_stop_allowed()
+                        if ((self.args.goal_type == 'ins-image' and match_points > 90) or self.args.goal_type == 'text') and d1_allow_stop:
                             planner_inputs['found_goal'] = 1
                             self.last_override_info['global_goal_override'] = True
                             self.last_override_info['visible_target_override'] = True
@@ -576,7 +672,11 @@ class UniGoal_Agent():
                             selem = skimage.morphology.disk(1)
                             goal_map = skimage.morphology.dilation(goal_map, selem)
                             self.goal_map_mask[gx1:gx2, gy1:gy2][goal_map > 0] = 0
-                            adopted_source = 'exp_goal_visible_fallback'
+                            adopted_source = (
+                                'exp_goal_d1_instance_rejected'
+                                if not d1_allow_stop
+                                else 'exp_goal_visible_fallback'
+                            )
                     else:
                         new_goal_map = goal_map * self.goal_map_mask[gx1:gx2, gy1:gy2]
                         if np.any(new_goal_map > 0):

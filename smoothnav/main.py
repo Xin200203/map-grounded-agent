@@ -443,8 +443,10 @@ def main():
     graph = Graph(args)
     envs = construct_envs(args)
     agent = UniGoal_Agent(args, envs)
-    if getattr(args, "executor_takeover_vlm_verify", False):
-        # C7' verifier runs on its own multimodal channel (the main planner
+    if getattr(args, "executor_takeover_vlm_verify", False) or getattr(
+        args, "executor_instance_gated_stop", False
+    ):
+        # C7'/D1 verifier runs on its own multimodal channel (the main planner
         # channel may be text-only, e.g. deepseek-chat).
         verify_base_url = os.environ.get("VAPEUR_BASE_URL", "")
         verify_api_key = os.environ.get("VAPEUR_API_KEY", "")
@@ -2112,6 +2114,7 @@ def main():
                     "global_goal_override": bool(agent.last_override_info.get("global_goal_override")),
                     "executor_adopted_goal_source": agent.last_override_info.get("adopted_goal_source"),
                     "takeover_verify_verdict": agent.last_override_info.get("takeover_verify_verdict"),
+                    "d1_instance_verdict": agent.last_override_info.get("d1_instance_verdict"),
                     "executor_feedback_trace": (
                         executor_feedback.to_dict()
                         if executor_feedback is not None
